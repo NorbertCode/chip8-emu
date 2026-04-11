@@ -1,10 +1,15 @@
 #include "processor.hpp"
 
+Processor::Processor(const std::uint16_t startProgramCounter)
+{
+    state.programCounter = startProgramCounter;
+}
+
 const std::uint16_t Processor::fetch(const Memory& memory)
 {
-    const std::uint16_t instruction = (memory.read(programCounter) << 8) | memory.read(programCounter + 1);
+    const std::uint16_t instruction = (memory.read(state.programCounter) << 8) | memory.read(state.programCounter + 1);
 
-    programCounter += 2;
+    state.programCounter += 2;
 
     return instruction;
 }
