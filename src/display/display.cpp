@@ -27,9 +27,12 @@ const size_t Display::getHeight() const
 
 bool Display::xorPixel(const std::uint8_t x, const std::uint8_t y, const bool value)
 {
-    bool collision = display[x][y] && !value;
+    const std::uint8_t x_mod = x % getWidth();
+    const std::uint8_t y_mod = y % getHeight();
 
-    display[x][y] = display[x][y] != value;
+    bool collision = display[x_mod][y_mod] && value;
+
+    display[x_mod][y_mod] = display[x_mod][y_mod] != value;
 
     return collision;
 }
