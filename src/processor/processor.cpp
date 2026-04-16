@@ -1,15 +1,17 @@
 #include "processor.hpp"
+#include "opcodes.cpp"
 
-Processor::Processor(const std::uint16_t startProgramCounter)
+Processor::Processor(Memory& memory, Display& display, const std::uint16_t startProgramCounter)
+    : memory(memory), display(display)
 {
-    state.programCounter = startProgramCounter;
+    programCounter = startProgramCounter;
 }
 
-const std::uint16_t Processor::fetch(const Memory& memory)
+const std::uint16_t Processor::fetch()
 {
-    const std::uint16_t instruction = (memory.read(state.programCounter) << 8) | memory.read(state.programCounter + 1);
+    const std::uint16_t instruction = (memory.read(programCounter) << 8) | memory.read(programCounter + 1);
 
-    state.programCounter += 2;
+    programCounter += 2;
 
     return instruction;
 }
@@ -17,12 +19,14 @@ const std::uint16_t Processor::fetch(const Memory& memory)
 void Processor::execute(const std::uint16_t instruction)
 {
     const std::array<std::uint8_t, 4> nibbles = {
-        (instruction & 0xF000) >> 12,
-        (instruction & 0x0F00) >> 8,
-        (instruction & 0x00F0) >> 4,
-        (instruction & 0x000F)
+        static_cast<std::uint8_t>((instruction & 0xF000) >> 12),
+        static_cast<std::uint8_t>((instruction & 0x0F00) >> 8),
+        static_cast<std::uint8_t>((instruction & 0x00F0) >> 4),
+        static_cast<std::uint8_t>(instruction & 0x000F)
     };
 
+    const std::uint8_t x = nibbles[1];
+    const std::uint8_t y = nibbles[2];
     const std::uint16_t addr = instruction & 0xFFF;
     const std::uint8_t byte = instruction & 0xFF;
 
