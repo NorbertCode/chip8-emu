@@ -126,12 +126,12 @@ void Processor::drw(const std::uint8_t x, const std::uint8_t y, const std::uint8
 
 void Processor::skp(const std::uint8_t x)
 {
-    // TODO
+    programCounter += keyboard.getKey(x) * 2;
 }
 
 void Processor::sknp(const std::uint8_t x)
 {
-    // TODO
+    programCounter += !keyboard.getKey(x) * 2;
 }
 
 void Processor::ldRegDT(const std::uint8_t x)
@@ -141,7 +141,12 @@ void Processor::ldRegDT(const std::uint8_t x)
 
 void Processor::ldK(const std::uint8_t x)
 {
-    // TODO
+    const bool pressed = keyboard.getKey(x);
+
+    if (pressed)
+        registersV[x];
+    else
+        programCounter -= 2;
 }
 
 void Processor::ldDTReg(const std::uint8_t x)

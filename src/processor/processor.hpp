@@ -1,7 +1,8 @@
 #pragma once
 #include <array>
-#include "display/display.hpp"
 #include "memory/memory.hpp"
+#include "display/display.hpp"
+#include "keyboard/keyboard.hpp"
 
 class Processor
 {
@@ -25,6 +26,7 @@ private:
 
     Memory memory;
     Display display;
+    Keyboard keyboard;
 
     void cls(); // Clear display
     void ret(); // Return
