@@ -21,7 +21,7 @@ public:
 
 private:
     std::vector<std::uint8_t> memory;
-    const MemoryLayout layout;
+    const MemoryLayout& layout;
 };
 
 class InvalidMemoryLayoutException : public std::logic_error
