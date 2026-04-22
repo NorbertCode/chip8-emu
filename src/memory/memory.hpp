@@ -6,7 +6,6 @@
 struct MemoryLayout
 {
     std::uint16_t reserved_end;
-    std::uint16_t program_start;
     std::uint16_t program_end; // This also works as memory end
     bool reserved_read_only;
 };
@@ -25,14 +24,16 @@ private:
     const MemoryLayout layout;
 };
 
-class ReadOnlyMemoryException : public std::logic_error
+class InvalidMemoryLayoutException : public std::logic_error
 {
 public:
-    ReadOnlyMemoryException(const std::uint16_t address)
-        : std::logic_error("Memory at address " + std::to_string(address)), address(address) { }
+    InvalidMemoryLayoutException(const std::uint16_t reserved_end, const std::uint16_t program_end) 
+        : std::logic_error("Invalid memory layout. Reservered end (" + std::to_string(reserved_end) + ") has to be < program end (" + std::to_string(program_end) + ")"), reserved_end(reserved_end), program_end(program_end) { }
 
-    const std::uint16_t getAddress() const { return address; }
+    const std::uint16_t getReservedEnd() const { return reserved_end; }
+    const std::uint16_t getProgramEnd() const { return program_end; }
 
 private:
-    const std::uint16_t address;
+    const std::uint16_t reserved_end;
+    const std::uint16_t program_end;
 };

@@ -2,11 +2,17 @@
 
 Memory::Memory(const MemoryLayout& memoryLayout) : layout(memoryLayout)
 {
-    memory.resize(layout.program_end + 1);
+    if (layout.reserved_end >= layout.program_end)
+        throw InvalidMemoryLayoutException(layout.reserved_end, layout.program_end);
+
+    memory.resize(layout.program_end);
 }
 
 std::uint8_t Memory::read(std::uint16_t address) const
 {
+    if (address >= layout.program_end)
+        return 0xFF;
+
     return memory[address];
 }
 
@@ -15,17 +21,15 @@ std::vector<std::uint8_t> Memory::read_bytes(const std::uint16_t address, const 
     std::vector<std::uint8_t> output(bytes);
 
     for (auto i = 0; i < bytes; ++i)
-    {
-        output[i] = memory[address + i];
-    }
+        output[i] = read(address + i);
 
     return output;
 }
 
 void Memory::write(std::uint16_t address, std::uint8_t data)
 {
-    if (address < layout.reserved_end && layout.reserved_read_only)
-        throw ReadOnlyMemoryException(address);
+    if ((address < layout.reserved_end && layout.reserved_read_only) || address >= layout.program_end)
+        return;
 
     memory[address] = data;
 }
