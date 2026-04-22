@@ -5,7 +5,7 @@ Display::Display(const std::uint8_t width, const std::uint8_t height)
     display.resize(width, std::vector<bool>(height));
 }
 
-const bool Display::getPixel(const std::uint8_t x, const std::uint8_t y) const
+bool Display::getPixel(const std::uint8_t x, const std::uint8_t y) const
 {
     return display[x][y];
 }
@@ -15,12 +15,12 @@ const std::vector<std::vector<bool>>& Display::getDisplay() const
     return display;
 }
 
-const size_t Display::getWidth() const
+size_t Display::getWidth() const
 {
     return display.size();
 }
 
-const size_t Display::getHeight() const
+size_t Display::getHeight() const
 {
     return display[0].size();
 }
