@@ -10,6 +10,7 @@ add_library(
     src/memory/memory.cpp
     src/processor/processor.cpp
     src/display/display.cpp
+    src/keyboard/keyboard.cpp
 )
 target_include_directories(core_lib PUBLIC src)
 
@@ -36,6 +37,7 @@ enable_testing()
 add_executable(
     run_tests
     tests/display/displayTest.cpp
+    tests/memory/memoryTest.cpp
 )
 
 target_link_libraries(run_tests PRIVATE 
