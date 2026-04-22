@@ -2,15 +2,20 @@
 
 bool Keyboard::getKey(const std::uint8_t keyCode) const
 {
+    if (keyCode >= keys.size())
+        return false;
+
     return keys[keyCode];
 }
 
 void Keyboard::keyDown(const std::uint8_t keyCode)
 {
-    keys[keyCode] = true;
+    if (keyCode < keys.size())
+        keys[keyCode] = true;
 }
 
 void Keyboard::keyUp(const std::uint8_t keyCode)
 {
-    keys[keyCode] = false;
+    if (keyCode < keys.size())
+        keys[keyCode] = false;
 }

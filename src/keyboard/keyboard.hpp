@@ -11,5 +11,5 @@ public:
     void keyUp(const std::uint8_t keyCode);
     
 private:
-    std::array<bool, 16> keys;
+    std::array<bool, 16> keys{};
 };
