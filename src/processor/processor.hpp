@@ -9,6 +9,8 @@ class Processor
 public:
     Processor(Memory& memory, Display& display, const std::uint16_t startProgramCounter);
 
+    void step();
+
     std::uint16_t fetch();
     void execute(const std::uint16_t instruction);
 
@@ -23,6 +25,8 @@ private:
 
     std::uint8_t delayTimer = 0;
     std::uint8_t soundTimer = 0;
+
+    bool halted = false;
 
     Memory& memory;
     Display& display;
