@@ -9,23 +9,23 @@ class Processor
 public:
     Processor(Memory& memory, Display& display, const std::uint16_t startProgramCounter);
 
-    const std::uint16_t fetch();
+    std::uint16_t fetch();
     void execute(const std::uint16_t instruction);
 
 private:
-    std::array<std::uint8_t, 16> registersV;
-    std::uint16_t registerI;
+    std::array<std::uint8_t, 16> registersV{};
+    std::uint16_t registerI = 0;
 
-    std::uint16_t programCounter;
-    std::uint8_t stackPointer;
+    std::uint16_t programCounter = 0;
+    std::uint8_t stackPointer = 0;
 
-    std::array<std::uint16_t, 16> stack;
+    std::array<std::uint16_t, 16> stack{};
 
-    std::uint8_t delayTimer;
-    std::uint8_t soundTimer;
+    std::uint8_t delayTimer = 0;
+    std::uint8_t soundTimer = 0;
 
-    Memory memory;
-    Display display;
+    Memory& memory;
+    Display& display;
     Keyboard keyboard;
 
     void cls(); // Clear display

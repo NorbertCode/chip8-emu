@@ -7,7 +7,7 @@ Processor::Processor(Memory& memory, Display& display, const std::uint16_t start
     programCounter = startProgramCounter;
 }
 
-const std::uint16_t Processor::fetch()
+std::uint16_t Processor::fetch()
 {
     const std::uint16_t instruction = (memory.read(programCounter) << 8) | memory.read(programCounter + 1);
 
