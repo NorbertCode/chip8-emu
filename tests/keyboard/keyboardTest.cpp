@@ -57,3 +57,21 @@ TEST(KeyboardTest, KeyUp_InvalidKeyCode_DoesNothing)
     for (std::size_t i = 0; i < 16; ++i)
         EXPECT_FALSE(keyboard.getKey(i));
 }
+
+TEST(KeyboardTest, KeyPressedCallback_IsCalled)
+{
+    Keyboard keyboard;
+
+    bool callbackCalled = false;
+    std::uint8_t callbackKeyCode = 0;
+
+    keyboard.setOnKeyPressed([&](const std::uint8_t keyCode) {
+        callbackCalled = true;
+        callbackKeyCode = keyCode;
+    });
+
+    keyboard.keyDown(0x5);
+
+    EXPECT_TRUE(callbackCalled);
+    EXPECT_EQ(callbackKeyCode, 0x5);
+}
