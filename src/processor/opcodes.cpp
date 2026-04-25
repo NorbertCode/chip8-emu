@@ -141,12 +141,16 @@ void Processor::ldRegDT(const std::uint8_t x)
 
 void Processor::ldK(const std::uint8_t x)
 {
-    const bool pressed = keyboard.getKey(x);
+    halted = true;
 
-    if (pressed)
-        registersV[x];
-    else
-        programCounter -= 2;
+    auto onKeyPress = [this, x](const std::uint8_t keyCode) {
+        registersV[x] = keyCode;
+        halted = false;
+
+        keyboard.clearOnKeyDown();
+    };
+
+    keyboard.setOnKeyPressed(onKeyPress);
 }
 
 void Processor::ldDTReg(const std::uint8_t x)
