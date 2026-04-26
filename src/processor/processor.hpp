@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <random>
 #include "memory/memory.hpp"
 #include "display/display.hpp"
 #include "keyboard/keyboard.hpp"
@@ -31,6 +32,9 @@ private:
     Memory& memory;
     Display& display;
     Keyboard keyboard;
+
+    std::mt19937 random;
+    std::uniform_int_distribution<std::uint16_t> uniformDistribution;
 
     void cls(); // Clear display
     void ret(); // Return

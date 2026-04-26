@@ -2,7 +2,7 @@
 #include "opcodes.cpp"
 
 Processor::Processor(Memory& memory, Display& display, const std::uint16_t startProgramCounter)
-    : memory(memory), display(display)
+    : memory(memory), display(display), random(std::random_device{}()), uniformDistribution(0, 255)
 {
     programCounter = startProgramCounter;
 }

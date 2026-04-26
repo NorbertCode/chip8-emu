@@ -115,7 +115,8 @@ void Processor::jpV0(const std::uint16_t addr)
 
 void Processor::rnd(const std::uint8_t x, const std::uint8_t byte)
 {
-    // TODO
+    std::uint8_t randomByte = static_cast<std::uint8_t>(uniformDistribution(random));
+    registersV[x] = randomByte & byte;
 }
 
 void Processor::drw(const std::uint8_t x, const std::uint8_t y, const std::uint8_t nibble)
