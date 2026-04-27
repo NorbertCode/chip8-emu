@@ -8,8 +8,7 @@ void Processor::cls()
 
 void Processor::ret()
 {
-    programCounter = stack[stackPointer];
-    stackPointer--;
+    programCounter = stack[--stackPointer];
 }
 
 void Processor::jp(std::uint16_t addr)
@@ -180,7 +179,7 @@ void Processor::ldB(const std::uint8_t x)
     const int digit_bits = 12; // 8-bit value needs 12 bits for BCD representation
     const int digits = digit_bits / 4;
 
-    std::uint32_t scratch_space = x;
+    std::uint32_t scratch_space = registersV[x];
 
     for (int i = 0; i < 8; ++i) // For every bit in x
     {
@@ -203,12 +202,12 @@ void Processor::ldB(const std::uint8_t x)
 
 void Processor::ldIReg(const std::uint8_t x)
 {
-    for (size_t registerIndex = 0, memoryIndex = registerI; registerIndex < x; ++registerIndex, ++memoryIndex)
+    for (size_t registerIndex = 0, memoryIndex = registerI; registerIndex <= x; ++registerIndex, ++memoryIndex)
         memory.write(memoryIndex, registersV[registerIndex]);
 }
 
 void Processor::ldRegI(const std::uint8_t x)
 {
-    for (size_t registerIndex = 0, memoryIndex = registerI; registerIndex < x; ++registerIndex, ++memoryIndex)
+    for (size_t registerIndex = 0, memoryIndex = registerI; registerIndex <= x; ++registerIndex, ++memoryIndex)
         registersV[registerIndex] = memory.read(memoryIndex);
 }
