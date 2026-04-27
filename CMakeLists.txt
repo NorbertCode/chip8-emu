@@ -39,6 +39,7 @@ add_executable(
     tests/display/displayTest.cpp
     tests/memory/memoryTest.cpp
     tests/keyboard/keyboardTest.cpp
+    tests/processor/processorTest.cpp
 )
 
 target_link_libraries(run_tests PRIVATE 
