@@ -170,7 +170,7 @@ void Processor::addI(const std::uint8_t x)
 
 void Processor::ldF(const std::uint8_t x)
 {
-    // TODO
+    registerI = registersV[x] * 5; // Each character is 5 bytes long
 }
 
 void Processor::ldB(const std::uint8_t x)
