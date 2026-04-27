@@ -2,10 +2,13 @@
 
 Memory::Memory(const MemoryLayout& memoryLayout) : layout(memoryLayout)
 {
-    if (layout.reserved_end >= layout.program_end)
+    if (layout.reserved_end >= layout.program_end || layout.reserved_data.size() > layout.reserved_end)
         throw InvalidMemoryLayoutException(layout.reserved_end, layout.program_end);
 
     memory.resize(layout.program_end);
+
+    for (size_t i = 0; i < layout.reserved_data.size(); ++i)
+        memory[i] = layout.reserved_data[i];
 }
 
 std::uint8_t Memory::read(std::uint16_t address) const

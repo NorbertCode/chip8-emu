@@ -5,6 +5,7 @@
 
 struct MemoryLayout
 {
+    std::vector<uint8_t> reserved_data;
     std::uint16_t reserved_end;
     std::uint16_t program_end; // This also works as memory end
     bool reserved_read_only;
@@ -28,7 +29,7 @@ class InvalidMemoryLayoutException : public std::logic_error
 {
 public:
     InvalidMemoryLayoutException(const std::uint16_t reserved_end, const std::uint16_t program_end) 
-        : std::logic_error("Invalid memory layout. Reservered end (" + std::to_string(reserved_end) + ") has to be < program end (" + std::to_string(program_end) + ")"), reserved_end(reserved_end), program_end(program_end) { }
+        : std::logic_error("Invalid memory layout. Reservered end (" + std::to_string(reserved_end) + ") has to be < program end (" + std::to_string(program_end) + ") and data size has to be < reserved end"), reserved_end(reserved_end), program_end(program_end) { }
 
     const std::uint16_t getReservedEnd() const { return reserved_end; }
     const std::uint16_t getProgramEnd() const { return program_end; }

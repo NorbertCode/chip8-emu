@@ -2,6 +2,7 @@
 #include "memory/memory.hpp"
 
 const MemoryLayout layout = {
+    .reserved_data = { 0x01, 0x02, 0x03 },
     .reserved_end = 0xF,
     .program_end = 0xFF,
     .reserved_read_only = true
@@ -16,6 +17,16 @@ TEST(MemoryTest, Constructor_InvalidMemoryLayout_ThrowsInvalidMemoryLayout)
     };
 
     EXPECT_THROW((Memory(invalidLayout)), InvalidMemoryLayoutException);
+}
+
+TEST(MemoryTest, Constructor_ReservedData_GetsCopiedCorrectly)
+{
+    Memory memory(layout);
+
+    EXPECT_EQ(memory.read(0), 0x01);
+    EXPECT_EQ(memory.read(1), 0x02);
+    EXPECT_EQ(memory.read(2), 0x03);
+    EXPECT_EQ(memory.read(3), 0x00);
 }
 
 TEST(MemoryTest, ReadWrite_WithinBounds_WritesAndReadsCorrectly)
@@ -61,10 +72,10 @@ TEST(MemoryTest, Write_ReservedReadOnly_DoesNothing)
 {
     Memory memory(layout);
 
-    memory.write(0x0, 0xAB);
+    memory.write(0xD, 0xAB);
     memory.write(0xE, 0xCD);
 
-    EXPECT_EQ(memory.read(0x0), 0x0);
+    EXPECT_EQ(memory.read(0xD), 0x0);
     EXPECT_EQ(memory.read(0xE), 0x0);
 }
 
