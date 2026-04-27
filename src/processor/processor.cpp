@@ -80,7 +80,7 @@ void Processor::execute(const std::uint16_t instruction)
                 case 0xA1: sknp(x); break; // SKNP Vx
             }
             break;
-        case 0xF: break;
+        case 0xF:
             switch (byte)
             {
                 case 0x07: ldRegDT(x); break; // LD Vx, DT
