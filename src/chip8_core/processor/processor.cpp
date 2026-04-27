@@ -15,6 +15,15 @@ void Processor::step()
     execute(fetch());
 }
 
+void Processor::tick_timers()
+{
+    if (delayTimer > 0)
+        delayTimer--;
+
+    if (soundTimer > 0)
+        soundTimer--;
+}
+
 std::uint16_t Processor::fetch()
 {
     const std::uint16_t instruction = (memory.read(programCounter) << 8) | memory.read(programCounter + 1);

@@ -11,6 +11,7 @@ public:
     Processor(Memory& memory, Display& display, Keyboard& keyboard, const std::uint16_t startProgramCounter);
 
     void step();
+    void tick_timers();
 
     std::uint16_t fetch();
     void execute(const std::uint16_t instruction);

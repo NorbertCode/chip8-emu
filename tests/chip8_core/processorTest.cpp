@@ -27,19 +27,6 @@ protected:
 
 };
 
-TEST_F(ProcessorTest, Fetch_IncrementsProgramCounter)
-{
-    memory.write(0x200, 0xAB);
-    memory.write(0x201, 0xCD);
-    memory.write(0x202, 0x12);
-    memory.write(0x203, 0x34);
-
-    const std::uint16_t instruction = processor.fetch();
-
-    EXPECT_EQ(instruction, 0xABCD);
-    EXPECT_EQ(processor.getProgramCounter(), 0x202);
-}
-
 TEST_F(ProcessorTest, Step_NotHalted_FetchesAndExecutesInstruction)
 {
     memory.write(0x200, 0xAB);
@@ -58,6 +45,44 @@ TEST_F(ProcessorTest, Step_Halted_DoesNothing)
 
     EXPECT_EQ(processor.getProgramCounter(), 0x200);
     EXPECT_EQ(processor.isHalted(), true);
+}
+
+TEST_F(ProcessorTest, TickTimers_AboveZero_TicksDown)
+{
+    processor.execute(0x6005); // LD V0, 0x05
+    processor.execute(0x6106); // LD V1, 0x06
+    processor.execute(0xF015); // LD DT, V0
+    processor.execute(0xF118); // LD ST, V1
+
+    processor.tick_timers();
+
+    EXPECT_EQ(processor.getDelayTimer(), 0x04);
+    EXPECT_EQ(processor.getSoundTimer(), 0x05);
+}
+
+TEST_F(ProcessorTest, TickTimers_AtZero_DoesNothing)
+{
+    processor.execute(0x6000); // LD V0, 0x00
+    processor.execute(0xF015); // LD DT, V0
+    processor.execute(0xF018); // LD ST, V0
+
+    processor.tick_timers();
+
+    EXPECT_EQ(processor.getDelayTimer(), 0x00);
+    EXPECT_EQ(processor.getSoundTimer(), 0x00);
+}
+
+TEST_F(ProcessorTest, Fetch_IncrementsProgramCounter)
+{
+    memory.write(0x200, 0xAB);
+    memory.write(0x201, 0xCD);
+    memory.write(0x202, 0x12);
+    memory.write(0x203, 0x34);
+
+    const std::uint16_t instruction = processor.fetch();
+
+    EXPECT_EQ(instruction, 0xABCD);
+    EXPECT_EQ(processor.getProgramCounter(), 0x202);
 }
 
 TEST_F(ProcessorTest, cls_DisplayWithPixels_ClearsDisplay)
