@@ -11,7 +11,7 @@ Memory::Memory(const MemoryLayout& memoryLayout) : layout(memoryLayout)
         memory[i] = layout.reserved_data[i];
 }
 
-std::uint8_t Memory::read(std::uint16_t address) const
+std::uint8_t Memory::read(const std::uint16_t address) const
 {
     if (address >= layout.program_end)
         return 0xFF;
@@ -23,16 +23,22 @@ std::vector<std::uint8_t> Memory::read_bytes(const std::uint16_t address, const 
 {
     std::vector<std::uint8_t> output(bytes);
 
-    for (auto i = 0; i < bytes; ++i)
+    for (size_t i = 0; i < bytes; ++i)
         output[i] = read(address + i);
 
     return output;
 }
 
-void Memory::write(std::uint16_t address, std::uint8_t data)
+void Memory::write(const std::uint16_t address, const std::uint8_t data)
 {
     if ((address < layout.reserved_end && layout.reserved_read_only) || address >= layout.program_end)
         return;
 
     memory[address] = data;
+}
+
+void Memory::write_bytes(const std::uint16_t address, const std::vector<std::uint8_t> data)
+{
+    for (size_t i = 0; i < data.size(); ++i)
+        write(address + i, data[i]);
 }

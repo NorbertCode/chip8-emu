@@ -112,3 +112,49 @@ TEST(MemoryTest, ReadBytes_OverlappingProgramEnd_ReturnsFF)
 
     EXPECT_EQ(memory.read_bytes(0xFD, 3), expected);
 }
+
+TEST(MemoryTest, WriteBytes_WithinBounds_WritesCorrectly)
+{
+    Memory memory(layout);
+    std::vector<std::uint8_t> data = { 0xAB, 0xCD, 0xEF };
+
+    memory.write_bytes(0x10, data);
+
+    EXPECT_EQ(memory.read(0x10), 0xAB);
+    EXPECT_EQ(memory.read(0x11), 0xCD);
+    EXPECT_EQ(memory.read(0x12), 0xEF);
+}
+
+TEST(MemoryTest, WriteBytes_AboveProgramEnd_DoesNothing)
+{
+    Memory memory(layout);
+    std::vector<std::uint8_t> data = { 0xAB, 0xCD, 0xEF };
+
+    memory.write_bytes(0xFF, data);
+
+    EXPECT_EQ(memory.read(0xFF), 0xFF);
+}
+
+TEST(MemoryTest, WriteBytes_OverlappingProgramEnd_WritesPartially)
+{
+    Memory memory(layout);
+    std::vector<std::uint8_t> data = { 0xAB, 0xCD, 0xEF };
+
+    memory.write_bytes(0xFE, data);
+
+    EXPECT_EQ(memory.read(0xFE), 0xAB);
+    EXPECT_EQ(memory.read(0xFF), 0xFF);
+    EXPECT_EQ(memory.read(0x100), 0xFF);
+}
+
+TEST(MemoryTest, WriteBytes_ReservedReadOnly_DoesNothing)
+{
+    Memory memory(layout);
+    std::vector<std::uint8_t> data = { 0xAB, 0xCD, 0xEF };
+
+    memory.write_bytes(0xC, data);
+
+    EXPECT_EQ(memory.read(0xC), 0x0);
+    EXPECT_EQ(memory.read(0xD), 0x0);
+    EXPECT_EQ(memory.read(0xE), 0x0);
+}
