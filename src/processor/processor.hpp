@@ -8,12 +8,25 @@
 class Processor
 {
 public:
-    Processor(Memory& memory, Display& display, const std::uint16_t startProgramCounter);
+    Processor(Memory& memory, Display& display, Keyboard& keyboard, const std::uint16_t startProgramCounter);
 
     void step();
 
     std::uint16_t fetch();
     void execute(const std::uint16_t instruction);
+
+    const std::array<std::uint8_t, 16>& getRegistersV() const { return registersV; }
+    std::uint16_t getRegisterI() const { return registerI; }
+
+    std::uint16_t getProgramCounter() const { return programCounter; }
+    std::uint8_t getStackPointer() const { return stackPointer; }
+
+    const std::array<std::uint16_t, 16>& getStack() const { return stack; }
+
+    std::uint8_t getDelayTimer() const { return delayTimer; }
+    std::uint8_t getSoundTimer() const { return soundTimer; }
+
+    bool isHalted() const { return halted; }
 
 private:
     std::array<std::uint8_t, 16> registersV{};
@@ -31,7 +44,7 @@ private:
 
     Memory& memory;
     Display& display;
-    Keyboard keyboard;
+    Keyboard& keyboard;
 
     std::mt19937 random;
     std::uniform_int_distribution<std::uint16_t> uniformDistribution;
