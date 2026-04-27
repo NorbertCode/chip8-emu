@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "keyboard/keyboard.hpp"
+#include "peripherals/keyboard.hpp"
 
 TEST(KeyboardTest, GetKey_Initially_ReturnsFalse)
 {

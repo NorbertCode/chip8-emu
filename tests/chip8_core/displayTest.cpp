@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "display/display.hpp"
+#include "peripherals/display.hpp"
 
 const std::vector<std::uint8_t> sprite_diagonal = {
     0b10000000,

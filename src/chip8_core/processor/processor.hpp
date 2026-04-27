@@ -2,8 +2,8 @@
 #include <array>
 #include <random>
 #include "memory/memory.hpp"
-#include "display/display.hpp"
-#include "keyboard/keyboard.hpp"
+#include "peripherals/display.hpp"
+#include "peripherals/keyboard.hpp"
 
 class Processor
 {

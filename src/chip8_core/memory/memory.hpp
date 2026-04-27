@@ -18,6 +18,7 @@ public:
 
     std::uint8_t read(const std::uint16_t address) const;
     std::vector<std::uint8_t> read_bytes(const std::uint16_t address, const std::uint16_t bytes) const;
+
     void write(const std::uint16_t address, const std::uint8_t data);
 
 private:

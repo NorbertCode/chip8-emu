@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "processor/processor.hpp"
 #include "memory/memory.hpp"
-#include "display/display.hpp"
+#include "processor/processor.hpp"
+#include "peripherals/display.hpp"
 
 class ProcessorTest : public ::testing::Test
 {
@@ -447,6 +447,8 @@ TEST_F(ProcessorTest, skp_KeyPressed_SkipsNextInstruction)
 
 TEST_F(ProcessorTest, skp_KeyNotPressed_DoesNotSkipNextInstruction)
 {
+    keyboard.keyUp(0);
+
     processor.execute(0xE09E); // SKP V0
 
     EXPECT_EQ(processor.getProgramCounter(), 0x200);
@@ -454,6 +456,8 @@ TEST_F(ProcessorTest, skp_KeyNotPressed_DoesNotSkipNextInstruction)
 
 TEST_F(ProcessorTest, sknp_KeyNotPressed_SkipsNextInstruction)
 {
+    keyboard.keyUp(0);
+
     processor.execute(0xE0A1); // SKNP V0
 
     EXPECT_EQ(processor.getProgramCounter(), 0x202);
