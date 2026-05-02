@@ -1,11 +1,11 @@
 #include "display.hpp"
 
-Display::Display(const std::uint8_t width, const std::uint8_t height)
+Display::Display(std::uint8_t width, std::uint8_t height)
 {
     display.resize(width, std::vector<bool>(height));
 }
 
-bool Display::getPixel(const std::uint8_t x, const std::uint8_t y) const
+bool Display::getPixel(std::uint8_t x, std::uint8_t y) const
 {
     return display[x][y];
 }
@@ -25,7 +25,7 @@ size_t Display::getHeight() const
     return display[0].size();
 }
 
-bool Display::xorPixel(std::uint8_t x, std::uint8_t y, const bool value, const bool clipping)
+bool Display::xorPixel(std::uint8_t x, std::uint8_t y, bool value, bool clipping)
 {
     if (!clipping)
     {
@@ -42,7 +42,7 @@ bool Display::xorPixel(std::uint8_t x, std::uint8_t y, const bool value, const b
     return collision;
 }
 
-bool Display::xorSprite(const std::uint8_t x, const std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping)
+bool Display::xorSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping)
 {
     bool collision = false;
 
