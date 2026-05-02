@@ -5,16 +5,25 @@
 #include "peripherals/display.hpp"
 #include "peripherals/keyboard.hpp"
 
+struct Quirks
+{
+    bool vfReset;
+    bool indexIncrement;
+    bool displayClipping;
+    bool vyShifting;
+    bool vxJumping;
+};
+
 class Processor
 {
 public:
-    Processor(Memory& memory, Display& display, Keyboard& keyboard, const std::uint16_t startProgramCounter);
+    Processor(Memory& memory, Display& display, Keyboard& keyboard, const Quirks& quirks, std::uint16_t startProgramCounter);
 
     void step();
     void tick_timers();
 
     std::uint16_t fetch();
-    void execute(const std::uint16_t instruction);
+    void execute(std::uint16_t instruction);
 
     const std::array<std::uint8_t, 16>& getRegistersV() const { return registersV; }
     std::uint16_t getRegisterI() const { return registerI; }
@@ -46,6 +55,8 @@ private:
     Memory& memory;
     Display& display;
     Keyboard& keyboard;
+
+    const Quirks& quirks;
 
     std::mt19937 random;
     std::uniform_int_distribution<std::uint16_t> uniformDistribution;

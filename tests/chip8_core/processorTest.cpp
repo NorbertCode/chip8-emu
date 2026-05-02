@@ -18,12 +18,20 @@ protected:
         .reserved_read_only = true
     };
 
+    const Quirks quirks = {
+        .vfReset = false,
+        .indexIncrement = false,
+        .displayClipping = false,
+        .vyShifting = false,
+        .vxJumping = false
+    };
+
     Display display;
     Memory memory;
     Keyboard keyboard;
 
     ProcessorTest() 
-        : memory(layout), display(64, 32), keyboard(keyboard), processor(memory, display, keyboard, 0x200) { }
+        : memory(layout), display(64, 32), keyboard(keyboard), processor(memory, display, keyboard, quirks, 0x200) { }
 
 };
 
@@ -87,8 +95,8 @@ TEST_F(ProcessorTest, Fetch_IncrementsProgramCounter)
 
 TEST_F(ProcessorTest, cls_DisplayWithPixels_ClearsDisplay)
 {
-    display.xorPixel(0, 0, true);
-    display.xorPixel(1, 1, true);
+    display.xorPixel(0, 0, true, false);
+    display.xorPixel(1, 1, true, false);
 
     processor.execute(0x00E0); // CLS
 
@@ -234,6 +242,30 @@ TEST_F(ProcessorTest, orReg_OrsRegisters)
     EXPECT_EQ(processor.getRegistersV()[0], 0x03);
 }
 
+TEST_F(ProcessorTest, orReg_vfResetDisabled_DoesNotResetVf)
+{
+    processor.execute(0x6001); // LD V0, 0x01
+    processor.execute(0x6102); // LD V1, 0x02
+    processor.execute(0x6FFF); // LD VF, 0xFF
+
+    processor.execute(0x8011); // OR V0, V1
+
+    EXPECT_EQ(processor.getRegistersV()[0xF], 0xFF);
+}
+
+TEST_F(ProcessorTest, orReg_vfResetEnabled_ResetsVf)
+{
+    Processor processorWithVfReset(memory, display, keyboard, Quirks{ .vfReset = true }, 0x200);
+
+    processorWithVfReset.execute(0x6001); // LD V0, 0x01
+    processorWithVfReset.execute(0x6102); // LD V1, 0x02
+    processorWithVfReset.execute(0x6FFF); // LD VF, 0xFF
+
+    processorWithVfReset.execute(0x8011); // OR V0, V1
+
+    EXPECT_EQ(processorWithVfReset.getRegistersV()[0xF], 0);
+}
+
 TEST_F(ProcessorTest, andReg_AndsRegisters)
 {
     processor.execute(0x6001); // LD V0, 0x01
@@ -244,6 +276,29 @@ TEST_F(ProcessorTest, andReg_AndsRegisters)
     EXPECT_EQ(processor.getRegistersV()[0], 0x01);
 }
 
+TEST_F(ProcessorTest, andReg_vfResetDisabled_DoesNotResetVf)
+{
+    processor.execute(0x6001); // LD V0, 0x01
+    processor.execute(0x6103); // LD V1, 0x03
+    processor.execute(0x6FFF); // LD VF, 0xFF
+
+    processor.execute(0x8012); // AND V0, V1
+
+    EXPECT_EQ(processor.getRegistersV()[0xF], 0xFF);
+}
+
+TEST_F(ProcessorTest, andReg_vfResetEnabled_ResetsVf)
+{
+    Processor processorWithVfReset(memory, display, keyboard, Quirks{ .vfReset = true }, 0x200);
+    processorWithVfReset.execute(0x6001); // LD V0, 0x01
+    processorWithVfReset.execute(0x6103); // LD V1, 0x03
+    processorWithVfReset.execute(0x6FFF); // LD VF, 0xFF
+
+    processorWithVfReset.execute(0x8012); // AND V0, V1
+
+    EXPECT_EQ(processorWithVfReset.getRegistersV()[0xF], 0);
+}
+
 TEST_F(ProcessorTest, xorReg_XorsRegisters)
 {
     processor.execute(0x6001); // LD V0, 0x01
@@ -252,6 +307,29 @@ TEST_F(ProcessorTest, xorReg_XorsRegisters)
     processor.execute(0x8013); // XOR V0, V1
 
     EXPECT_EQ(processor.getRegistersV()[0], 0x02);
+}
+
+TEST_F(ProcessorTest, xorReg_vfResetDisabled_DoesNotResetVf)
+{
+    processor.execute(0x6001); // LD V0, 0x01
+    processor.execute(0x6103); // LD V1, 0x03
+    processor.execute(0x6FFF); // LD VF, 0xFF
+
+    processor.execute(0x8013); // XOR V0, V1
+
+    EXPECT_EQ(processor.getRegistersV()[0xF], 0xFF);
+}
+
+TEST_F(ProcessorTest, xorReg_vfResetEnabled_ResetsVf)
+{
+    Processor processorWithVfReset(memory, display, keyboard, Quirks{ .vfReset = true }, 0x200);
+    processorWithVfReset.execute(0x6001); // LD V0, 0x01
+    processorWithVfReset.execute(0x6103); // LD V1, 0x03
+    processorWithVfReset.execute(0x6FFF); // LD VF, 0xFF
+
+    processorWithVfReset.execute(0x8013); // XOR V0, V1
+
+    EXPECT_EQ(processorWithVfReset.getRegistersV()[0xF], 0);
 }
 
 TEST_F(ProcessorTest, addReg_WontOverflow_AddsRegistersNoCarry)
@@ -301,21 +379,34 @@ TEST_F(ProcessorTest, subReg_WillUnderflow_SubsRegistersWithBorrow)
 TEST_F(ProcessorTest, shrReg_LsbZero_ShiftsRightWithZeroLsb)
 {
     processor.execute(0x6002); // LD V0, 0x02
+    processor.execute(0x6104); // LD V1, 0x04
 
     processor.execute(0x8016); // SHR V0 {, V1}
 
-    EXPECT_EQ(processor.getRegistersV()[0], 0x01);
+    EXPECT_EQ(processor.getRegistersV()[0], 0x01); // V1 should be ignored
     EXPECT_EQ(processor.getRegistersV()[0xF], 0);
 }
 
 TEST_F(ProcessorTest, shrReg_LsbOne_ShiftsRightWithOneLsb)
 {
     processor.execute(0x6003); // LD V0, 0x03
+    processor.execute(0x6104); // LD V1, 0x04
 
     processor.execute(0x8016); // SHR V0 {, V1}
 
     EXPECT_EQ(processor.getRegistersV()[0], 0x01);
     EXPECT_EQ(processor.getRegistersV()[0xF], 1);
+}
+
+TEST_F(ProcessorTest, shrReg_vyShiftingEnabled_ShiftsVyInsteadOfVx)
+{
+    Processor processorWithVyShifting(memory, display, keyboard, Quirks{ .vyShifting = true }, 0x200);
+    processorWithVyShifting.execute(0x6002); // LD V0, 0x02
+    processorWithVyShifting.execute(0x6104); // LD V1, 0x04
+
+    processorWithVyShifting.execute(0x8016); // SHR V0 {, V1}
+
+    EXPECT_EQ(processorWithVyShifting.getRegistersV()[0], 0x02);
 }
 
 TEST_F(ProcessorTest, subnReg_WontUnderflow_SubsRegistersNoBorrow)
@@ -343,21 +434,34 @@ TEST_F(ProcessorTest, subnReg_WillUnderflow_SubsRegistersWithBorrow)
 TEST_F(ProcessorTest, shlReg_MsbZero_ShiftsLeftWithZeroMsb)
 {
     processor.execute(0x6001); // LD V0, 0x01
+    processor.execute(0x6102); // LD V1, 0x02
 
     processor.execute(0x801E); // SHL V0 {, V1}
 
-    EXPECT_EQ(processor.getRegistersV()[0], 0x02);
+    EXPECT_EQ(processor.getRegistersV()[0], 0x02); // V1 should be ignored
     EXPECT_EQ(processor.getRegistersV()[0xF], 0);
 }
 
 TEST_F(ProcessorTest, shlReg_MsbOne_ShiftsLeftWithOneMsb)
 {
     processor.execute(0x60FF); // LD V0, 0xFF
+    processor.execute(0x6102); // LD V1, 0x02
 
     processor.execute(0x801E); // SHL V0 {, V1}
 
-    EXPECT_EQ(processor.getRegistersV()[0], 0xFE);
+    EXPECT_EQ(processor.getRegistersV()[0], 0xFE); // V1 should be ignored
     EXPECT_EQ(processor.getRegistersV()[0xF], 1);
+}
+
+TEST_F(ProcessorTest, shlReg_vyShiftingEnabled_ShiftsVyInsteadOfVx)
+{
+    Processor processorWithVyShifting(memory, display, keyboard, Quirks{ .vyShifting = true }, 0x200);
+    processorWithVyShifting.execute(0x6001); // LD V0, 0x01
+    processorWithVyShifting.execute(0x6102); // LD V1, 0x02
+
+    processorWithVyShifting.execute(0x801E); // SHL V0 {, V1}
+
+    EXPECT_EQ(processorWithVyShifting.getRegistersV()[0], 0x04);
 }
 
 TEST_F(ProcessorTest, sneReg_NotEqual_SkipsNextInstruction)
@@ -387,13 +491,24 @@ TEST_F(ProcessorTest, ldI_LoadsAddressIntoRegisterI)
     EXPECT_EQ(processor.getRegisterI(), 0x123);
 }
 
-TEST_F(ProcessorTest, jpV0_JumpsToAddressPlusV0)
+TEST_F(ProcessorTest, jpV0_vxJumpingDisabled_JumpsToAddressPlusV0)
 {
     processor.execute(0x6001); // LD V0, 0x01
 
     processor.execute(0xB123); // JP V0, 0x123
 
     EXPECT_EQ(processor.getProgramCounter(), 0x124);
+}
+
+TEST_F(ProcessorTest, jpV0_vxJumpingEnabled_JumpsToAddressPlusVx)
+{
+    Processor processorWithVxJumping(memory, display, keyboard, Quirks{ .vxJumping = true }, 0x200);
+    processorWithVxJumping.execute(0x6001); // LD V0, 0x01
+    processorWithVxJumping.execute(0x6102); // LD V1, 0x02
+
+    processorWithVxJumping.execute(0xB123); // JP V1, 0x123
+
+    EXPECT_EQ(processorWithVxJumping.getProgramCounter(), 0x125);
 }
 
 TEST_F(ProcessorTest, rnd_GeneratesMaskedRandomNumbers)
@@ -459,6 +574,37 @@ TEST_F(ProcessorTest, drw_Collision_DrawsSpriteWithCollisionFlag)
     EXPECT_FALSE(display.getPixel(3, 2));
 
     EXPECT_EQ(processor.getRegistersV()[0xF], 1);
+}
+
+TEST_F(ProcessorTest, drw_DisplayClippingDisabled_WrapsAround)
+{
+    memory.write(0x300, 0b11111111);
+    processor.execute(0xA300); // LD I, 0x300
+    processor.execute(0x603E); // LD V0, 0x3E (62)
+    processor.execute(0x6100); // LD V1, 0x00
+
+    processor.execute(0xD011); // DRW V0, V1, 1
+
+    EXPECT_TRUE(display.getPixel(62, 0));
+    EXPECT_TRUE(display.getPixel(63, 0));
+    EXPECT_TRUE(display.getPixel(0, 0));
+    EXPECT_TRUE(display.getPixel(1, 0));
+}
+
+TEST_F(ProcessorTest, drw_DisplayClippingEnabled_DoesNotWrap)
+{
+    Processor processorWithClipping(memory, display, keyboard, Quirks{ .displayClipping = true }, 0x200);
+    memory.write(0x300, 0b11111111);
+    processorWithClipping.execute(0xA300); // LD I, 0x300
+    processorWithClipping.execute(0x603E); // LD V0, 0x3E (62)
+    processorWithClipping.execute(0x6100); // LD V1, 0x00
+
+    processorWithClipping.execute(0xD011); // DRW V0, V1, 1
+
+    EXPECT_TRUE(display.getPixel(62, 0));
+    EXPECT_TRUE(display.getPixel(63, 0));
+    EXPECT_FALSE(display.getPixel(0, 0));
+    EXPECT_FALSE(display.getPixel(1, 0));
 }
 
 TEST_F(ProcessorTest, skp_KeyPressed_SkipsNextInstruction)
@@ -630,6 +776,33 @@ TEST_F(ProcessorTest, ldIReg_LoadsRegistersIntoMemory)
     EXPECT_EQ(memory.read(0x303), 0x0);
 }
 
+TEST_F(ProcessorTest, ldIReg_IndexIncrementDisabled_DoesNotIncrementI)
+{
+    processor.execute(0x6001); // LD V0, 0x01
+    processor.execute(0x6102); // LD V1, 0x02
+    processor.execute(0x6203); // LD V2, 0x03
+    processor.execute(0x6304); // LD V3, 0x04
+    processor.execute(0xA300); // LD I, 0x300
+
+    processor.execute(0xF255); // LD [I], V2
+
+    EXPECT_EQ(processor.getRegisterI(), 0x300);
+}
+
+TEST_F(ProcessorTest, ldIReg_IndexIncrementEnabled_IncrementsI)
+{
+    Processor processorWithIndexIncrement(memory, display, keyboard, Quirks{ .indexIncrement = true }, 0x200);
+    processorWithIndexIncrement.execute(0x6001); // LD V0, 0x01
+    processorWithIndexIncrement.execute(0x6102); // LD V1, 0x02
+    processorWithIndexIncrement.execute(0x6203); // LD V2, 0x03
+    processorWithIndexIncrement.execute(0x6304); // LD V3, 0x04
+    processorWithIndexIncrement.execute(0xA300); // LD I, 0x300
+
+    processorWithIndexIncrement.execute(0xF255); // LD [I], V2
+
+    EXPECT_EQ(processorWithIndexIncrement.getRegisterI(), 0x304);
+}
+
 TEST_F(ProcessorTest, ldRegI_LoadsMemoryIntoRegisters)
 {
     memory.write(0x300, 0x01);
@@ -643,4 +816,29 @@ TEST_F(ProcessorTest, ldRegI_LoadsMemoryIntoRegisters)
     EXPECT_EQ(processor.getRegistersV()[1], 0x02);
     EXPECT_EQ(processor.getRegistersV()[2], 0x03);
     EXPECT_EQ(processor.getRegistersV()[3], 0x00);
+}
+
+TEST_F(ProcessorTest, ldRegI_IndexIncrementDisabled_DoesNotIncrementI)
+{
+    memory.write(0x300, 0x01);
+    memory.write(0x301, 0x02);
+    memory.write(0x302, 0x03);
+    processor.execute(0xA300); // LD I, 0x300
+
+    processor.execute(0xF265); // LD V2, [I]
+
+    EXPECT_EQ(processor.getRegisterI(), 0x300);
+}
+
+TEST_F(ProcessorTest, ldRegI_IndexIncrementEnabled_IncrementsI)
+{
+    Processor processorWithIndexIncrement(memory, display, keyboard, Quirks{ .indexIncrement = true }, 0x200);
+    memory.write(0x300, 0x01);
+    memory.write(0x301, 0x02);
+    memory.write(0x302, 0x03);
+    processorWithIndexIncrement.execute(0xA300); // LD I, 0x300
+
+    processorWithIndexIncrement.execute(0xF265); // LD V2, [I]
+
+    EXPECT_EQ(processorWithIndexIncrement.getRegisterI(), 0x304);
 }

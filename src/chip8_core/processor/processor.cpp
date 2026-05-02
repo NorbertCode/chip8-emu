@@ -1,8 +1,8 @@
 #include "processor.hpp"
 #include "opcodes.cpp"
 
-Processor::Processor(Memory& memory, Display& display, Keyboard& keyboard, const std::uint16_t startProgramCounter)
-    : memory(memory), display(display), keyboard(keyboard), random(std::random_device{}()), uniformDistribution(0, 255)
+Processor::Processor(Memory& memory, Display& display, Keyboard& keyboard, const Quirks& quirks, std::uint16_t startProgramCounter)
+    : memory(memory), display(display), keyboard(keyboard), quirks(quirks), random(std::random_device{}()), uniformDistribution(0, 255)
 {
     programCounter = startProgramCounter;
 }
@@ -33,7 +33,7 @@ std::uint16_t Processor::fetch()
     return instruction;
 }
 
-void Processor::execute(const std::uint16_t instruction)
+void Processor::execute(std::uint16_t instruction)
 {
     const std::array<std::uint8_t, 4> nibbles = {
         static_cast<std::uint8_t>((instruction & 0xF000) >> 12),

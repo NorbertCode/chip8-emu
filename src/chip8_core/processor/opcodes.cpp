@@ -55,16 +55,25 @@ void Processor::ldReg(const std::uint8_t x, const std::uint8_t y)
 void Processor::orReg(const std::uint8_t x, const std::uint8_t y)
 {
     registersV[x] |= registersV[y];
+
+    if (quirks.vfReset)
+        registersV[0xF] = 0;
 }
 
 void Processor::andReg(const std::uint8_t x, const std::uint8_t y)
 {
     registersV[x] &= registersV[y];
+
+    if (quirks.vfReset)
+        registersV[0xF] = 0;
 }
 
 void Processor::xorReg(const std::uint8_t x, const std::uint8_t y)
 {
     registersV[x] ^= registersV[y];
+
+    if (quirks.vfReset)
+        registersV[0xF] = 0;
 }
 
 void Processor::addReg(const std::uint8_t x, const std::uint8_t y)
@@ -81,8 +90,10 @@ void Processor::subReg(const std::uint8_t x, const std::uint8_t y)
 
 void Processor::shrReg(const std::uint8_t x, const std::uint8_t y)
 {
-    registersV[0xF] = registersV[x] & 0x1;
-    registersV[x] >>= 1;
+    std::uint8_t value = quirks.vyShifting ? registersV[y] : registersV[x];
+
+    registersV[0xF] = value & 0x1;
+    registersV[x] = value >> 1;
 }
 
 void Processor::subnReg(const std::uint8_t x, const std::uint8_t y)
@@ -93,8 +104,10 @@ void Processor::subnReg(const std::uint8_t x, const std::uint8_t y)
 
 void Processor::shlReg(const std::uint8_t x, const std::uint8_t y)
 {
-    registersV[0xF] = (registersV[x] & 0x80) >> 7;
-    registersV[x] = registersV[x] << 1;
+    std::uint8_t value = quirks.vyShifting ? registersV[y] : registersV[x];
+
+    registersV[0xF] = (value & 0x80) >> 7;
+    registersV[x] = value << 1;
 }
 
 void Processor::sneReg(const std::uint8_t x, const std::uint8_t y)
@@ -109,7 +122,8 @@ void Processor::ldI(const std::uint16_t addr)
 
 void Processor::jpV0(const std::uint16_t addr)
 {
-    programCounter = registersV[0] + addr;
+    std::uint8_t registerAddress = quirks.vxJumping ? registersV[(addr >> 8) & 0xF] : registersV[0x0];
+    programCounter = registerAddress + addr;
 }
 
 void Processor::rnd(const std::uint8_t x, const std::uint8_t byte)
@@ -121,7 +135,7 @@ void Processor::rnd(const std::uint8_t x, const std::uint8_t byte)
 void Processor::drw(const std::uint8_t x, const std::uint8_t y, const std::uint8_t nibble)
 {
     const std::vector<std::uint8_t> sprite = memory.read_bytes(registerI, nibble);
-    registersV[0xF] = display.xorSprite(registersV[x], registersV[y], sprite);
+    registersV[0xF] = display.xorSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
 }
 
 void Processor::skp(const std::uint8_t x)
@@ -202,12 +216,22 @@ void Processor::ldB(const std::uint8_t x)
 
 void Processor::ldIReg(const std::uint8_t x)
 {
-    for (size_t registerIndex = 0, memoryIndex = registerI; registerIndex <= x; ++registerIndex, ++memoryIndex)
+    size_t registerIndex, memoryIndex;
+
+    for (registerIndex = 0, memoryIndex = registerI; registerIndex <= x; ++registerIndex, ++memoryIndex)
         memory.write(memoryIndex, registersV[registerIndex]);
+
+    if (quirks.indexIncrement)
+        registerI = memoryIndex + 1;
 }
 
 void Processor::ldRegI(const std::uint8_t x)
 {
-    for (size_t registerIndex = 0, memoryIndex = registerI; registerIndex <= x; ++registerIndex, ++memoryIndex)
+    size_t registerIndex, memoryIndex;
+
+    for (registerIndex = 0, memoryIndex = registerI; registerIndex <= x; ++registerIndex, ++memoryIndex)
         registersV[registerIndex] = memory.read(memoryIndex);
+
+    if (quirks.indexIncrement)
+        registerI = memoryIndex + 1;
 }
