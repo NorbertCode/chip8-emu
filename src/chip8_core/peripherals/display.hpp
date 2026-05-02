@@ -13,8 +13,8 @@ public:
     size_t getWidth() const;
     size_t getHeight() const;
 
-    bool xorPixel(const std::uint8_t x, const std::uint8_t y, const bool value); // Returns collision (if pixel was erased)
-    bool xorSprite(const std::uint8_t x, const std::uint8_t y, const std::vector<std::uint8_t> sprite); // Returns collision (if pixel was erased)
+    bool xorPixel(std::uint8_t x, std::uint8_t y, const bool value, const bool clipping); // Returns collision (if pixel was erased)
+    bool xorSprite(const std::uint8_t x, const std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping); // Returns collision (if pixel was erased)
     void clear();
 
 private:

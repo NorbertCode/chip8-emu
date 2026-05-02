@@ -25,19 +25,24 @@ size_t Display::getHeight() const
     return display[0].size();
 }
 
-bool Display::xorPixel(const std::uint8_t x, const std::uint8_t y, const bool value)
+bool Display::xorPixel(std::uint8_t x, std::uint8_t y, const bool value, const bool clipping)
 {
-    const std::uint8_t x_mod = x % getWidth();
-    const std::uint8_t y_mod = y % getHeight();
+    if (!clipping)
+    {
+        x %= getWidth();
+        y %= getHeight();
+    }
+    else if (x >= getWidth() || y >= getHeight())
+        return false;
 
-    bool collision = display[x_mod][y_mod] && value;
+    bool collision = display[x][y] && value;
 
-    display[x_mod][y_mod] = display[x_mod][y_mod] != value;
+    display[x][y] = display[x][y] != value;
 
     return collision;
 }
 
-bool Display::xorSprite(const std::uint8_t x, const std::uint8_t y, const std::vector<std::uint8_t> sprite)
+bool Display::xorSprite(const std::uint8_t x, const std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping)
 {
     bool collision = false;
 
@@ -49,7 +54,7 @@ bool Display::xorSprite(const std::uint8_t x, const std::uint8_t y, const std::v
         for (size_t sprite_column_index = 0; sprite_column_index < 8; ++sprite_column_index)
         {
             bool sprite_pixel = ((sprite_row >> (7 - sprite_column_index)) & 0x1) > 0;
-            collision = xorPixel(x + sprite_column_index, display_row_index, sprite_pixel) || collision;
+            collision = xorPixel(x + sprite_column_index, display_row_index, sprite_pixel, clipping) || collision;
         }
     }
 

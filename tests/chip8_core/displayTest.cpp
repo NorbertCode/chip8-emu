@@ -33,7 +33,7 @@ TEST(DisplayTest, XorPixel_From0Value1InBounds_Is1NoCollision)
 {
     Display display(4, 4);
 
-    bool collision = display.xorPixel(0, 0, true);
+    bool collision = display.xorPixel(0, 0, true, false);
 
     EXPECT_TRUE(display.getPixel(0, 0));
     EXPECT_FALSE(collision);
@@ -43,7 +43,7 @@ TEST(DisplayTest, XorPixel_From0Value0InBounds_Is0NoCollision)
 {
     Display display(4, 4);
 
-    bool collision = display.xorPixel(0, 0, false);
+    bool collision = display.xorPixel(0, 0, false, false);
 
     EXPECT_FALSE(display.getPixel(0, 0));
     EXPECT_FALSE(collision);
@@ -52,9 +52,9 @@ TEST(DisplayTest, XorPixel_From0Value0InBounds_Is0NoCollision)
 TEST(DisplayTest, XorPixel_From1Value0InBounds_Is1NoCollision) 
 {
     Display display(4, 4);
-    display.xorPixel(0, 0, true);
+    display.xorPixel(0, 0, true, false);
 
-    bool collision = display.xorPixel(0, 0, false);
+    bool collision = display.xorPixel(0, 0, false, false);
 
     EXPECT_TRUE(display.getPixel(0, 0));
     EXPECT_FALSE(collision);
@@ -63,15 +63,15 @@ TEST(DisplayTest, XorPixel_From1Value0InBounds_Is1NoCollision)
 TEST(DisplayTest, XorPixel_From1Value1InBounds_Is0Collision)
 {
     Display display(4, 4);
-    display.xorPixel(0, 0, true);
+    display.xorPixel(0, 0, true, false);
 
-    bool collision = display.xorPixel(0, 0, true);
+    bool collision = display.xorPixel(0, 0, true, false);
 
     EXPECT_FALSE(display.getPixel(0, 0));
     EXPECT_TRUE(collision);
 }
 
-TEST(DisplayTest, XorPixel_OutOfBoundsHorizontal_WrapsAround)
+TEST(DisplayTest, XorPixel_OutOfBoundsHorizontalClippingFalse_WrapsAround)
 {
     Display display(2, 2);
 
@@ -80,7 +80,7 @@ TEST(DisplayTest, XorPixel_OutOfBoundsHorizontal_WrapsAround)
     // Moved to here:
     // # .
     // . .
-    display.xorPixel(2, 0, true);
+    display.xorPixel(2, 0, true, false);
 
     EXPECT_TRUE(display.getPixel(0, 0));
     EXPECT_FALSE(display.getPixel(1, 0));
@@ -88,7 +88,7 @@ TEST(DisplayTest, XorPixel_OutOfBoundsHorizontal_WrapsAround)
     EXPECT_FALSE(display.getPixel(1, 1));
 }
 
-TEST(DisplayTest, XorPixel_OutOfBoundsVertical_WrapsAround)
+TEST(DisplayTest, XorPixel_OutOfBoundsVerticalClippingFalse_WrapsAround)
 {
     Display display(2, 2);
 
@@ -98,10 +98,39 @@ TEST(DisplayTest, XorPixel_OutOfBoundsVertical_WrapsAround)
     // Move to here:
     // . #
     // . .
-    display.xorPixel(1, 2, true);
+    display.xorPixel(1, 2, true, false);
 
     EXPECT_FALSE(display.getPixel(0, 0));
     EXPECT_TRUE(display.getPixel(1, 0));
+    EXPECT_FALSE(display.getPixel(0, 1));
+    EXPECT_FALSE(display.getPixel(1, 1));
+}
+
+TEST(DisplayTest, XorPixel_OutOfBoundsHorizontalClippingTrue_DoesNotDraw)
+{
+    Display display(2, 2);
+
+    // . . # <- Would be here
+    // . .
+    display.xorPixel(2, 0, true, true);
+
+    EXPECT_FALSE(display.getPixel(0, 0));
+    EXPECT_FALSE(display.getPixel(1, 0));
+    EXPECT_FALSE(display.getPixel(0, 1));
+    EXPECT_FALSE(display.getPixel(1, 1));
+}
+
+TEST(DisplayTest, XorPixel_OutOfBoundsVerticalClippingTrue_DoesNotDraw)
+{
+    Display display(2, 2);
+
+    // . .
+    // . .
+    //   # <- Would be here
+    display.xorPixel(1, 2, true, true);
+
+    EXPECT_FALSE(display.getPixel(0, 0));
+    EXPECT_FALSE(display.getPixel(1, 0));
     EXPECT_FALSE(display.getPixel(0, 1));
     EXPECT_FALSE(display.getPixel(1, 1));
 }
@@ -110,7 +139,7 @@ TEST(DisplayTest, XorSprite_From0sInBounds_DrawsSprite)
 {
     Display display(8, 8);
 
-    display.xorSprite(0, 0, sprite_diagonal);
+    display.xorSprite(0, 0, sprite_diagonal, false);
 
     EXPECT_EQ(display.getDisplay()[0], std::vector<bool>({ 1, 0, 0, 0, 0, 0, 0, 0 }));
     EXPECT_EQ(display.getDisplay()[1], std::vector<bool>({ 0, 1, 0, 0, 0, 0, 0, 0 }));
@@ -125,7 +154,7 @@ TEST(DisplayTest, XorSprite_From0sInBoundsWithOffset_DrawsSprite)
     Display display(8, 8);
     std::array<size_t, 4> empty_columns = { 0, 1, 6, 7 };
 
-    display.xorSprite(2, 0, sprite_diagonal);
+    display.xorSprite(2, 0, sprite_diagonal, false);
 
     EXPECT_EQ(display.getDisplay()[2], std::vector<bool>({ 1, 0, 0, 0, 0, 0, 0, 0 }));
     EXPECT_EQ(display.getDisplay()[3], std::vector<bool>({ 0, 1, 0, 0, 0, 0, 0, 0 }));
@@ -138,9 +167,9 @@ TEST(DisplayTest, XorSprite_From0sInBoundsWithOffset_DrawsSprite)
 TEST(DisplayTest, XorSprite_CollisionInBounds_XorsExisting)
 {
     Display display(4, 4);
-    display.xorSprite(0, 0, sprite_square);
+    display.xorSprite(0, 0, sprite_square, false);
 
-    display.xorSprite(0, 0, sprite_diagonal);
+    display.xorSprite(0, 0, sprite_diagonal, false);
 
     EXPECT_EQ(display.getDisplay()[0], std::vector<bool>({ 0, 1, 0, 0 }));
     EXPECT_EQ(display.getDisplay()[1], std::vector<bool>({ 1, 0, 0, 0 }));
@@ -152,7 +181,7 @@ TEST(DisplayTest, XorSprite_OutOfBounds_WrapsAround)
 {
     Display display(4, 4);
 
-    display.xorSprite(4, 0, sprite_diagonal);
+    display.xorSprite(4, 0, sprite_diagonal, false);
 
     EXPECT_EQ(display.getDisplay()[0], std::vector<bool>({ 1, 0, 0, 0 }));
     EXPECT_EQ(display.getDisplay()[1], std::vector<bool>({ 0, 1, 0, 0 }));
@@ -164,7 +193,7 @@ TEST(DisplayTest, XorSprite_OnBorder_HalfWrapsAround)
 {
     Display display(4, 4);
 
-    display.xorSprite(2, 0, sprite_diagonal);
+    display.xorSprite(2, 0, sprite_diagonal, false);
 
     EXPECT_EQ(display.getDisplay()[0], std::vector<bool>({ 0, 0, 1, 0 }));
     EXPECT_EQ(display.getDisplay()[1], std::vector<bool>({ 0, 0, 0, 1 }));
@@ -172,10 +201,20 @@ TEST(DisplayTest, XorSprite_OnBorder_HalfWrapsAround)
     EXPECT_EQ(display.getDisplay()[3], std::vector<bool>({ 0, 1, 0, 0 }));
 }
 
+TEST(DisplayTest, XorSprite_OutOfBoundsClippingTrue_DoesNotDraw)
+{
+    Display display(4, 4);
+
+    display.xorSprite(4, 0, sprite_diagonal, true);
+
+    for (size_t i = 0; i < display.getWidth(); ++i)
+        EXPECT_EQ(display.getDisplay()[i], std::vector<bool>({ 0, 0, 0, 0 }));
+}
+
 TEST(DisplayTest, Clear_SetsAllPixelTo0)
 {
     Display display(4, 4);
-    display.xorSprite(0, 0, sprite_diagonal);
+    display.xorSprite(0, 0, sprite_diagonal, false);
 
     display.clear();
 
