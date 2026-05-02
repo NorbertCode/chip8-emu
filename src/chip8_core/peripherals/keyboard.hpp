@@ -6,16 +6,16 @@
 class Keyboard
 {
 public:
-    bool getKey(const std::uint8_t keyCode) const;
+    bool getKey(std::uint8_t keyCode) const;
 
-    void keyDown(const std::uint8_t keyCode);
-    void keyUp(const std::uint8_t keyCode);
+    void keyDown(std::uint8_t keyCode);
+    void keyUp(std::uint8_t keyCode);
 
-    void setOnKeyPressed(std::function<void(const std::uint8_t)> callback);
+    void setOnKeyPressed(std::function<void(std::uint8_t)> callback);
     void clearOnKeyDown();
     
 private:
     std::array<bool, 16> keys{};
 
-    std::function<void(const std::uint8_t)> onKeyDown;
+    std::function<void(std::uint8_t)> onKeyDown;
 };

@@ -1,6 +1,6 @@
 #include "keyboard.hpp"
 
-bool Keyboard::getKey(const std::uint8_t keyCode) const
+bool Keyboard::getKey(std::uint8_t keyCode) const
 {
     if (keyCode >= keys.size())
         return false;
@@ -8,7 +8,7 @@ bool Keyboard::getKey(const std::uint8_t keyCode) const
     return keys[keyCode];
 }
 
-void Keyboard::keyDown(const std::uint8_t keyCode)
+void Keyboard::keyDown(std::uint8_t keyCode)
 {
     if (keyCode < keys.size())
         keys[keyCode] = true;
@@ -17,13 +17,13 @@ void Keyboard::keyDown(const std::uint8_t keyCode)
         onKeyDown(keyCode);
 }
 
-void Keyboard::keyUp(const std::uint8_t keyCode)
+void Keyboard::keyUp(std::uint8_t keyCode)
 {
     if (keyCode < keys.size())
         keys[keyCode] = false;
 }
 
-void Keyboard::setOnKeyPressed(std::function<void(const std::uint8_t)> callback)
+void Keyboard::setOnKeyPressed(std::function<void(std::uint8_t)> callback)
 {
     onKeyDown = std::move(callback);
 }
