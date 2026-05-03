@@ -62,7 +62,7 @@ TEST_F(ProcessorTest, TickTimers_AboveZero_TicksDown)
     processor.execute(0xF015); // LD DT, V0
     processor.execute(0xF118); // LD ST, V1
 
-    processor.tick_timers();
+    processor.tickTimers();
 
     EXPECT_EQ(processor.getDelayTimer(), 0x04);
     EXPECT_EQ(processor.getSoundTimer(), 0x05);
@@ -74,7 +74,7 @@ TEST_F(ProcessorTest, TickTimers_AtZero_DoesNothing)
     processor.execute(0xF015); // LD DT, V0
     processor.execute(0xF018); // LD ST, V0
 
-    processor.tick_timers();
+    processor.tickTimers();
 
     EXPECT_EQ(processor.getDelayTimer(), 0x00);
     EXPECT_EQ(processor.getSoundTimer(), 0x00);

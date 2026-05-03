@@ -15,7 +15,7 @@ void Processor::step()
     execute(fetch());
 }
 
-void Processor::tick_timers()
+void Processor::tickTimers()
 {
     if (delayTimer > 0)
         delayTimer--;

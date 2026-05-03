@@ -20,7 +20,7 @@ public:
     Processor(Memory& memory, Display& display, Keyboard& keyboard, const Quirks& quirks, std::uint16_t startProgramCounter);
 
     void step();
-    void tick_timers();
+    void tickTimers();
 
     std::uint16_t fetch();
     void execute(std::uint16_t instruction);
