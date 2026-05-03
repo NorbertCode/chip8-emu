@@ -138,67 +138,85 @@ TEST(DisplayTest, XorPixel_OutOfBoundsVerticalClippingTrue_DoesNotDraw)
 TEST(DisplayTest, XorSprite_From0sInBounds_DrawsSprite)
 {
     Display display(8, 8);
+    const std::vector<std::vector<bool>> expected = {
+        { 1, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 1, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 1, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 1, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 }
+    };
 
     display.xorSprite(0, 0, sprite_diagonal, false);
 
-    EXPECT_EQ(display.getDisplay()[0], std::vector<bool>({ 1, 0, 0, 0, 0, 0, 0, 0 }));
-    EXPECT_EQ(display.getDisplay()[1], std::vector<bool>({ 0, 1, 0, 0, 0, 0, 0, 0 }));
-    EXPECT_EQ(display.getDisplay()[2], std::vector<bool>({ 0, 0, 1, 0, 0, 0, 0, 0 }));
-    EXPECT_EQ(display.getDisplay()[3], std::vector<bool>({ 0, 0, 0, 1, 0, 0, 0, 0 }));
-    for (size_t i = 4; i < display.getWidth(); ++i)
-        EXPECT_EQ(display.getDisplay()[i], std::vector<bool>({ 0, 0, 0, 0, 0, 0, 0, 0 }));
+    EXPECT_EQ(display.getDisplay(), expected);
 }
 
 TEST(DisplayTest, XorSprite_From0sInBoundsWithOffset_DrawsSprite)
 {
-    Display display(8, 8);
-    std::array<size_t, 4> empty_columns = { 0, 1, 6, 7 };
+    Display display(8, 6);
+    const std::vector<std::vector<bool>> expected = {
+        { 0, 0, 0, 0, 0, 0 }, // First column (index 0 is topmost)
+        { 0, 0, 0, 0, 0, 0 }, // Second column
+        { 1, 0, 0, 0, 0, 0 }, // Etc...
+        { 0, 1, 0, 0, 0, 0 },
+        { 0, 0, 1, 0, 0, 0 },
+        { 0, 0, 0, 1, 0, 0 },
+        { 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0 }
+    };
 
     display.xorSprite(2, 0, sprite_diagonal, false);
 
-    EXPECT_EQ(display.getDisplay()[2], std::vector<bool>({ 1, 0, 0, 0, 0, 0, 0, 0 }));
-    EXPECT_EQ(display.getDisplay()[3], std::vector<bool>({ 0, 1, 0, 0, 0, 0, 0, 0 }));
-    EXPECT_EQ(display.getDisplay()[4], std::vector<bool>({ 0, 0, 1, 0, 0, 0, 0, 0 }));
-    EXPECT_EQ(display.getDisplay()[5], std::vector<bool>({ 0, 0, 0, 1, 0, 0, 0, 0 }));
-    for (size_t i : empty_columns)
-        EXPECT_EQ(display.getDisplay()[i], std::vector<bool>({ 0, 0, 0, 0, 0, 0, 0, 0 }));
+    EXPECT_EQ(display.getDisplay(), expected);
 }
 
 TEST(DisplayTest, XorSprite_CollisionInBounds_XorsExisting)
 {
     Display display(4, 4);
     display.xorSprite(0, 0, sprite_square, false);
+    const std::vector<std::vector<bool>> expected = {
+        { 0, 1, 0, 0 },
+        { 1, 0, 0, 0 },
+        { 0, 0, 1, 0 },
+        { 0, 0, 0, 1 }
+    };
 
     display.xorSprite(0, 0, sprite_diagonal, false);
 
-    EXPECT_EQ(display.getDisplay()[0], std::vector<bool>({ 0, 1, 0, 0 }));
-    EXPECT_EQ(display.getDisplay()[1], std::vector<bool>({ 1, 0, 0, 0 }));
-    EXPECT_EQ(display.getDisplay()[2], std::vector<bool>({ 0, 0, 1, 0 }));
-    EXPECT_EQ(display.getDisplay()[3], std::vector<bool>({ 0, 0, 0, 1 }));
+    EXPECT_EQ(display.getDisplay(), expected);
 }
 
 TEST(DisplayTest, XorSprite_OutOfBounds_WrapsAround)
 {
     Display display(4, 4);
+    const std::vector<std::vector<bool>> expected = {
+        { 1, 0, 0, 0 },
+        { 0, 1, 0, 0 },
+        { 0, 0, 1, 0 },
+        { 0, 0, 0, 1 }
+    };
 
     display.xorSprite(4, 0, sprite_diagonal, false);
 
-    EXPECT_EQ(display.getDisplay()[0], std::vector<bool>({ 1, 0, 0, 0 }));
-    EXPECT_EQ(display.getDisplay()[1], std::vector<bool>({ 0, 1, 0, 0 }));
-    EXPECT_EQ(display.getDisplay()[2], std::vector<bool>({ 0, 0, 1, 0 }));
-    EXPECT_EQ(display.getDisplay()[3], std::vector<bool>({ 0, 0, 0, 1 }));
+    EXPECT_EQ(display.getDisplay(), expected);
 }
 
 TEST(DisplayTest, XorSprite_OnBorder_HalfWrapsAround)
 {
     Display display(4, 4);
+    const std::vector<std::vector<bool>> expected = {
+        { 0, 0, 1, 0 },
+        { 0, 0, 0, 1 },
+        { 1, 0, 0, 0 },
+        { 0, 1, 0, 0 }
+    };
 
     display.xorSprite(2, 0, sprite_diagonal, false);
 
-    EXPECT_EQ(display.getDisplay()[0], std::vector<bool>({ 0, 0, 1, 0 }));
-    EXPECT_EQ(display.getDisplay()[1], std::vector<bool>({ 0, 0, 0, 1 }));
-    EXPECT_EQ(display.getDisplay()[2], std::vector<bool>({ 1, 0, 0, 0 }));
-    EXPECT_EQ(display.getDisplay()[3], std::vector<bool>({ 0, 1, 0, 0 }));
+    EXPECT_EQ(display.getDisplay(), expected);
 }
 
 TEST(DisplayTest, XorSprite_OutOfBoundsClippingTrue_DoesNotDraw)
