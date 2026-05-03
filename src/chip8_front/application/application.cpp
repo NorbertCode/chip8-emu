@@ -1,0 +1,48 @@
+#include "application.hpp"
+#include <chrono>
+
+Application::Application(Chip8& chip8, const ApplicationConfig& config)
+    : chip8(chip8), renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight()), processorTime(1000 / config.loopFrequency), displayTime(1000.0 / config.displayFrequency) { }
+
+void Application::run()
+{
+    double processorAccumulator = 0.0;
+    double displayAccumulator = 0.0;
+    auto previousTime = std::chrono::high_resolution_clock::now();
+
+    while(true)
+    {
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsedTime = currentTime - previousTime;
+        previousTime = currentTime;
+
+        processorAccumulator += elapsedTime.count();
+        displayAccumulator += elapsedTime.count();
+
+        SDL_Event event;
+
+        while (SDL_PollEvent(&event) != 0)
+        {
+            switch (event.type)
+            {
+                case SDL_QUIT:
+                    return;
+            }
+        }
+
+        while (processorAccumulator >= processorTime)
+        {
+            chip8.getProcessor().step();
+            chip8.getProcessor().tickTimers();
+
+            processorAccumulator -= processorTime;
+        }
+
+        while (displayAccumulator >= displayTime)
+        {
+            renderer.render(chip8.getDisplay().getDisplay());
+
+            displayAccumulator -= displayTime;
+        }
+    }
+}
