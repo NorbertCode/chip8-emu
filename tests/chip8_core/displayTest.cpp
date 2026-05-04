@@ -22,10 +22,10 @@ TEST(DisplayTest, GetParameters_ReturnsCorrectValues)
 
     EXPECT_EQ(display.getWidth(), width);
     EXPECT_EQ(display.getHeight(), height);
-    for (size_t i = 0; i < display.getDisplay().size(); ++i)
+    for (size_t i = 0; i < display.getWidth(); ++i)
     {
-        for (size_t j = 0; j < display.getDisplay()[0].size(); ++j)
-            EXPECT_FALSE(display.getDisplay()[i][j]);
+        for (size_t j = 0; j < display.getHeight(); ++j)
+            EXPECT_FALSE(display.getPixel(i, j));
     }
 }
 
@@ -138,15 +138,15 @@ TEST(DisplayTest, XorPixel_OutOfBoundsVerticalClippingTrue_DoesNotDraw)
 TEST(DisplayTest, XorSprite_From0sInBounds_DrawsSprite)
 {
     Display display(8, 8);
-    const std::vector<std::vector<bool>> expected = {
-        { 1, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 1, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 1, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 1, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0 }
+    const std::vector<std::uint8_t> expected = {
+        0xFF, 0, 0, 0, 0, 0, 0, 0,
+        0, 0xFF, 0, 0, 0, 0, 0, 0,
+        0, 0, 0xFF, 0, 0, 0, 0, 0,
+        0, 0, 0, 0xFF, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0
     };
 
     display.xorSprite(0, 0, sprite_diagonal, false);
@@ -157,15 +157,13 @@ TEST(DisplayTest, XorSprite_From0sInBounds_DrawsSprite)
 TEST(DisplayTest, XorSprite_From0sInBoundsWithOffset_DrawsSprite)
 {
     Display display(8, 6);
-    const std::vector<std::vector<bool>> expected = {
-        { 0, 0, 0, 0, 0, 0 }, // First column (index 0 is topmost)
-        { 0, 0, 0, 0, 0, 0 }, // Second column
-        { 1, 0, 0, 0, 0, 0 }, // Etc...
-        { 0, 1, 0, 0, 0, 0 },
-        { 0, 0, 1, 0, 0, 0 },
-        { 0, 0, 0, 1, 0, 0 },
-        { 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0 }
+    const std::vector<std::uint8_t> expected = {
+        0, 0, 0xFF, 0, 0, 0, 0, 0,
+        0, 0, 0, 0xFF, 0, 0, 0, 0,
+        0, 0, 0, 0, 0xFF, 0, 0, 0,
+        0, 0, 0, 0, 0, 0xFF, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0
     };
 
     display.xorSprite(2, 0, sprite_diagonal, false);
@@ -177,11 +175,11 @@ TEST(DisplayTest, XorSprite_CollisionInBounds_XorsExisting)
 {
     Display display(4, 4);
     display.xorSprite(0, 0, sprite_square, false);
-    const std::vector<std::vector<bool>> expected = {
-        { 0, 1, 0, 0 },
-        { 1, 0, 0, 0 },
-        { 0, 0, 1, 0 },
-        { 0, 0, 0, 1 }
+    const std::vector<std::uint8_t> expected = {
+        0, 0xFF, 0, 0,
+        0xFF, 0, 0, 0,
+        0, 0, 0xFF, 0,
+        0, 0, 0, 0xFF
     };
 
     display.xorSprite(0, 0, sprite_diagonal, false);
@@ -192,11 +190,11 @@ TEST(DisplayTest, XorSprite_CollisionInBounds_XorsExisting)
 TEST(DisplayTest, XorSprite_OutOfBounds_WrapsAround)
 {
     Display display(4, 4);
-    const std::vector<std::vector<bool>> expected = {
-        { 1, 0, 0, 0 },
-        { 0, 1, 0, 0 },
-        { 0, 0, 1, 0 },
-        { 0, 0, 0, 1 }
+    const std::vector<std::uint8_t> expected = {
+        0xFF, 0, 0, 0,
+        0, 0xFF, 0, 0,
+        0, 0, 0xFF, 0,
+        0, 0, 0, 0xFF
     };
 
     display.xorSprite(4, 0, sprite_diagonal, false);
@@ -207,11 +205,11 @@ TEST(DisplayTest, XorSprite_OutOfBounds_WrapsAround)
 TEST(DisplayTest, XorSprite_OnBorder_HalfWrapsAround)
 {
     Display display(4, 4);
-    const std::vector<std::vector<bool>> expected = {
-        { 0, 0, 1, 0 },
-        { 0, 0, 0, 1 },
-        { 1, 0, 0, 0 },
-        { 0, 1, 0, 0 }
+    const std::vector<std::uint8_t> expected = {
+        0, 0, 0xFF, 0,
+        0, 0, 0, 0xFF,
+        0xFF, 0, 0, 0,
+        0, 0xFF, 0, 0
     };
 
     display.xorSprite(2, 0, sprite_diagonal, false);
@@ -226,7 +224,10 @@ TEST(DisplayTest, XorSprite_OutOfBoundsClippingTrue_DoesNotDraw)
     display.xorSprite(4, 0, sprite_diagonal, true);
 
     for (size_t i = 0; i < display.getWidth(); ++i)
-        EXPECT_EQ(display.getDisplay()[i], std::vector<bool>({ 0, 0, 0, 0 }));
+    {
+        for (size_t j = 0; j < display.getHeight(); ++j)
+            EXPECT_FALSE(display.getPixel(i, j));
+    }
 }
 
 TEST(DisplayTest, Clear_SetsAllPixelTo0)

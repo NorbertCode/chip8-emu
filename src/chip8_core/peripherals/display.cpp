@@ -1,28 +1,28 @@
 #include "display.hpp"
 
-Display::Display(std::uint8_t width, std::uint8_t height)
+Display::Display(std::uint8_t width, std::uint8_t height) : width(width), height(height)
 {
-    display.resize(width, std::vector<bool>(height));
+    display.resize(width * height, 0x0);
 }
 
 bool Display::getPixel(std::uint8_t x, std::uint8_t y) const
 {
-    return display[x][y];
+    return display[y * width + x];
 }
 
-const std::vector<std::vector<bool>>& Display::getDisplay() const
+const std::vector<std::uint8_t>& Display::getDisplay() const
 {
     return display;
 }
 
-size_t Display::getWidth() const
+std::uint8_t Display::getWidth() const
 {
-    return display.size();
+    return width;
 }
 
-size_t Display::getHeight() const
+std::uint8_t Display::getHeight() const
 {
-    return display[0].size();
+    return height;
 }
 
 bool Display::xorPixel(std::uint8_t x, std::uint8_t y, bool value, bool clipping)
@@ -35,9 +35,10 @@ bool Display::xorPixel(std::uint8_t x, std::uint8_t y, bool value, bool clipping
     else if (x >= getWidth() || y >= getHeight())
         return false;
 
-    bool collision = display[x][y] && value;
+    size_t index = y * width + x;
 
-    display[x][y] = display[x][y] != value;
+    bool collision = display[index] && value;
+    display[index] = ((display[index] == 0xFF) != value) * 0xFF;
 
     return collision;
 }
@@ -65,7 +66,6 @@ void Display::clear()
 {
     for (size_t i = 0; i < display.size(); ++i)
     {
-        for (size_t j = 0; j < display[i].size(); ++j)
-            display[i][j] = false;
+        display[i] = 0;
     }
 }
