@@ -189,29 +189,10 @@ void Processor::ldF(const std::uint8_t x)
 
 void Processor::ldB(const std::uint8_t x)
 {
-    // Double Dabble Alg
-    const int digit_bits = 12; // 8-bit value needs 12 bits for BCD representation
-    const int digits = digit_bits / 4;
-
-    std::uint32_t scratch_space = registersV[x];
-
-    for (int i = 0; i < 8; ++i) // For every bit in x
-    {
-        for (unsigned int digit_bit = 8; digit_bit < 8 + digit_bits; digit_bit+=4) // Start at BCD representation offset
-        {
-            std::uint8_t digit = static_cast<std::uint8_t>(scratch_space >> digit_bit) & 0xF; 
-
-            scratch_space += (digit >= 5) * (3U << digit_bit); // Add 3 to the correct BCD digit if its >= 5
-        }
-
-        scratch_space <<= 1;
-    }
-
-    for (int i = 0; i < digits; ++i)
-    {
-        std::uint8_t digit = static_cast<std::uint8_t>(scratch_space >> (8 + 4 * (digits - i - 1))) & 0xF;
-        memory.write(registerI + i, digit);
-    }
+    // 8-bit numbers are at most 3-digit
+    memory.write(registerI, registersV[x] / 100);
+    memory.write(registerI + 1, (registersV[x] / 10) % 10);
+    memory.write(registerI + 2, registersV[x] % 10);
 }
 
 void Processor::ldIReg(const std::uint8_t x)
