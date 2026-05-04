@@ -70,7 +70,7 @@ TEST(KeyboardTest, KeyPressedCallback_IsCalled)
         callbackKeyCode = keyCode;
     });
 
-    keyboard.keyDown(0x5);
+    keyboard.keyUp(0x5);
 
     EXPECT_TRUE(callbackCalled);
     EXPECT_EQ(callbackKeyCode, 0x5);

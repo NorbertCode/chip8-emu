@@ -660,7 +660,7 @@ TEST_F(ProcessorTest, ldK_HaltsUntilKeyPress)
 
     EXPECT_TRUE(processor.isHalted());
 
-    keyboard.keyDown(1);
+    keyboard.keyUp(1);
 
     EXPECT_FALSE(processor.isHalted());
     EXPECT_EQ(processor.getRegistersV()[0], 1);
@@ -672,9 +672,9 @@ TEST_F(ProcessorTest, ldK_HaltsUntilKeyPressIgnoresOtherKeys)
 
     EXPECT_TRUE(processor.isHalted());
 
-    keyboard.keyDown(1);
-    keyboard.keyDown(2);
-    keyboard.keyDown(3);
+    keyboard.keyUp(1);
+    keyboard.keyUp(2);
+    keyboard.keyUp(3);
 
     EXPECT_FALSE(processor.isHalted());
     EXPECT_EQ(processor.getRegistersV()[0], 1);

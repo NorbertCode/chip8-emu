@@ -12,10 +12,10 @@ public:
     void keyUp(std::uint8_t keyCode);
 
     void setOnKeyPressed(std::function<void(std::uint8_t)> callback);
-    void clearOnKeyDown();
+    void clearOnKeyPressed();
     
 private:
     std::array<bool, 16> keys{};
 
-    std::function<void(std::uint8_t)> onKeyDown;
+    std::function<void(std::uint8_t)> onKeyPressed;
 };

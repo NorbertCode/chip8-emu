@@ -161,7 +161,7 @@ void Processor::ldK(const std::uint8_t x)
         registersV[x] = keyCode;
         halted = false;
 
-        keyboard.clearOnKeyDown();
+        keyboard.clearOnKeyPressed();
     };
 
     keyboard.setOnKeyPressed(onKeyPress);

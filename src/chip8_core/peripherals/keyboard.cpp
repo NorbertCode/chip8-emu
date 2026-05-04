@@ -12,23 +12,23 @@ void Keyboard::keyDown(std::uint8_t keyCode)
 {
     if (keyCode < keys.size())
         keys[keyCode] = true;
-
-    if (onKeyDown)
-        onKeyDown(keyCode);
 }
 
 void Keyboard::keyUp(std::uint8_t keyCode)
 {
     if (keyCode < keys.size())
         keys[keyCode] = false;
+
+    if (onKeyPressed)
+        onKeyPressed(keyCode);
 }
 
 void Keyboard::setOnKeyPressed(std::function<void(std::uint8_t)> callback)
 {
-    onKeyDown = std::move(callback);
+    onKeyPressed = std::move(callback);
 }
 
-void Keyboard::clearOnKeyDown()
+void Keyboard::clearOnKeyPressed()
 {
-    onKeyDown = nullptr;
+    onKeyPressed = nullptr;
 }
