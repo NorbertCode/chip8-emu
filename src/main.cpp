@@ -37,7 +37,8 @@ constexpr Quirks quirks = {
 
 constexpr ApplicationConfig config = {
     .loopFrequency = 600,
-    .displayFrequency = 60
+    .displayFrequency = 60,
+    .keyMap = { "X", "1", "2", "3", "Q", "W", "E", "A", "S", "D", "Z", "C", "4", "R", "F", "V" }
 };
 
 constexpr int displayWidth = 64;

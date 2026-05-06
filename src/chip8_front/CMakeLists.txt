@@ -2,6 +2,7 @@ add_library(
     chip8_front
     application/application.cpp
     application/renderer.cpp
+    application/input.cpp
 )
 
 find_package(SDL2 REQUIRED)

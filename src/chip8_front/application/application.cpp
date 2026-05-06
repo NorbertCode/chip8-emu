@@ -2,7 +2,11 @@
 #include <chrono>
 
 Application::Application(Chip8& chip8, const ApplicationConfig& config)
-    : chip8(chip8), renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight()), processorTime(1000 / config.loopFrequency), displayTime(1000.0 / config.displayFrequency) { }
+    : chip8(chip8), 
+      renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight()), 
+      input(chip8.getKeyboard(), config.keyMap),
+      processorTime(1000 / config.loopFrequency), 
+      displayTime(1000.0 / config.displayFrequency) { }
 
 void Application::run()
 {
@@ -19,16 +23,10 @@ void Application::run()
         processorAccumulator += elapsedTime.count();
         displayAccumulator += elapsedTime.count();
 
-        SDL_Event event;
+        input.handleEvents();
 
-        while (SDL_PollEvent(&event) != 0)
-        {
-            switch (event.type)
-            {
-                case SDL_QUIT:
-                    return;
-            }
-        }
+        if (input.shouldQuit()) 
+            return;
 
         while (processorAccumulator >= processorTime)
         {
