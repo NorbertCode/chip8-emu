@@ -140,12 +140,12 @@ void Processor::drw(const std::uint8_t x, const std::uint8_t y, const std::uint8
 
 void Processor::skp(const std::uint8_t x)
 {
-    programCounter += keyboard.getKey(x) * 2;
+    programCounter += keyboard.getKey(registersV[x]) * 2;
 }
 
 void Processor::sknp(const std::uint8_t x)
 {
-    programCounter += !keyboard.getKey(x) * 2;
+    programCounter += !keyboard.getKey(registersV[x]) * 2;
 }
 
 void Processor::ldRegDT(const std::uint8_t x)

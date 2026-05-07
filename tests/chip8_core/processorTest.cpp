@@ -609,7 +609,8 @@ TEST_F(ProcessorTest, drw_DisplayClippingEnabled_DoesNotWrap)
 
 TEST_F(ProcessorTest, skp_KeyPressed_SkipsNextInstruction)
 {
-    keyboard.keyDown(0);
+    processor.execute(0x6001); // LD V0, 01 - so SKP looks at key 1
+    keyboard.keyDown(1);
 
     processor.execute(0xE09E); // SKP V0
 
@@ -618,7 +619,8 @@ TEST_F(ProcessorTest, skp_KeyPressed_SkipsNextInstruction)
 
 TEST_F(ProcessorTest, skp_KeyNotPressed_DoesNotSkipNextInstruction)
 {
-    keyboard.keyUp(0);
+    processor.execute(0x6001); // LD V0, 01 - so SKP looks at key 1
+    keyboard.keyUp(1);
 
     processor.execute(0xE09E); // SKP V0
 
@@ -627,7 +629,8 @@ TEST_F(ProcessorTest, skp_KeyNotPressed_DoesNotSkipNextInstruction)
 
 TEST_F(ProcessorTest, sknp_KeyNotPressed_SkipsNextInstruction)
 {
-    keyboard.keyUp(0);
+    processor.execute(0x6001); // LD V0, 01 - so SKNP looks at key 1
+    keyboard.keyUp(1);
 
     processor.execute(0xE0A1); // SKNP V0
 
@@ -636,7 +639,8 @@ TEST_F(ProcessorTest, sknp_KeyNotPressed_SkipsNextInstruction)
 
 TEST_F(ProcessorTest, sknp_KeyPressed_DoesNotSkipNextInstruction)
 {
-    keyboard.keyDown(0);
+    processor.execute(0x6001); // LD V0, 01 - so SKNP looks at key 1
+    keyboard.keyDown(1);
 
     processor.execute(0xE0A1); // SKNP V0
 
