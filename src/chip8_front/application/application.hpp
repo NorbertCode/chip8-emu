@@ -8,6 +8,7 @@
 struct ApplicationConfig
 {
     double loopFrequency;
+    double timerFrequency;
     double displayFrequency;
     std::array<std::string, 16> keyMap;
 };
@@ -26,5 +27,6 @@ private:
     Input input;
 
     const double processorTime;
+    const double timerTime;
     const double displayTime;
 };

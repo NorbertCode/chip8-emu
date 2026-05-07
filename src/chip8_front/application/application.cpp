@@ -6,11 +6,13 @@ Application::Application(Chip8& chip8, const ApplicationConfig& config)
       renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight()), 
       input(chip8.getKeyboard(), config.keyMap),
       processorTime(1000.0 / config.loopFrequency), 
+      timerTime(1000.0 / config.timerFrequency),
       displayTime(1000.0 / config.displayFrequency) { }
 
 void Application::run()
 {
     double processorAccumulator = 0.0;
+    double timerAccumulator = 0.0;
     double displayAccumulator = 0.0;
     auto previousTime = std::chrono::high_resolution_clock::now();
 
@@ -34,6 +36,13 @@ void Application::run()
             chip8.getProcessor().tickTimers();
 
             processorAccumulator -= processorTime;
+        }
+
+        while (timerAccumulator >= timerTime)
+        {
+            chip8.getProcessor().tickTimers();
+
+            timerAccumulator -= timerTime;
         }
 
         while (displayAccumulator >= displayTime)
