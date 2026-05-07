@@ -5,7 +5,7 @@ Application::Application(Chip8& chip8, const ApplicationConfig& config)
     : chip8(chip8), 
       renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight()), 
       input(chip8.getKeyboard(), config.keyMap),
-      processorTime(1000 / config.loopFrequency), 
+      processorTime(1000.0 / config.loopFrequency), 
       displayTime(1000.0 / config.displayFrequency) { }
 
 void Application::run()
