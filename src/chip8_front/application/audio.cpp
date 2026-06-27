@@ -5,8 +5,8 @@
 
 const double TWO_PI = 2.0 * std::numbers::pi;
 
-Audio::Audio(int soundFrequency)
-    : audioData(soundFrequency)
+Audio::Audio(double soundFrequency)
+    : soundFrequency(soundFrequency)
 {
     SDL_AudioSpec spec = {
         .freq = SAMPLE_FREQUENCY,
@@ -27,16 +27,11 @@ Audio::Audio(int soundFrequency)
     phaseStep = TWO_PI * soundFrequency / SAMPLE_FREQUENCY;
 }
 
-const AudioData& Audio::getAudioData() const
-{
-    return audioData;
-}
-
 void Audio::setFrequency(int frequency)
 {
     SDL_LockAudioDevice(audioDevice);
 
-    audioData.frequency = frequency;
+    soundFrequency = frequency;
     phaseStep = TWO_PI * frequency / SAMPLE_FREQUENCY;
 
     SDL_UnlockAudioDevice(audioDevice);
@@ -44,7 +39,7 @@ void Audio::setFrequency(int frequency)
 
 int Audio::getFrequency() const
 {
-    return audioData.frequency;
+    return soundFrequency;
 }
 
 void Audio::movePhase()

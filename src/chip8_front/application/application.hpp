@@ -4,12 +4,14 @@
 #include "chip8.hpp"
 #include "renderer.hpp"
 #include "input.hpp"
+#include "audio.hpp"
 
 struct ApplicationConfig
 {
     double loopFrequency;
     double timerFrequency;
     double displayFrequency;
+    double audioFrequency;
     std::array<std::string, 16> keyMap;
 };
 
@@ -25,6 +27,7 @@ private:
 
     Renderer renderer;
     Input input;
+    Audio audio;
 
     const double processorTime;
     const double timerTime;

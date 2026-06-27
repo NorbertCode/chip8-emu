@@ -2,17 +2,10 @@
 #include <cstdint>
 #include <SDL2/SDL.h>
 
-struct AudioData
-{
-    int frequency;
-};
-
 class Audio
 {
 public:
-    Audio(int soundFrequency);
-
-    const AudioData& getAudioData() const;
+    Audio(double soundFrequency);
 
     void setFrequency(int frequency);
     int getFrequency() const;
@@ -24,14 +17,15 @@ public:
     void disable();
 
 private:
-    AudioData audioData;
     SDL_AudioDeviceID audioDevice;
+
+    double soundFrequency;
 
     double phase = 0.0;
     double phaseStep;
 
     const int SAMPLE_FREQUENCY = 44100;
-    const int BUFFER_SIZE = 512;
+    const Uint16 BUFFER_SIZE = 512;
 
-    static void callback(void* userdata, std::uint8_t* stream, int len);
+    static void callback(void* userdata, Uint8* stream, int len);
 };

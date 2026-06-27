@@ -3,6 +3,7 @@ add_library(
     application/application.cpp
     application/renderer.cpp
     application/input.cpp
+    application/audio.cpp
 )
 
 find_package(SDL2 REQUIRED)
