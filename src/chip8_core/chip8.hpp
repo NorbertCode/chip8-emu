@@ -14,6 +14,8 @@ public:
     Display& getDisplay() { return display; }
     Keyboard& getKeyboard() { return keyboard; }
 
+    void loadRom(const std::vector<std::uint8_t>& rom);
+
 private:
     Processor processor;
     Memory memory;

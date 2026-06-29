@@ -21,3 +21,8 @@ const std::vector<std::uint8_t> FONT_DATA = {
 
 Chip8::Chip8(const Quirks& quirks, const MemoryConfig& memoryConfig, const DisplayConfig& displayConfig)
     : memory(memoryConfig, FONT_DATA), display(displayConfig), processor(memory, display, keyboard, quirks, memoryConfig.reservedEnd) { }
+
+void Chip8::loadRom(const std::vector<std::uint8_t>& rom)
+{
+    memory.write_bytes(memory.getMemoryConfig().reservedEnd, rom);
+}
