@@ -22,6 +22,8 @@ public:
     void write(std::uint16_t address, std::uint8_t data);
     void write_bytes(std::uint16_t address, const std::vector<std::uint8_t>& data);
 
+    const MemoryConfig& getMemoryConfig() const;
+
 private:
     std::vector<std::uint8_t> memory;
 

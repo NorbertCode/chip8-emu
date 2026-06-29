@@ -43,3 +43,8 @@ void Memory::write_bytes(std::uint16_t address, const std::vector<std::uint8_t>&
     for (size_t i = 0; i < data.size(); ++i)
         write(address + i, data[i]);
 }
+
+const MemoryConfig& Memory::getMemoryConfig() const
+{
+    return memoryConfig;
+}
