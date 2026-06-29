@@ -1,19 +1,20 @@
 #include "memory.hpp"
 
-Memory::Memory(const MemoryLayout& memoryLayout) : layout(memoryLayout)
+Memory::Memory(const MemoryConfig& memoryConfig, const std::vector<std::uint8_t>& reservedData) 
+    : memoryConfig(memoryConfig)
 {
-    if (layout.reserved_end >= layout.program_end || layout.reserved_data.size() > layout.reserved_end)
-        throw InvalidMemoryLayoutException(layout.reserved_end, layout.program_end);
+    if (memoryConfig.reservedEnd >= memoryConfig.programEnd || reservedData.size() > memoryConfig.reservedEnd)
+        throw InvalidMemoryLayoutException(memoryConfig.reservedEnd, memoryConfig.programEnd);
 
-    memory.resize(layout.program_end);
+    memory.resize(memoryConfig.programEnd);
 
-    for (size_t i = 0; i < layout.reserved_data.size(); ++i)
-        memory[i] = layout.reserved_data[i];
+    for (size_t i = 0; i < reservedData.size(); ++i)
+        memory[i] = reservedData[i];
 }
 
 std::uint8_t Memory::read(std::uint16_t address) const
 {
-    if (address >= layout.program_end)
+    if (address >= memoryConfig.programEnd)
         return 0xFF;
 
     return memory[address];
@@ -31,7 +32,7 @@ std::vector<std::uint8_t> Memory::read_bytes(std::uint16_t address, std::uint16_
 
 void Memory::write(std::uint16_t address, std::uint8_t data)
 {
-    if ((address < layout.reserved_end && layout.reserved_read_only) || address >= layout.program_end)
+    if ((address < memoryConfig.reservedEnd && memoryConfig.reservedReadOnly) || address >= memoryConfig.programEnd)
         return;
 
     memory[address] = data;

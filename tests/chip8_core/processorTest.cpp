@@ -8,14 +8,15 @@ class ProcessorTest : public ::testing::Test
 protected:
     Processor processor;
 
-    const MemoryLayout layout = {
-        .reserved_data = { 
-            0xF0, 0x90, 0x90, 0x90, 0xF0, // 0 character
-            0x20, 0x60, 0x20, 0x20, 0x70 // 1 character
-        },
-        .reserved_end = 0x200,
-        .program_end = 0x1000,
-        .reserved_read_only = true
+    const MemoryConfig memoryConfig = {
+        .reservedEnd = 0x200,
+        .programEnd = 0x1000,
+        .reservedReadOnly = true
+    };
+
+    const std::vector<std::uint8_t> reservedData = {
+        0xF0, 0x90, 0x90, 0x90, 0xF0, // 0 character
+        0x20, 0x60, 0x20, 0x20, 0x70 // 1 character
     };
 
     const Quirks quirks = {
@@ -31,7 +32,7 @@ protected:
     Keyboard keyboard;
 
     ProcessorTest() 
-        : memory(layout), display(64, 32), keyboard(keyboard), processor(memory, display, keyboard, quirks, 0x200) { }
+        : memory(memoryConfig), display(64, 32), keyboard(keyboard), processor(memory, display, keyboard, quirks, 0x200) { }
 
 };
 

@@ -2,19 +2,19 @@
 #include <cstdint>
 #include <vector>
 #include <stdexcept>
+#include <optional>
 
-struct MemoryLayout
+struct MemoryConfig
 {
-    std::vector<uint8_t> reserved_data;
-    std::uint16_t reserved_end;
-    std::uint16_t program_end; // This also works as memory end
-    bool reserved_read_only;
+    std::uint16_t reservedEnd;
+    std::uint16_t programEnd; // This also works as memory end
+    bool reservedReadOnly;
 };
 
 class Memory
 {
 public:
-    Memory(const MemoryLayout& memoryLayout);
+    Memory(const MemoryConfig& memoryConfig, const std::vector<std::uint8_t>& reservedData = {});
 
     std::uint8_t read(std::uint16_t address) const;
     std::vector<std::uint8_t> read_bytes(std::uint16_t address, std::uint16_t bytes) const;
@@ -25,19 +25,19 @@ public:
 private:
     std::vector<std::uint8_t> memory;
 
-    const MemoryLayout& layout;
+    const MemoryConfig& memoryConfig;
 };
 
 class InvalidMemoryLayoutException : public std::logic_error
 {
 public:
-    InvalidMemoryLayoutException(const std::uint16_t reserved_end, const std::uint16_t program_end) 
-        : std::logic_error("Invalid memory layout. Reservered end (" + std::to_string(reserved_end) + ") has to be < program end (" + std::to_string(program_end) + ") and data size has to be < reserved end"), reserved_end(reserved_end), program_end(program_end) { }
+    InvalidMemoryLayoutException(const std::uint16_t reservedEnd, const std::uint16_t programEnd) 
+        : std::logic_error("Invalid memory layout. Reservered end (" + std::to_string(reservedEnd) + ") has to be < program end (" + std::to_string(programEnd) + ") and data size has to be < reserved end"), reservedEnd(reservedEnd), programEnd(programEnd) { }
 
-    const std::uint16_t getReservedEnd() const { return reserved_end; }
-    const std::uint16_t getProgramEnd() const { return program_end; }
+    const std::uint16_t getReservedEnd() const { return reservedEnd; }
+    const std::uint16_t getProgramEnd() const { return programEnd; }
 
 private:
-    const std::uint16_t reserved_end;
-    const std::uint16_t program_end;
+    const std::uint16_t reservedEnd;
+    const std::uint16_t programEnd;
 };

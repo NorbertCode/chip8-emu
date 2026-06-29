@@ -1,19 +1,22 @@
 #include <gtest/gtest.h>
 #include "memory/memory.hpp"
 
-const MemoryLayout layout = {
-    .reserved_data = { 0x01, 0x02, 0x03 },
-    .reserved_end = 0xF,
-    .program_end = 0xFF,
-    .reserved_read_only = true
+const MemoryConfig memoryConfig = {
+    .reservedEnd = 0xF,
+    .programEnd = 0xFF,
+    .reservedReadOnly = true
+};
+
+const std::vector<std::uint8_t> reservedData = {
+    0x01, 0x02, 0x03
 };
 
 TEST(MemoryTest, Constructor_InvalidMemoryLayout_ThrowsInvalidMemoryLayout)
 {
-    const MemoryLayout invalidLayout = {
-        .reserved_end = 0x10,
-        .program_end = 0xF,
-        .reserved_read_only = true
+    const MemoryConfig invalidLayout = {
+        .reservedEnd = 0x10,
+        .programEnd = 0xF,
+        .reservedReadOnly = true
     };
 
     EXPECT_THROW((Memory(invalidLayout)), InvalidMemoryLayoutException);
@@ -21,7 +24,7 @@ TEST(MemoryTest, Constructor_InvalidMemoryLayout_ThrowsInvalidMemoryLayout)
 
 TEST(MemoryTest, Constructor_ReservedData_GetsCopiedCorrectly)
 {
-    Memory memory(layout);
+    Memory memory(memoryConfig, reservedData);
 
     EXPECT_EQ(memory.read(0), 0x01);
     EXPECT_EQ(memory.read(1), 0x02);
@@ -31,7 +34,7 @@ TEST(MemoryTest, Constructor_ReservedData_GetsCopiedCorrectly)
 
 TEST(MemoryTest, ReadWrite_WithinBounds_WritesAndReadsCorrectly)
 {
-    Memory memory(layout);
+    Memory memory(memoryConfig);
 
     memory.write(0x10, 0xAB);
 
@@ -40,7 +43,7 @@ TEST(MemoryTest, ReadWrite_WithinBounds_WritesAndReadsCorrectly)
 
 TEST(MemoryTest, ReadWrite_AtBorder_WritesAndReadsCorrectly)
 {
-    Memory memory(layout);
+    Memory memory(memoryConfig);
 
     memory.write(0xF, 0xAB);
     memory.write(0xFE, 0xCD);
@@ -51,7 +54,7 @@ TEST(MemoryTest, ReadWrite_AtBorder_WritesAndReadsCorrectly)
 
 TEST(MemoryTest, Read_AboveProgramEnd_ReturnsFF)
 {
-    Memory memory(layout);
+    Memory memory(memoryConfig);
 
     EXPECT_EQ(memory.read(0xFF), 0xFF);
     EXPECT_EQ(memory.read(0x100), 0xFF);
@@ -59,7 +62,7 @@ TEST(MemoryTest, Read_AboveProgramEnd_ReturnsFF)
 
 TEST(MemoryTest, Write_AboveProgramEnd_DoesNothing)
 {
-    Memory memory(layout);
+    Memory memory(memoryConfig);
 
     memory.write(0xFF, 0xAB);
     memory.write(0x100, 0xCD);
@@ -70,7 +73,7 @@ TEST(MemoryTest, Write_AboveProgramEnd_DoesNothing)
 
 TEST(MemoryTest, Write_ReservedReadOnly_DoesNothing)
 {
-    Memory memory(layout);
+    Memory memory(memoryConfig);
 
     memory.write(0xD, 0xAB);
     memory.write(0xE, 0xCD);
@@ -81,7 +84,7 @@ TEST(MemoryTest, Write_ReservedReadOnly_DoesNothing)
 
 TEST(MemoryTest, ReadBytes_WithinBounds_ReadsCorrectly)
 {
-    Memory memory(layout);
+    Memory memory(memoryConfig);
     std::vector<std::uint8_t> expected = { 0xAB, 0xCD, 0xEF };
 
     memory.write(0x10, 0xAB);
@@ -93,7 +96,7 @@ TEST(MemoryTest, ReadBytes_WithinBounds_ReadsCorrectly)
 
 TEST(MemoryTest, ReadBytes_AboveProgramEnd_ReturnsFF)
 {
-    Memory memory(layout);
+    Memory memory(memoryConfig);
     std::vector<std::uint8_t> expected = { 0xFF, 0xFF, 0xFF };
 
     const std::vector<std::uint8_t> output = memory.read_bytes(0xFF, 3);
@@ -103,7 +106,7 @@ TEST(MemoryTest, ReadBytes_AboveProgramEnd_ReturnsFF)
 
 TEST(MemoryTest, ReadBytes_OverlappingProgramEnd_ReturnsFF)
 {
-    Memory memory(layout);
+    Memory memory(memoryConfig);
     std::vector<std::uint8_t> expected = { 0xAB, 0xCD, 0xFF };
 
     memory.write(0xFD, 0xAB);
@@ -115,7 +118,7 @@ TEST(MemoryTest, ReadBytes_OverlappingProgramEnd_ReturnsFF)
 
 TEST(MemoryTest, WriteBytes_WithinBounds_WritesCorrectly)
 {
-    Memory memory(layout);
+    Memory memory(memoryConfig);
     std::vector<std::uint8_t> data = { 0xAB, 0xCD, 0xEF };
 
     memory.write_bytes(0x10, data);
@@ -127,7 +130,7 @@ TEST(MemoryTest, WriteBytes_WithinBounds_WritesCorrectly)
 
 TEST(MemoryTest, WriteBytes_AboveProgramEnd_DoesNothing)
 {
-    Memory memory(layout);
+    Memory memory(memoryConfig);
     std::vector<std::uint8_t> data = { 0xAB, 0xCD, 0xEF };
 
     memory.write_bytes(0xFF, data);
@@ -137,7 +140,7 @@ TEST(MemoryTest, WriteBytes_AboveProgramEnd_DoesNothing)
 
 TEST(MemoryTest, WriteBytes_OverlappingProgramEnd_WritesPartially)
 {
-    Memory memory(layout);
+    Memory memory(memoryConfig);
     std::vector<std::uint8_t> data = { 0xAB, 0xCD, 0xEF };
 
     memory.write_bytes(0xFE, data);
@@ -149,7 +152,7 @@ TEST(MemoryTest, WriteBytes_OverlappingProgramEnd_WritesPartially)
 
 TEST(MemoryTest, WriteBytes_ReservedReadOnly_DoesNothing)
 {
-    Memory memory(layout);
+    Memory memory(memoryConfig);
     std::vector<std::uint8_t> data = { 0xAB, 0xCD, 0xEF };
 
     memory.write_bytes(0xC, data);

@@ -7,7 +7,7 @@
 class Chip8
 {
 public:
-    Chip8(const Quirks& quirks, const MemoryLayout& layout, std::uint8_t displayWidth, std::uint8_t displayHeight);
+    Chip8(const Quirks& quirks, const MemoryConfig& memoryConfig, std::uint8_t displayWidth, std::uint8_t displayHeight);
 
     Processor& getProcessor() { return processor; }
     Memory& getMemory() { return memory; }
