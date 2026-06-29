@@ -18,7 +18,7 @@ TEST(DisplayTest, GetParameters_ReturnsCorrectValues)
     const std::uint8_t width = 64;
     const std::uint8_t height = 32;
 
-    Display display(width, height);
+    Display display({width, height});
 
     EXPECT_EQ(display.getWidth(), width);
     EXPECT_EQ(display.getHeight(), height);
@@ -31,7 +31,7 @@ TEST(DisplayTest, GetParameters_ReturnsCorrectValues)
 
 TEST(DisplayTest, XorPixel_From0Value1InBounds_Is1NoCollision)
 {
-    Display display(4, 4);
+    Display display({4, 4});
 
     bool collision = display.xorPixel(0, 0, true, false);
 
@@ -41,7 +41,7 @@ TEST(DisplayTest, XorPixel_From0Value1InBounds_Is1NoCollision)
 
 TEST(DisplayTest, XorPixel_From0Value0InBounds_Is0NoCollision)
 {
-    Display display(4, 4);
+    Display display({4, 4});
 
     bool collision = display.xorPixel(0, 0, false, false);
 
@@ -51,7 +51,7 @@ TEST(DisplayTest, XorPixel_From0Value0InBounds_Is0NoCollision)
 
 TEST(DisplayTest, XorPixel_From1Value0InBounds_Is1NoCollision) 
 {
-    Display display(4, 4);
+    Display display({4, 4});
     display.xorPixel(0, 0, true, false);
 
     bool collision = display.xorPixel(0, 0, false, false);
@@ -62,7 +62,7 @@ TEST(DisplayTest, XorPixel_From1Value0InBounds_Is1NoCollision)
 
 TEST(DisplayTest, XorPixel_From1Value1InBounds_Is0Collision)
 {
-    Display display(4, 4);
+    Display display({4, 4});
     display.xorPixel(0, 0, true, false);
 
     bool collision = display.xorPixel(0, 0, true, false);
@@ -73,7 +73,7 @@ TEST(DisplayTest, XorPixel_From1Value1InBounds_Is0Collision)
 
 TEST(DisplayTest, XorPixel_OutOfBoundsHorizontalClippingFalse_WrapsAround)
 {
-    Display display(2, 2);
+    Display display({2, 2});
 
     // . . # <- Would be here
     // . .
@@ -90,7 +90,7 @@ TEST(DisplayTest, XorPixel_OutOfBoundsHorizontalClippingFalse_WrapsAround)
 
 TEST(DisplayTest, XorPixel_OutOfBoundsVerticalClippingFalse_WrapsAround)
 {
-    Display display(2, 2);
+    Display display({2, 2});
 
     // . .
     // . .
@@ -108,7 +108,7 @@ TEST(DisplayTest, XorPixel_OutOfBoundsVerticalClippingFalse_WrapsAround)
 
 TEST(DisplayTest, XorPixel_OutOfBoundsHorizontalClippingTrue_DoesNotDraw)
 {
-    Display display(2, 2);
+    Display display({2, 2});
 
     // . . # <- Would be here
     // . .
@@ -122,7 +122,7 @@ TEST(DisplayTest, XorPixel_OutOfBoundsHorizontalClippingTrue_DoesNotDraw)
 
 TEST(DisplayTest, XorPixel_OutOfBoundsVerticalClippingTrue_DoesNotDraw)
 {
-    Display display(2, 2);
+    Display display({2, 2});
 
     // . .
     // . .
@@ -137,7 +137,7 @@ TEST(DisplayTest, XorPixel_OutOfBoundsVerticalClippingTrue_DoesNotDraw)
 
 TEST(DisplayTest, XorSprite_From0sInBounds_DrawsSprite)
 {
-    Display display(8, 8);
+    Display display({8, 8});
     const std::vector<std::uint8_t> expected = {
         0xFF, 0, 0, 0, 0, 0, 0, 0,
         0, 0xFF, 0, 0, 0, 0, 0, 0,
@@ -156,7 +156,7 @@ TEST(DisplayTest, XorSprite_From0sInBounds_DrawsSprite)
 
 TEST(DisplayTest, XorSprite_From0sInBoundsWithOffset_DrawsSprite)
 {
-    Display display(8, 6);
+    Display display({8, 6});
     const std::vector<std::uint8_t> expected = {
         0, 0, 0xFF, 0, 0, 0, 0, 0,
         0, 0, 0, 0xFF, 0, 0, 0, 0,
@@ -173,7 +173,7 @@ TEST(DisplayTest, XorSprite_From0sInBoundsWithOffset_DrawsSprite)
 
 TEST(DisplayTest, XorSprite_CollisionInBounds_XorsExisting)
 {
-    Display display(4, 4);
+    Display display({4, 4});
     display.xorSprite(0, 0, sprite_square, false);
     const std::vector<std::uint8_t> expected = {
         0, 0xFF, 0, 0,
@@ -189,7 +189,7 @@ TEST(DisplayTest, XorSprite_CollisionInBounds_XorsExisting)
 
 TEST(DisplayTest, XorSprite_OutOfBounds_WrapsAround)
 {
-    Display display(4, 4);
+    Display display({4, 4});
     const std::vector<std::uint8_t> expected = {
         0xFF, 0, 0, 0,
         0, 0xFF, 0, 0,
@@ -204,7 +204,7 @@ TEST(DisplayTest, XorSprite_OutOfBounds_WrapsAround)
 
 TEST(DisplayTest, XorSprite_OnBorder_HalfWrapsAround)
 {
-    Display display(4, 4);
+    Display display({4, 4});
     const std::vector<std::uint8_t> expected = {
         0, 0, 0xFF, 0,
         0, 0, 0, 0xFF,
@@ -219,7 +219,7 @@ TEST(DisplayTest, XorSprite_OnBorder_HalfWrapsAround)
 
 TEST(DisplayTest, XorSprite_OutOfBoundsClippingTrue_DoesNotDraw)
 {
-    Display display(4, 4);
+    Display display({4, 4});
 
     display.xorSprite(4, 0, sprite_diagonal, true);
 
@@ -232,7 +232,7 @@ TEST(DisplayTest, XorSprite_OutOfBoundsClippingTrue_DoesNotDraw)
 
 TEST(DisplayTest, Clear_SetsAllPixelTo0)
 {
-    Display display(4, 4);
+    Display display({4, 4});
     display.xorSprite(0, 0, sprite_diagonal, false);
 
     display.clear();

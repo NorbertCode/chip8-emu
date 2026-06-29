@@ -19,5 +19,5 @@ const std::vector<std::uint8_t> FONT_DATA = {
     0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-Chip8::Chip8(const Quirks& quirks, const MemoryConfig& memoryConfig, std::uint8_t displayWidth, std::uint8_t displayHeight)
-    : memory(memoryConfig, FONT_DATA), display(displayWidth, displayHeight), processor(memory, display, keyboard, quirks, memoryConfig.reservedEnd) { }
+Chip8::Chip8(const Quirks& quirks, const MemoryConfig& memoryConfig, const DisplayConfig& displayConfig)
+    : memory(memoryConfig, FONT_DATA), display(displayConfig), processor(memory, display, keyboard, quirks, memoryConfig.reservedEnd) { }

@@ -1,6 +1,6 @@
 #include "display.hpp"
 
-Display::Display(std::uint8_t width, std::uint8_t height) : width(width), height(height)
+Display::Display(const DisplayConfig& displayConfig) : width(displayConfig.width), height(displayConfig.height)
 {
     display.resize(width * height, 0x0);
 }

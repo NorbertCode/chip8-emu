@@ -19,6 +19,11 @@ protected:
         0x20, 0x60, 0x20, 0x20, 0x70 // 1 character
     };
 
+    const DisplayConfig& displayConfig = {
+        .width = 64,
+        .height = 32
+    };
+
     const Quirks quirks = {
         .vfReset = false,
         .indexIncrement = false,
@@ -32,7 +37,7 @@ protected:
     Keyboard keyboard;
 
     ProcessorTest() 
-        : memory(memoryConfig), display(64, 32), keyboard(keyboard), processor(memory, display, keyboard, quirks, 0x200) { }
+        : memory(memoryConfig), display(displayConfig), keyboard(keyboard), processor(memory, display, keyboard, quirks, 0x200) { }
 
 };
 

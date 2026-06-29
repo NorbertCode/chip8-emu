@@ -2,11 +2,17 @@
 #include <cstdint>
 #include <vector>
 
+struct DisplayConfig
+{
+    // Coordinates are taken from registers which are 8-bit, hence std::uint8_t
+    std::uint8_t width;
+    std::uint8_t height;
+};
+
 class Display
 {
 public:
-    // Coordinates are taken from registers which are 8-bit, hence std::uint8_t
-    Display(std::uint8_t width, std::uint8_t height);
+    Display(const DisplayConfig& displayConfig);
 
     bool getPixel(std::uint8_t x, std::uint8_t y) const;
     const std::vector<std::uint8_t>& getDisplay() const;

@@ -17,6 +17,11 @@ constexpr Quirks quirks = {
     .vxJumping = false
 };
 
+constexpr DisplayConfig displayConfig = {
+    .width = 64,
+    .height = 32
+};
+
 constexpr ApplicationConfig config = {
     .loopFrequency = 600,
     .timerFrequency = 60,
@@ -24,9 +29,6 @@ constexpr ApplicationConfig config = {
     .audioFrequency = 440,
     .keyMap = { "X", "1", "2", "3", "Q", "W", "E", "A", "S", "D", "Z", "C", "4", "R", "F", "V" }
 };
-
-constexpr int displayWidth = 64;
-constexpr int displayHeight = 32;
 
 int main(int argc, char* argv[])
 {
@@ -48,7 +50,7 @@ int main(int argc, char* argv[])
 
     file.close();
 
-    Chip8 chip8(quirks, memoryConfig, displayWidth, displayHeight);
+    Chip8 chip8(quirks, memoryConfig, displayConfig);
     chip8.getMemory().write_bytes(memoryConfig.reservedEnd, file_buffer);
 
     Application application(chip8, config);
