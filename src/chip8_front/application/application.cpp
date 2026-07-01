@@ -17,7 +17,7 @@ void Application::run()
     double displayAccumulator = 0.0;
     auto previousTime = std::chrono::high_resolution_clock::now();
 
-    while(true)
+    while(chip8.getProcessor().isRunning())
     {
         auto currentTime = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> elapsedTime = currentTime - previousTime;

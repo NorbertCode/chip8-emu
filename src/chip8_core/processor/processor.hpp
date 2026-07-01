@@ -36,6 +36,7 @@ public:
     std::uint8_t getDelayTimer() const { return delayTimer; }
     std::uint8_t getSoundTimer() const { return soundTimer; }
 
+    bool isRunning() const { return running; }
     bool isHalted() const { return halted; }
 
 private:
@@ -50,6 +51,7 @@ private:
     std::uint8_t delayTimer = 0;
     std::uint8_t soundTimer = 0;
 
+    bool running = true;
     bool halted = false;
 
     Memory& memory;
@@ -63,6 +65,7 @@ private:
 
     void cls(); // Clear display
     void ret(); // Return
+    void exit(); // Exit the interpreter
     void jp(const std::uint16_t addr); // Jump to addr
     void call(const std::uint16_t addr); // Call addr
     void seRegByte(const std::uint8_t x, const std::uint8_t byte); // Skip next instruction if Vx == byte

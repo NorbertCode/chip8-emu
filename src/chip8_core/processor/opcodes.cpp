@@ -11,6 +11,11 @@ void Processor::ret()
     programCounter = stack[--stackPointer];
 }
 
+void Processor::exit()
+{
+    running = false;
+}
+
 void Processor::jp(std::uint16_t addr)
 {
     programCounter = addr;

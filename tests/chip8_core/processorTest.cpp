@@ -140,6 +140,15 @@ TEST_F(ProcessorTest, ret_EmptyStack_Underflows)
     EXPECT_EQ(processor.getStackPointer(), 0xFF);
 }
 
+TEST_F(ProcessorTest, exit_StopsProcessor)
+{
+    EXPECT_TRUE(processor.isRunning());
+
+    processor.execute(0x00FD); // EXIT
+
+    EXPECT_FALSE(processor.isRunning());
+}
+
 TEST_F(ProcessorTest, jp_JumpsToAddress)
 {
     processor.execute(0x1400); // JP 0x400
