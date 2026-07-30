@@ -1,6 +1,7 @@
 #include "display.hpp"
 
-Display::Display(const DisplayConfig& displayConfig) : width(displayConfig.width), height(displayConfig.height)
+Display::Display(const DisplayConfig& displayConfig) 
+    : width(displayConfig.width), height(displayConfig.height), mode(displayConfig.defaultMode)
 {
     display.resize(width * height, 0x0);
 }
@@ -47,16 +48,21 @@ bool Display::xorSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::u
 {
     bool collision = false;
 
-    for (size_t sprite_row_index = 0; sprite_row_index < sprite.size(); ++sprite_row_index)
-    {
-        std::uint8_t sprite_row = sprite[sprite_row_index];
-        std::uint8_t display_row_index = y + sprite_row_index;
+    for (size_t spriteRowIndex = 0; spriteRowIndex < sprite.size(); ++spriteRowIndex)
+        collision |= xorRow(x, y + spriteRowIndex, sprite[spriteRowIndex], clipping);
 
-        for (size_t sprite_column_index = 0; sprite_column_index < 8; ++sprite_column_index)
-        {
-            bool sprite_pixel = ((sprite_row >> (7 - sprite_column_index)) & 0x1) > 0;
-            collision = xorPixel(x + sprite_column_index, display_row_index, sprite_pixel, clipping) || collision;
-        }
+    return collision;
+}
+
+bool Display::xorHiresSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping)
+{
+    bool collision = false;
+
+    for (size_t spriteRowIndex = 0; spriteRowIndex < sprite.size() / 2; ++spriteRowIndex)
+    {
+        std::uint16_t row = (sprite[2 * spriteRowIndex] << 8) | sprite[2 * spriteRowIndex + 1];
+
+        collision |= xorRow(x, y + spriteRowIndex, row, clipping);
     }
 
     return collision;
@@ -65,7 +71,16 @@ bool Display::xorSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::u
 void Display::clear()
 {
     for (size_t i = 0; i < display.size(); ++i)
-    {
         display[i] = 0;
-    }
 }
+
+void Display::setResolutionMode(const ResolutionMode& mode)
+{
+    this->mode = mode;
+}
+
+const ResolutionMode& Display::getResolutionMode() const
+{
+    return mode;
+}
+

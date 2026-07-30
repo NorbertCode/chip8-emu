@@ -230,6 +230,21 @@ TEST(DisplayTest, XorSprite_OutOfBoundsClippingTrue_DoesNotDraw)
     }
 }
 
+TEST(DisplayTest, XorSprite_Lores_DrawsTwiceAsBig)
+{
+    Display display({4, 4, ResolutionMode::Lores});
+    const std::vector<std::uint8_t> expected = {
+        0xFF, 0xFF, 0, 0,
+        0xFF, 0xFF, 0, 0,
+        0, 0, 0xFF, 0xFF,
+        0, 0, 0xFF, 0xFF
+    };
+
+    display.xorSprite(0, 0, sprite_diagonal, true);
+
+    EXPECT_EQ(display.getDisplay(), expected);
+}
+
 TEST(DisplayTest, Clear_SetsAllPixelTo0)
 {
     Display display({4, 4});
