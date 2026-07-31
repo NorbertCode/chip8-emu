@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "peripherals/display.hpp"
+#include <bitset>
 
 const std::vector<std::uint8_t> sprite_diagonal = {
     0b10000000,
@@ -11,6 +12,24 @@ const std::vector<std::uint8_t> sprite_diagonal = {
 const std::vector<std::uint8_t> sprite_square = {
     0b11000000,
     0b11000000
+};
+
+const std::vector<std::uint8_t> hires_sprite = {
+    0b11000000, 0b00000000,
+    0b00110000, 0b00000000,
+    0b00001100, 0b00000000,
+    0b00000011, 0b00000000,
+    0b00000000, 0b11000000,
+    0b00000000, 0b00110000,
+    0b00000000, 0b00001100,
+    0b00000000, 0b00000011,
+    0b00000000, 0b00001100,
+    0b00000000, 0b00110000,
+    0b00000000, 0b11000000,
+    0b00000011, 0b00000000,
+    0b00001100, 0b00000000,
+    0b00110000, 0b00000000,
+    0b11000000, 0b00000000,
 };
 
 TEST(DisplayTest, GetParameters_ReturnsCorrectValues)
@@ -243,6 +262,52 @@ TEST(DisplayTest, XorSprite_Lores_DrawsTwiceAsBig)
     display.xorSprite(0, 0, sprite_diagonal, true);
 
     EXPECT_EQ(display.getDisplay(), expected);
+}
+
+TEST(DisplayTest, XorHiresSprite_Hires_DrawsSprite)
+{
+    Display display({16, 16, ResolutionMode::Hires});
+    const std::vector<std::uint8_t> expected = {
+        0xFF, 0xFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0xFF, 0xFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0xFF, 0xFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0xFF, 0xFF, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0xFF, 0xFF, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xFF, 0xFF, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xFF, 0xFF, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xFF, 0xFF,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xFF, 0xFF, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xFF, 0xFF, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0xFF, 0xFF, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0xFF, 0xFF, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0xFF, 0xFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0xFF, 0xFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0xFF, 0xFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    };
+
+    display.xorHiresSprite(0, 0, hires_sprite, true);
+
+    EXPECT_EQ(display.getDisplay(), expected);
+}
+
+TEST(DisplayTest, XorHiresSprite_NoCollisionHires_ReturnsFalse)
+{
+    Display display({16, 16, ResolutionMode::Hires});
+
+    bool collision = display.xorHiresSprite(0, 0, hires_sprite, true);
+
+    EXPECT_FALSE(collision);
+}
+
+TEST(DisplayTest, XorHiresSprite_CollisionHires_ReturnsTrue)
+{
+    Display display({16, 16, ResolutionMode::Hires});
+    display.xorHiresSprite(0, 0, hires_sprite, true);
+
+    bool collision = display.xorHiresSprite(0, 0, hires_sprite, true);
+
+    EXPECT_TRUE(collision);
 }
 
 TEST(DisplayTest, Clear_SetsAllPixelTo0)
