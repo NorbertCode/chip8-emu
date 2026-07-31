@@ -52,9 +52,11 @@ void Processor::execute(std::uint16_t instruction)
         case 0x0: 
             switch (instruction)
             {
-                case 0x00E0: cls(); break; // CLS
-                case 0x00EE: ret(); break; // RET
-                case 0x00FD: exit(); break; // EXIT
+                case 0x00E0: cls(); break;   // CLS
+                case 0x00EE: ret(); break;   // RET
+                case 0x00FD: exit(); break;  // EXIT
+                case 0x00FE: setDisplayMode(ResolutionMode::Lores); break; // LORES
+                case 0x00FF: setDisplayMode(ResolutionMode::Hires); break; // HIRES
             }
             break;
         case 0x1: jp(addr); break;            // JP

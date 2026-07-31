@@ -32,7 +32,7 @@ public:
     bool xorHiresSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping); // Same as above, but expects a 16x16 sprite
     void clear();
 
-    void setResolutionMode(const ResolutionMode& mode);
+    void setResolutionMode(ResolutionMode mode);
     const ResolutionMode& getResolutionMode() const;
 
 private:

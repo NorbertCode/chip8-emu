@@ -74,7 +74,7 @@ void Display::clear()
         display[i] = 0;
 }
 
-void Display::setResolutionMode(const ResolutionMode& mode)
+void Display::setResolutionMode(ResolutionMode mode)
 {
     this->mode = mode;
 }

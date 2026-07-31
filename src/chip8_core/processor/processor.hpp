@@ -12,6 +12,7 @@ struct Quirks
     bool displayClipping;
     bool vyShifting;
     bool vxJumping;
+    bool clearOnDisplayModeChange;
 };
 
 class Processor
@@ -66,36 +67,37 @@ private:
     void cls(); // Clear display
     void ret(); // Return
     void exit(); // Exit the interpreter
-    void jp(const std::uint16_t addr); // Jump to addr
-    void call(const std::uint16_t addr); // Call addr
-    void seRegByte(const std::uint8_t x, const std::uint8_t byte); // Skip next instruction if Vx == byte
-    void sneRegByte(const std::uint8_t x, const std::uint8_t byte); // Skip next instruction if Vx != byte
-    void seReg(const std::uint8_t x, const std::uint8_t y); // Skip next instruction if Vx == Vy
-    void ldRegByte(const std::uint8_t x, const std::uint8_t byte); // Vx = byte
-    void addRegByte(const std::uint8_t x, const std::uint8_t byte); // Vx = Vx + byte
-    void ldReg(const std::uint8_t x, const std::uint8_t y); // Vx = Vy
-    void orReg(const std::uint8_t x, const std::uint8_t y); // Vx = Vx | Vy
-    void andReg(const std::uint8_t x, const std::uint8_t y); // Vx = Vx & Vy
-    void xorReg(const std::uint8_t x, const std::uint8_t y); // Vx = Vx ^ Vy
-    void addReg(const std::uint8_t x, const std::uint8_t y); // Vx = Vx + Vy, VF = carry
-    void subReg(const std::uint8_t x, const std::uint8_t y); // Vx = Vx - Vy, VF = !borrow
-    void shrReg(const std::uint8_t x, const std::uint8_t y); // Vx = Vx >> 1, VF = LSb(Vx)
-    void subnReg(const std::uint8_t x, const std::uint8_t y); // Vx = Vy - Vx, VF = !borrow
-    void shlReg(const std::uint8_t x, const std::uint8_t y); // Vx = Vx << 1, VF = MSb(Vx)
-    void sneReg(const std::uint8_t x, const std::uint8_t y); // Skip next instruction if Vx != Vy
-    void ldI(const std::uint16_t addr); // I = addr
-    void jpV0(const std::uint16_t addr); // Jump to V0 + addr
-    void rnd(const std::uint8_t x, const std::uint8_t byte); // Vx = random() & byte
-    void drw(const std::uint8_t x, const std::uint8_t y, const std::uint8_t nibble); // Draw n-byte sprite from I at (Vx, Vy), VF = collision
-    void skp(const std::uint8_t x); // Skip next instruction if key with value Vx is pressed
-    void sknp(const std::uint8_t x); // Skip next instruction if key with value Vx is not pressed
-    void ldRegDT(const std::uint8_t x); // Vx = DT
-    void ldK(const std::uint8_t x); // Wait until key press, then Vx = key
-    void ldDTReg(const std::uint8_t x); // DT = Vx
-    void ldSTReg(const std::uint8_t x); // ST = Vx
-    void addI(const std::uint8_t x); // I = I + Vx
-    void ldF(const std::uint8_t x); // I = location of sprite for digit Vx
-    void ldB(const std::uint8_t x); // Store BCD representation of Vx at (I, I + 1, I + 2)
-    void ldIReg(const std::uint8_t x); // Store registers V0-Vx in memory starting at address I
-    void ldRegI(const std::uint8_t x); // Read registers V0-Vx from memory starting at address I
+    void setDisplayMode(ResolutionMode mode); // Switch display mode
+    void jp(std::uint16_t addr); // Jump to addr
+    void call(std::uint16_t addr); // Call addr
+    void seRegByte(std::uint8_t x, std::uint8_t byte); // Skip next instruction if Vx == byte
+    void sneRegByte(std::uint8_t x, std::uint8_t byte); // Skip next instruction if Vx != byte
+    void seReg(std::uint8_t x, std::uint8_t y); // Skip next instruction if Vx == Vy
+    void ldRegByte(std::uint8_t x, std::uint8_t byte); // Vx = byte
+    void addRegByte(std::uint8_t x, std::uint8_t byte); // Vx = Vx + byte
+    void ldReg(std::uint8_t x, std::uint8_t y); // Vx = Vy
+    void orReg(std::uint8_t x, std::uint8_t y); // Vx = Vx | Vy
+    void andReg(std::uint8_t x, std::uint8_t y); // Vx = Vx & Vy
+    void xorReg(std::uint8_t x, std::uint8_t y); // Vx = Vx ^ Vy
+    void addReg(std::uint8_t x, std::uint8_t y); // Vx = Vx + Vy, VF = carry
+    void subReg(std::uint8_t x, std::uint8_t y); // Vx = Vx - Vy, VF = !borrow
+    void shrReg(std::uint8_t x, std::uint8_t y); // Vx = Vx >> 1, VF = LSb(Vx)
+    void subnReg(std::uint8_t x, std::uint8_t y); // Vx = Vy - Vx, VF = !borrow
+    void shlReg(std::uint8_t x, std::uint8_t y); // Vx = Vx << 1, VF = MSb(Vx)
+    void sneReg(std::uint8_t x, std::uint8_t y); // Skip next instruction if Vx != Vy
+    void ldI(std::uint16_t addr); // I = addr
+    void jpV0(std::uint16_t addr); // Jump to V0 + addr
+    void rnd(std::uint8_t x, std::uint8_t byte); // Vx = random() & byte
+    void drw(std::uint8_t x, std::uint8_t y, std::uint8_t nibble); // Draw n-byte sprite from I at (Vx, Vy), VF = collision
+    void skp(std::uint8_t x); // Skip next instruction if key with value Vx is pressed
+    void sknp(std::uint8_t x); // Skip next instruction if key with value Vx is not pressed
+    void ldRegDT(std::uint8_t x); // Vx = DT
+    void ldK(std::uint8_t x); // Wait until key press, then Vx = key
+    void ldDTReg(std::uint8_t x); // DT = Vx
+    void ldSTReg(std::uint8_t x); // ST = Vx
+    void addI(std::uint8_t x); // I = I + Vx
+    void ldF(std::uint8_t x); // I = location of sprite for digit Vx
+    void ldB(std::uint8_t x); // Store BCD representation of Vx at (I, I + 1, I + 2)
+    void ldIReg(std::uint8_t x); // Store registers V0-Vx in memory starting at address I
+    void ldRegI(std::uint8_t x); // Read registers V0-Vx from memory starting at address I
 };
