@@ -106,6 +106,7 @@ void Processor::execute(std::uint16_t instruction)
                 case 0x18: ldSTReg(x); break; // LD ST, Vx
                 case 0x1E: addI(x); break;    // ADD I, Vx
                 case 0x29: ldF(x); break;     // LD F, Vx
+                case 0x30: ldFHires(x); break;// LDHIRES F, Vx
                 case 0x33: ldB(x); break;     // LD B, Vx
                 case 0x55: ldIReg(x); break;  // LD [I], Vx
                 case 0x65: ldRegI(x); break;  // LD Vx, I

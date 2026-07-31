@@ -789,6 +789,24 @@ TEST_F(ProcessorTest, ldF_SecondCharacter_LoadsCorrectly)
     EXPECT_EQ(processor.getRegisterI(), 0x5);
 }
 
+TEST_F(ProcessorTest, ldFHires_FirstCharacter_LoadsCorrectly)
+{
+    processor.execute(0x6000); // LD V0, 0x0
+
+    processor.execute(0xF030); // LDHIRES F, Vx
+
+    EXPECT_EQ(processor.getRegisterI(), 0x50);
+}
+
+TEST_F(ProcessorTest, ldFHires_SecondCharacter_LoadsCorrectly)
+{
+    processor.execute(0x6001); // LD V0, 0x1
+
+    processor.execute(0xF030); // LDHIRES F, Vx
+
+    EXPECT_EQ(processor.getRegisterI(), 0x5A);
+}
+
 TEST_F(ProcessorTest, ldB_SingleDigit_ConvertsToBCD)
 {
     processor.execute(0x6005); // LD V0, 0x05

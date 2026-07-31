@@ -209,6 +209,11 @@ void Processor::ldF(std::uint8_t x)
     registerI = registersV[x] * 5; // Each character is 5 bytes long
 }
 
+void Processor::ldFHires(std::uint8_t x)
+{
+    registerI = (registersV[x] * 10) + 80; // 80 because there are 16 lores characters, each 5 bytes long
+}
+
 void Processor::ldB(std::uint8_t x)
 {
     // 8-bit numbers are at most 3-digit

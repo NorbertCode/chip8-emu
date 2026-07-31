@@ -98,6 +98,7 @@ private:
     void ldSTReg(std::uint8_t x); // ST = Vx
     void addI(std::uint8_t x); // I = I + Vx
     void ldF(std::uint8_t x); // I = location of sprite for digit Vx
+    void ldFHires(std::uint8_t x); // I = location of hires sprite for digit Vx
     void ldB(std::uint8_t x); // Store BCD representation of Vx at (I, I + 1, I + 2)
     void ldIReg(std::uint8_t x); // Store registers V0-Vx in memory starting at address I
     void ldRegI(std::uint8_t x); // Read registers V0-Vx from memory starting at address I
