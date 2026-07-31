@@ -89,6 +89,7 @@ private:
     void jpV0(std::uint16_t addr); // Jump to V0 + addr
     void rnd(std::uint8_t x, std::uint8_t byte); // Vx = random() & byte
     void drw(std::uint8_t x, std::uint8_t y, std::uint8_t nibble); // Draw n-byte sprite from I at (Vx, Vy), VF = collision
+    void drwHires(std::uint8_t x, std::uint8_t y); // Draw hires sprite from I at (Vx, Vy), VF = collision
     void skp(std::uint8_t x); // Skip next instruction if key with value Vx is pressed
     void sknp(std::uint8_t x); // Skip next instruction if key with value Vx is not pressed
     void ldRegDT(std::uint8_t x); // Vx = DT

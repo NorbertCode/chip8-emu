@@ -622,6 +622,52 @@ TEST_F(ProcessorTest, drw_DisplayClippingEnabled_DoesNotWrap)
     EXPECT_FALSE(display.getPixel(1, 0));
 }
 
+TEST_F(ProcessorTest, drwHires_NoCollision_DrawsSpriteNoCollisionFlag)
+{
+    memory.write(0x300, 0b10101010);
+    memory.write(0x301, 0b01010101);
+    processor.execute(0xA300); // LD I, 0x300
+    processor.execute(0x6000); // LD V0, 0x00
+
+    processor.execute(0xD000); // DRWHIRES V0, V0,
+
+    EXPECT_TRUE(display.getPixel(0, 0));
+    EXPECT_FALSE(display.getPixel(1, 0));
+    EXPECT_TRUE(display.getPixel(2, 0));
+    EXPECT_FALSE(display.getPixel(3, 0));
+    EXPECT_TRUE(display.getPixel(4, 0));
+    EXPECT_FALSE(display.getPixel(5, 0));
+    EXPECT_TRUE(display.getPixel(6, 0));
+    EXPECT_FALSE(display.getPixel(7, 0));
+
+    EXPECT_FALSE(display.getPixel(8, 0));
+    EXPECT_TRUE(display.getPixel(9, 0));
+    EXPECT_FALSE(display.getPixel(10, 0));
+    EXPECT_TRUE(display.getPixel(11, 0));
+    EXPECT_FALSE(display.getPixel(12, 0));
+    EXPECT_TRUE(display.getPixel(13, 0));
+    EXPECT_FALSE(display.getPixel(14, 0));
+    EXPECT_TRUE(display.getPixel(15, 0));
+
+    EXPECT_EQ(processor.getRegistersV()[0xF], 0);
+}
+
+TEST_F(ProcessorTest, drwHires_Collision_DrawsSpriteWithCollisionFlag)
+{
+    memory.write(0x300, 0b10100101);
+    memory.write(0x301, 0b01011010);
+    processor.execute(0xA300); // LD I, 0x300
+    processor.execute(0x6000); // LD V0, 0x00
+
+    processor.execute(0xD000); // DRWHIRES V0, V0,
+    processor.execute(0xD000); // DRWHIRES V0, V0,
+
+    for (size_t i = 0; i < 16; ++i)
+        EXPECT_FALSE(display.getPixel(i, 0));
+
+    EXPECT_EQ(processor.getRegistersV()[0xF], 1);
+}
+
 TEST_F(ProcessorTest, skp_KeyPressed_SkipsNextInstruction)
 {
     processor.execute(0x6001); // LD V0, 01 - so SKP looks at key 1

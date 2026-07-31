@@ -154,6 +154,12 @@ void Processor::drw(std::uint8_t x, std::uint8_t y, std::uint8_t nibble)
     registersV[0xF] = display.xorSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
 }
 
+void Processor::drwHires(std::uint8_t x, std::uint8_t y)
+{
+    std::vector<std::uint8_t> sprite = memory.read_bytes(registerI, 16);
+    registersV[0xF] = display.xorHiresSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
+}
+
 void Processor::skp(std::uint8_t x)
 {
     programCounter += keyboard.getKey(registersV[x]) * 2;

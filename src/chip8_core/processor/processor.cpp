@@ -84,7 +84,12 @@ void Processor::execute(std::uint16_t instruction)
         case 0xA: ldI(addr); break;             // LD I, addr
         case 0xB: jpV0(addr); break;            // JP V0, addr
         case 0xC: rnd(x, byte); break;          // RND Vx, byte
-        case 0xD: drw(x, y, nibbles[3]); break; // DRW Vx, Vy, nibble
+        case 0xD: 
+            switch (nibbles[3])
+            {
+                case 0x0: drwHires(x, y); break;       // DRWHIRES Vx, Vy
+                default: drw(x, y, nibbles[3]); break; // DRW Vx, Vy, nibble
+            }
         case 0xE:
             switch (byte)
             {
