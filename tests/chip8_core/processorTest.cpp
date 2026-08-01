@@ -21,7 +21,8 @@ protected:
 
     const DisplayConfig& displayConfig = {
         .width = 64,
-        .height = 32
+        .height = 32,
+        .defaultMode = ResolutionMode::Hires
     };
 
     const Quirks quirks = {
@@ -29,7 +30,8 @@ protected:
         .indexIncrement = false,
         .displayClipping = false,
         .vyShifting = false,
-        .vxJumping = false
+        .vxJumping = false,
+        .clearOnDisplayModeChange = false
     };
 
     Display display;
@@ -177,6 +179,45 @@ TEST_F(ProcessorTest, exit_StopsProcessor)
     processor.execute(0x00FD); // EXIT
 
     EXPECT_FALSE(processor.isRunning());
+}
+
+TEST_F(ProcessorTest, setDisplayMode_SetsDisplayMode)
+{
+    EXPECT_EQ(display.getResolutionMode(), ResolutionMode::Hires);
+
+    processor.execute(0x00FE); // LORES
+
+    EXPECT_EQ(display.getResolutionMode(), ResolutionMode::Lores);
+
+    processor.execute(0x00FF); // HIRES
+
+    EXPECT_EQ(display.getResolutionMode(), ResolutionMode::Hires);
+}
+
+TEST_F(ProcessorTest, setDisplayMode_WithClearDisplayQuirk_ClearsDisplay)
+{
+    Processor processorWithClearDisplayQuirk(memory, display, keyboard, Quirks{ .clearOnDisplayModeChange = true }, 0x200);
+    display.xorPixel(0, 0, true, false);
+
+    processorWithClearDisplayQuirk.execute(0x00FE); // LORES
+
+    EXPECT_EQ(display.getResolutionMode(), ResolutionMode::Lores);
+
+    for (size_t x = 0; x < display.getWidth(); ++x)
+        for (size_t y = 0; y < display.getHeight(); ++y)
+            EXPECT_FALSE(display.getPixel(x, y));
+}
+
+TEST_F(ProcessorTest, setDisplay_WithClearDisplayQuirkToSameMode_DoesNotClearDisplay)
+{
+    Processor processorWithClearDisplayQuirk(memory, display, keyboard, Quirks{ .clearOnDisplayModeChange = true }, 0x200);
+    display.xorPixel(0, 0, true, false);
+
+    processorWithClearDisplayQuirk.execute(0x00FF); // HIRES
+
+    EXPECT_EQ(display.getResolutionMode(), ResolutionMode::Hires);
+
+    EXPECT_TRUE(display.getPixel(0, 0));
 }
 
 TEST_F(ProcessorTest, jp_JumpsToAddress)
