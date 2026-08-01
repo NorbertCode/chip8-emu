@@ -35,6 +35,10 @@ public:
     void setResolutionMode(ResolutionMode mode);
     const ResolutionMode& getResolutionMode() const;
 
+    void scrollLeft(std::uint8_t pixels);
+    void scrollRight(std::uint8_t pixels);
+    void scrollDown(std::uint8_t pixels);
+
 private:
     std::vector<std::uint8_t> display;
 
@@ -48,14 +52,14 @@ private:
 
         for (size_t columnIndex = 0; columnIndex < sizeof(T) * 8; ++columnIndex)
         {
-            bool pixel = ((row >> ((sizeof(T) * 8) - columnIndex - 1)) & 0x1) > 0;
+            const bool pixel = ((row >> ((sizeof(T) * 8) - columnIndex - 1)) & 0x1) > 0;
 
             if (mode == ResolutionMode::Hires)
                 collision |= xorPixel(x + columnIndex, y, pixel, clipping);
             else
             {
-                std::uint8_t doubleX = 2 * (x + columnIndex);
-                std::uint8_t doubleY = 2 * y;
+                const std::uint8_t doubleX = 2 * (x + columnIndex);
+                const std::uint8_t doubleY = 2 * y;
             
                 collision |= xorPixel(doubleX, doubleY, pixel, clipping);
                 collision |= xorPixel(doubleX + 1, doubleY, pixel, clipping);

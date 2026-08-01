@@ -323,3 +323,231 @@ TEST(DisplayTest, Clear_SetsAllPixelTo0)
             EXPECT_FALSE(display.getPixel(i, j));
     }
 }
+
+TEST(DisplayTest, ScrollLeft_InBounds_ScrollsDisplayLeft)
+{
+    Display display({4, 4});
+    display.xorSprite(2, 0, sprite_square, false);
+    std::vector<std::uint8_t> expected = {
+        0, 0xFF, 0xFF, 0,
+        0, 0xFF, 0xFF, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    };
+
+    display.scrollLeft(1);
+
+    EXPECT_EQ(display.getDisplay(), expected);
+}
+
+TEST(DisplayTest, ScrollLeft_AtEdge_ClipsSprite)
+{
+    Display display({4, 4});
+    display.xorSprite(0, 0, sprite_square, false);
+    std::vector<std::uint8_t> expected = {
+        0xFF, 0, 0, 0,
+        0xFF, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    };
+
+    display.scrollLeft(1);
+
+    EXPECT_EQ(display.getDisplay(), expected);
+}
+
+TEST(DisplayTest, ScrollLeft_0Pixels_DoesNotScroll)
+{
+    Display display({4, 4});
+    display.xorSprite(0, 0, sprite_square, false);
+    std::vector<std::uint8_t> expected = {
+        0xFF, 0xFF, 0, 0,
+        0xFF, 0xFF, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    };
+
+    display.scrollLeft(0);
+
+    EXPECT_EQ(display.getDisplay(), expected);
+}
+
+TEST(DisplayTest, ScrollLeft_DisplayWidth_ClearsScreen)
+{
+    Display display({4, 4});
+    display.xorSprite(0, 0, sprite_square, false);
+
+    display.scrollLeft(4);
+
+    for (size_t i = 0; i < display.getWidth(); ++i)
+    {
+        for (size_t j = 0; j < display.getHeight(); ++j)
+            EXPECT_FALSE(display.getPixel(i, j));
+    }
+}
+
+TEST(DisplayTest, ScrollLeft_AboveDisplayWidth_ClearsScreen)
+{
+    Display display({4, 4});
+    display.xorSprite(0, 0, sprite_square, false);
+
+    display.scrollLeft(5);
+
+    for (size_t i = 0; i < display.getWidth(); ++i)
+    {
+        for (size_t j = 0; j < display.getHeight(); ++j)
+            EXPECT_FALSE(display.getPixel(i, j));
+    }
+}
+
+TEST(DisplayTest, ScrollRight_InBounds_ScrollsDisplayRight)
+{
+    Display display({4, 4});
+    display.xorSprite(0, 0, sprite_square, false);
+    std::vector<std::uint8_t> expected = {
+        0, 0, 0xFF, 0xFF,
+        0, 0, 0xFF, 0xFF,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    };
+
+    display.scrollRight(2);
+
+    EXPECT_EQ(display.getDisplay(), expected);
+}
+
+TEST(DisplayTest, ScrollRight_AtEdge_ClipsSprite)
+{
+    Display display({4, 4});
+    display.xorSprite(2, 0, sprite_square, false);
+    std::vector<std::uint8_t> expected = {
+        0, 0, 0, 0xFF,
+        0, 0, 0, 0xFF,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    };
+
+    display.scrollRight(1);
+
+    EXPECT_EQ(display.getDisplay(), expected);
+}
+
+TEST(DisplayTest, ScrollRight_0Pixels_DoesNotScroll)
+{
+    Display display({4, 4});
+    display.xorSprite(0, 0, sprite_square, false);
+    std::vector<std::uint8_t> expected = {
+        0xFF, 0xFF, 0, 0,
+        0xFF, 0xFF, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    };
+
+    display.scrollRight(0);
+
+    EXPECT_EQ(display.getDisplay(), expected);
+}
+
+TEST(DisplayTest, ScrollRight_DisplayWidth_ClearsScreen)
+{
+    Display display({4, 4});
+    display.xorSprite(0, 0, sprite_square, false);
+
+    display.scrollRight(4);
+
+    for (size_t i = 0; i < display.getWidth(); ++i)
+    {
+        for (size_t j = 0; j < display.getHeight(); ++j)
+            EXPECT_FALSE(display.getPixel(i, j));
+    }
+}
+
+TEST(DisplayTest, ScrollRight_AboveDisplayWidth_ClearsScreen)
+{
+    Display display({4, 4});
+    display.xorSprite(0, 0, sprite_square, false);
+
+    display.scrollRight(5);
+
+    for (size_t i = 0; i < display.getWidth(); ++i)
+    {
+        for (size_t j = 0; j < display.getHeight(); ++j)
+            EXPECT_FALSE(display.getPixel(i, j));
+    }
+}
+
+TEST(DisplayTest, ScrollDown_InBounds_ScrollsDisplayDown)
+{
+    Display display({4, 4});
+    display.xorSprite(0, 0, sprite_square, false);
+    std::vector<std::uint8_t> expected = {
+        0, 0, 0, 0,
+        0xFF, 0xFF, 0, 0,
+        0xFF, 0xFF, 0, 0,
+        0, 0, 0, 0
+    };
+
+    display.scrollDown(1);
+
+    EXPECT_EQ(display.getDisplay(), expected);
+}
+
+TEST(DisplayTest, ScrollDown_AtEdge_ClipsSprite)
+{
+    Display display({4, 4});
+    display.xorSprite(0, 0, sprite_square, false);
+    std::vector<std::uint8_t> expected = {
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0xFF, 0xFF, 0, 0,
+    };
+
+    display.scrollDown(3);
+
+    EXPECT_EQ(display.getDisplay(), expected);
+}
+
+TEST(DisplayTest, ScrollDown_0Pixels_DoesNotScroll)
+{
+    Display display({4, 4});
+    display.xorSprite(0, 0, sprite_square, false);
+    std::vector<std::uint8_t> expected = {
+        0xFF, 0xFF, 0, 0,
+        0xFF, 0xFF, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    };
+
+    display.scrollDown(0);
+
+    EXPECT_EQ(display.getDisplay(), expected);
+}
+
+TEST(DisplayTest, ScrollDown_DisplayHeight_ClearsScreen)
+{
+    Display display({4, 4});
+    display.xorSprite(0, 0, sprite_square, false);
+
+    display.scrollDown(4);
+
+    for (size_t i = 0; i < display.getWidth(); ++i)
+    {
+        for (size_t j = 0; j < display.getHeight(); ++j)
+            EXPECT_FALSE(display.getPixel(i, j));
+    }
+}
+
+TEST(DisplayTest, ScrollDown_AboveDisplayHeight_ClearsScreen)
+{
+    Display display({4, 4});
+    display.xorSprite(0, 0, sprite_square, false);
+
+    display.scrollDown(5);
+
+    for (size_t i = 0; i < display.getWidth(); ++i)
+    {
+        for (size_t j = 0; j < display.getHeight(); ++j)
+            EXPECT_FALSE(display.getPixel(i, j));
+    }
+}

@@ -1,4 +1,5 @@
 #include "display.hpp"
+#include <algorithm>
 
 Display::Display(const DisplayConfig& displayConfig) 
     : width(displayConfig.width), height(displayConfig.height), mode(displayConfig.defaultMode)
@@ -36,7 +37,7 @@ bool Display::xorPixel(std::uint8_t x, std::uint8_t y, bool value, bool clipping
     else if (x >= getWidth() || y >= getHeight())
         return false;
 
-    size_t index = y * width + x;
+    const size_t index = y * width + x;
 
     bool collision = display[index] && value;
     display[index] = ((display[index] == 0xFF) != value) * 0xFF;
@@ -60,7 +61,7 @@ bool Display::xorHiresSprite(std::uint8_t x, std::uint8_t y, const std::vector<s
 
     for (size_t spriteRowIndex = 0; spriteRowIndex < sprite.size() / 2; ++spriteRowIndex)
     {
-        std::uint16_t row = (sprite[2 * spriteRowIndex] << 8) | sprite[2 * spriteRowIndex + 1];
+        const std::uint16_t row = (sprite[2 * spriteRowIndex] << 8) | sprite[2 * spriteRowIndex + 1];
 
         collision |= xorRow(x, y + spriteRowIndex, row, clipping);
     }
@@ -84,3 +85,32 @@ const ResolutionMode& Display::getResolutionMode() const
     return mode;
 }
 
+void Display::scrollLeft(std::uint8_t pixels)
+{
+    for (size_t row = 0; row < height; ++row)
+    {
+        const size_t rowStart = row * width;
+        const size_t rowEnd = rowStart + width;
+
+        const auto remainingStart = std::shift_left(display.begin() + rowStart, display.begin() + rowEnd, pixels);
+        std::fill(remainingStart, display.begin() + rowEnd, 0);
+    }
+}
+
+void Display::scrollRight(std::uint8_t pixels)
+{
+    for (size_t row = 0; row < height; ++row)
+    {
+        const size_t rowStart = row * width;
+        const size_t rowEnd = rowStart + width;
+
+        const auto remainingEnd = std::shift_right(display.begin() + rowStart, display.begin() + rowEnd, pixels);
+        std::fill(display.begin() + rowStart, remainingEnd, 0);
+    }
+}
+
+void Display::scrollDown(std::uint8_t pixels)
+{
+    const auto remainingEnd = std::shift_right(display.begin(), display.end(), pixels * width);
+    std::fill(display.begin(), remainingEnd, 0);
+}
