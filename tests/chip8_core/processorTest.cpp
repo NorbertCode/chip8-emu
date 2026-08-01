@@ -99,6 +99,16 @@ TEST_F(ProcessorTest, Fetch_IncrementsProgramCounter)
     EXPECT_EQ(processor.getProgramCounter(), 0x202);
 }
 
+TEST_F(ProcessorTest, scrollDown_ScrollsDisplayDownByNRows)
+{
+    display.xorPixel(0, 0, true, false);
+
+    processor.execute(0x00C2); // SCD 2
+
+    EXPECT_FALSE(display.getPixel(0, 0));
+    EXPECT_TRUE(display.getPixel(0, 2));
+}
+
 TEST_F(ProcessorTest, cls_DisplayWithPixels_ClearsDisplay)
 {
     display.xorPixel(0, 0, true, false);
@@ -138,6 +148,26 @@ TEST_F(ProcessorTest, ret_EmptyStack_Underflows)
 
     EXPECT_EQ(processor.getProgramCounter(), processor.getStack()[0xFF]);
     EXPECT_EQ(processor.getStackPointer(), 0xFF);
+}
+
+TEST_F(ProcessorTest, scrollRight_ScrollsDisplayRightBy4Pixels)
+{
+    display.xorPixel(0, 0, true, false);
+
+    processor.execute(0x00FB); // SCR
+
+    EXPECT_FALSE(display.getPixel(0, 0));
+    EXPECT_TRUE(display.getPixel(4, 0));
+}
+
+TEST_F(ProcessorTest, scrollLeft_ScrollsDisplayLeftBy4Pixels)
+{
+    display.xorPixel(4, 0, true, false);
+
+    processor.execute(0x00FC); // SCL
+
+    EXPECT_FALSE(display.getPixel(4, 0));
+    EXPECT_TRUE(display.getPixel(0, 0));
 }
 
 TEST_F(ProcessorTest, exit_StopsProcessor)

@@ -64,8 +64,11 @@ private:
     std::mt19937 random;
     std::uniform_int_distribution<std::uint16_t> uniformDistribution;
 
+    void scrollDown(std::uint8_t pixels); // Scroll display down by n pixels
     void cls(); // Clear display
     void ret(); // Return
+    void scrollRight(); // Scroll display right by 4 pixels
+    void scrollLeft(); // Scroll display left by 4 pixels
     void exit(); // Exit the interpreter
     void setDisplayMode(ResolutionMode mode); // Switch display mode
     void jp(std::uint16_t addr); // Jump to addr

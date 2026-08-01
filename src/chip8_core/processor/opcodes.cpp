@@ -1,6 +1,11 @@
 #include "processor.hpp"
 #include <random>
 
+void Processor::scrollDown(std::uint8_t pixels)
+{
+    display.scrollDown(pixels);
+}
+
 void Processor::cls()
 {
     display.clear();
@@ -9,6 +14,16 @@ void Processor::cls()
 void Processor::ret()
 {
     programCounter = stack[--stackPointer];
+}
+
+void Processor::scrollRight()
+{
+    display.scrollRight(4);
+}
+
+void Processor::scrollLeft()
+{
+    display.scrollLeft(4);
 }
 
 void Processor::exit()
