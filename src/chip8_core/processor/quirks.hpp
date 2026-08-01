@@ -15,5 +15,6 @@ struct Quirks
     bool vyShifting;
     bool vxJumping;
     bool clearOnDisplayModeChange;
+    bool vfCollisionCounter;
     LoresSpriteHandling loresSpriteHandling;
 };

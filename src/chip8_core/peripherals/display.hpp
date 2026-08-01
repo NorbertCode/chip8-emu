@@ -28,8 +28,8 @@ public:
     std::uint8_t getHeight() const;
 
     bool xorPixel(std::uint8_t x, std::uint8_t y, bool value, bool clipping); // Returns collision (if pixel was erased)
-    bool xorSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping); // Returns collision (if pixel was erased)
-    bool xorHiresSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping); // Same as above, but expects a 16x16 sprite
+    int xorSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping); // Returns collision (if pixel was erased)
+    int xorHiresSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping); // Same as above, but expects a 16x16 sprite
     void clear();
 
     void setResolutionMode(ResolutionMode mode);

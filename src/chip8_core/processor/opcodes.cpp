@@ -166,7 +166,8 @@ void Processor::rnd(std::uint8_t x, std::uint8_t byte)
 void Processor::drw(std::uint8_t x, std::uint8_t y, std::uint8_t nibble)
 {
     std::vector<std::uint8_t> sprite = memory.read_bytes(registerI, nibble);
-    registersV[0xF] = display.xorSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
+    int collisions = display.xorSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
+    registersV[0xF] = quirks.vfCollisionCounter && display.getResolutionMode() == ResolutionMode::Hires ? collisions : collisions > 0;
 }
 
 void Processor::drwHires(std::uint8_t x, std::uint8_t y)
@@ -175,8 +176,8 @@ void Processor::drwHires(std::uint8_t x, std::uint8_t y)
 
     if (display.getResolutionMode() == ResolutionMode::Hires || quirks.loresSpriteHandling == LoresSpriteHandling::DrawWide)
     {
-        registersV[0xF] = display.xorHiresSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
-        return;
+        int collisions = display.xorHiresSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
+        registersV[0xF] = quirks.vfCollisionCounter && display.getResolutionMode() == ResolutionMode::Hires ? collisions : collisions > 0;
     }
     else if (quirks.loresSpriteHandling == LoresSpriteHandling::DrawTall)
         drw(x, y, 16);

@@ -32,6 +32,7 @@ protected:
         .vyShifting = false,
         .vxJumping = false,
         .clearOnDisplayModeChange = false,
+        .vfCollisionCounter = false,
         .loresSpriteHandling = LoresSpriteHandling::DrawWide
     };
 
@@ -713,6 +714,39 @@ TEST_F(ProcessorTest, drw_DisplayClippingEnabled_DoesNotWrap)
     EXPECT_FALSE(display.getPixel(1, 0));
 }
 
+TEST_F(ProcessorTest, drw_HiresVfCollisionCounter_CountsCollidingRows)
+{
+    Quirks quirksWithCollisionCounter = quirks;
+    quirksWithCollisionCounter.vfCollisionCounter = true;
+    Processor processorWithCollisionCounter(memory, display, keyboard, quirksWithCollisionCounter, 0x200);
+    memory.write(0x300, 0b11110000);
+    memory.write(0x301, 0b11110000);
+    processorWithCollisionCounter.execute(0xA300); // LD I, 0x300
+    processorWithCollisionCounter.execute(0x6000); // LD V0, 0x00
+    processorWithCollisionCounter.execute(0xD002); // DRW V0, V0, 2
+
+    processorWithCollisionCounter.execute(0xD002); // DRW V0, V0, 2
+
+    EXPECT_EQ(processorWithCollisionCounter.getRegistersV()[0xF], 2);
+}
+
+TEST_F(ProcessorTest, drw_LoresVfCollisionCounter_ActsAsFlag)
+{
+    Quirks quirksWithCollisionCounter = quirks;
+    quirksWithCollisionCounter.vfCollisionCounter = true;
+    Processor processorWithCollisionCounter(memory, display, keyboard, quirksWithCollisionCounter, 0x200);
+    memory.write(0x300, 0b11110000);
+    memory.write(0x301, 0b11110000);
+    processorWithCollisionCounter.execute(0xA300); // LD I, 0x300
+    processorWithCollisionCounter.execute(0x6000); // LD V0, 0x00
+    processorWithCollisionCounter.execute(0x00FE); // LORES
+    processorWithCollisionCounter.execute(0xD002); // DRW V0, V0, 2
+
+    processorWithCollisionCounter.execute(0xD002); // DRW V0, V0, 2
+
+    EXPECT_EQ(processorWithCollisionCounter.getRegistersV()[0xF], 1);
+}
+
 TEST_F(ProcessorTest, drwHires_HiresNoCollision_Draws16x16SpriteNoCollisionFlag)
 {
     memory.write(0x300, 0b10101010);
@@ -868,6 +902,39 @@ TEST_F(ProcessorTest, drwHires_LoresNoOperation_DoesNotDrawAnything)
     processorWithNoLoresOperations.execute(0xD000); // DRWHIRES V0, V0,
 
     EXPECT_EQ(IsClear(display), true);
+}
+
+TEST_F(ProcessorTest, drwHires_HiresVfCollisionCounter_CountsCollidingRows)
+{
+    Quirks quirksWithCollisionCounter = quirks;
+    quirksWithCollisionCounter.vfCollisionCounter = true;
+    Processor processorWithCollisionCounter(memory, display, keyboard, quirksWithCollisionCounter, 0x200);
+    memory.write(0x300, 0b11110000);
+    memory.write(0x302, 0b11110000);
+    processorWithCollisionCounter.execute(0xA300); // LD I, 0x300
+    processorWithCollisionCounter.execute(0x6000); // LD V0, 0x00
+    processorWithCollisionCounter.execute(0xD000); // DRW V0, V0
+
+    processorWithCollisionCounter.execute(0xD000); // DRW V0, V0
+
+    EXPECT_EQ(processorWithCollisionCounter.getRegistersV()[0xF], 2);
+}
+
+TEST_F(ProcessorTest, drwHires_LoresVfCollisionCounter_ActsAsFlag)
+{
+    Quirks quirksWithCollisionCounter = quirks;
+    quirksWithCollisionCounter.vfCollisionCounter = true;
+    Processor processorWithCollisionCounter(memory, display, keyboard, quirksWithCollisionCounter, 0x200);
+    memory.write(0x300, 0b11110000);
+    memory.write(0x302, 0b11110000);
+    processorWithCollisionCounter.execute(0xA300); // LD I, 0x300
+    processorWithCollisionCounter.execute(0x6000); // LD V0, 0x00
+    processorWithCollisionCounter.execute(0x00FE); // LORES
+    processorWithCollisionCounter.execute(0xD000); // DRW V0, V0
+
+    processorWithCollisionCounter.execute(0xD000); // DRW V0, V0
+
+    EXPECT_EQ(processorWithCollisionCounter.getRegistersV()[0xF], 1);
 }
 
 TEST_F(ProcessorTest, skp_KeyPressed_SkipsNextInstruction)

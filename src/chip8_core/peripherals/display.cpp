@@ -45,28 +45,28 @@ bool Display::xorPixel(std::uint8_t x, std::uint8_t y, bool value, bool clipping
     return collision;
 }
 
-bool Display::xorSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping)
+int Display::xorSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping)
 {
-    bool collision = false;
+    int collisions = 0;
 
     for (size_t spriteRowIndex = 0; spriteRowIndex < sprite.size(); ++spriteRowIndex)
-        collision |= xorRow(x, y + spriteRowIndex, sprite[spriteRowIndex], clipping);
+        collisions += xorRow(x, y + spriteRowIndex, sprite[spriteRowIndex], clipping);
 
-    return collision;
+    return collisions;
 }
 
-bool Display::xorHiresSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping)
+int Display::xorHiresSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping)
 {
-    bool collision = false;
+    int collisions = 0;
 
     for (size_t spriteRowIndex = 0; spriteRowIndex < sprite.size() / 2; ++spriteRowIndex)
     {
         const std::uint16_t row = (sprite[2 * spriteRowIndex] << 8) | sprite[2 * spriteRowIndex + 1];
 
-        collision |= xorRow(x, y + spriteRowIndex, row, clipping);
+        collisions += xorRow(x, y + spriteRowIndex, row, clipping);
     }
 
-    return collision;
+    return collisions;
 }
 
 void Display::clear()
