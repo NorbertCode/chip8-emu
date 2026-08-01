@@ -171,8 +171,15 @@ void Processor::drw(std::uint8_t x, std::uint8_t y, std::uint8_t nibble)
 
 void Processor::drwHires(std::uint8_t x, std::uint8_t y)
 {
-    std::vector<std::uint8_t> sprite = memory.read_bytes(registerI, 16);
-    registersV[0xF] = display.xorHiresSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
+    std::vector<std::uint8_t> sprite = memory.read_bytes(registerI, 32);
+
+    if (display.getResolutionMode() == ResolutionMode::Hires || quirks.loresSpriteHandling == LoresSpriteHandling::DrawWide)
+    {
+        registersV[0xF] = display.xorHiresSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
+        return;
+    }
+    else if (quirks.loresSpriteHandling == LoresSpriteHandling::DrawTall)
+        drw(x, y, 16);
 }
 
 void Processor::skp(std::uint8_t x)

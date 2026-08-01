@@ -31,7 +31,8 @@ protected:
         .displayClipping = false,
         .vyShifting = false,
         .vxJumping = false,
-        .clearOnDisplayModeChange = false
+        .clearOnDisplayModeChange = false,
+        .loresSpriteHandling = LoresSpriteHandling::DrawWide
     };
 
     Display display;
@@ -39,9 +40,19 @@ protected:
     Keyboard keyboard;
 
     ProcessorTest() 
-        : memory(memoryConfig), display(displayConfig), keyboard(keyboard), processor(memory, display, keyboard, quirks, 0x200) { }
+        : memory(memoryConfig), display(displayConfig), processor(memory, display, keyboard, quirks, 0x200) { }
 
 };
+
+bool IsClear(const Display& display)
+{
+    for (size_t x = 0; x < display.getWidth(); ++x)
+        for (size_t y = 0; y < display.getHeight(); ++y)
+            if (display.getPixel(x, y))
+                return false;
+
+    return true;
+}
 
 TEST_F(ProcessorTest, Step_NotHalted_FetchesAndExecutesInstruction)
 {
@@ -118,18 +129,14 @@ TEST_F(ProcessorTest, cls_DisplayWithPixels_ClearsDisplay)
 
     processor.execute(0x00E0); // CLS
 
-    for (size_t x = 0; x < display.getWidth(); ++x)
-        for (size_t y = 0; y < display.getHeight(); ++y)
-            EXPECT_FALSE(display.getPixel(x, y));
+    EXPECT_TRUE(IsClear(display));
 }
 
 TEST_F(ProcessorTest, cls_CleanDisplay_DoesNothing)
 {
     processor.execute(0x00E0); // CLS
 
-    for (size_t x = 0; x < display.getWidth(); ++x)
-        for (size_t y = 0; y < display.getHeight(); ++y)
-            EXPECT_FALSE(display.getPixel(x, y));
+    EXPECT_TRUE(IsClear(display));
 }
 
 TEST_F(ProcessorTest, ret_AddressOnStack_ReturnsFromSubroutine)
@@ -196,27 +203,27 @@ TEST_F(ProcessorTest, setDisplayMode_SetsDisplayMode)
 
 TEST_F(ProcessorTest, setDisplayMode_WithClearDisplayQuirk_ClearsDisplay)
 {
-    Processor processorWithClearDisplayQuirk(memory, display, keyboard, Quirks{ .clearOnDisplayModeChange = true }, 0x200);
+    Quirks quirksWithClearDisplay = quirks;
+    quirksWithClearDisplay.clearOnDisplayModeChange = true;
+    Processor processorWithClearDisplayQuirk(memory, display, keyboard, quirksWithClearDisplay, 0x200);
     display.xorPixel(0, 0, true, false);
 
     processorWithClearDisplayQuirk.execute(0x00FE); // LORES
 
     EXPECT_EQ(display.getResolutionMode(), ResolutionMode::Lores);
-
-    for (size_t x = 0; x < display.getWidth(); ++x)
-        for (size_t y = 0; y < display.getHeight(); ++y)
-            EXPECT_FALSE(display.getPixel(x, y));
+    EXPECT_TRUE(IsClear(display));
 }
 
 TEST_F(ProcessorTest, setDisplay_WithClearDisplayQuirkToSameMode_DoesNotClearDisplay)
 {
-    Processor processorWithClearDisplayQuirk(memory, display, keyboard, Quirks{ .clearOnDisplayModeChange = true }, 0x200);
+    Quirks quirksWithClearDisplay = quirks;
+    quirksWithClearDisplay.clearOnDisplayModeChange = true;
+    Processor processorWithClearDisplayQuirk(memory, display, keyboard, quirksWithClearDisplay, 0x200);
     display.xorPixel(0, 0, true, false);
 
     processorWithClearDisplayQuirk.execute(0x00FF); // HIRES
 
     EXPECT_EQ(display.getResolutionMode(), ResolutionMode::Hires);
-
     EXPECT_TRUE(display.getPixel(0, 0));
 }
 
@@ -341,8 +348,9 @@ TEST_F(ProcessorTest, orReg_vfResetDisabled_DoesNotResetVf)
 
 TEST_F(ProcessorTest, orReg_vfResetEnabled_ResetsVf)
 {
-    Processor processorWithVfReset(memory, display, keyboard, Quirks{ .vfReset = true }, 0x200);
-
+    Quirks quirksWithVfReset = quirks;
+    quirksWithVfReset.vfReset = true;
+    Processor processorWithVfReset(memory, display, keyboard, quirksWithVfReset, 0x200);
     processorWithVfReset.execute(0x6001); // LD V0, 0x01
     processorWithVfReset.execute(0x6102); // LD V1, 0x02
     processorWithVfReset.execute(0x6FFF); // LD VF, 0xFF
@@ -375,7 +383,9 @@ TEST_F(ProcessorTest, andReg_vfResetDisabled_DoesNotResetVf)
 
 TEST_F(ProcessorTest, andReg_vfResetEnabled_ResetsVf)
 {
-    Processor processorWithVfReset(memory, display, keyboard, Quirks{ .vfReset = true }, 0x200);
+    Quirks quirksWithVfReset = quirks;
+    quirksWithVfReset.vfReset = true;
+    Processor processorWithVfReset(memory, display, keyboard, quirksWithVfReset, 0x200);
     processorWithVfReset.execute(0x6001); // LD V0, 0x01
     processorWithVfReset.execute(0x6103); // LD V1, 0x03
     processorWithVfReset.execute(0x6FFF); // LD VF, 0xFF
@@ -408,7 +418,9 @@ TEST_F(ProcessorTest, xorReg_vfResetDisabled_DoesNotResetVf)
 
 TEST_F(ProcessorTest, xorReg_vfResetEnabled_ResetsVf)
 {
-    Processor processorWithVfReset(memory, display, keyboard, Quirks{ .vfReset = true }, 0x200);
+    Quirks quirksWithVfReset = quirks;
+    quirksWithVfReset.vfReset = true;
+    Processor processorWithVfReset(memory, display, keyboard, quirksWithVfReset, 0x200);
     processorWithVfReset.execute(0x6001); // LD V0, 0x01
     processorWithVfReset.execute(0x6103); // LD V1, 0x03
     processorWithVfReset.execute(0x6FFF); // LD VF, 0xFF
@@ -486,7 +498,9 @@ TEST_F(ProcessorTest, shrReg_LsbOne_ShiftsRightWithOneLsb)
 
 TEST_F(ProcessorTest, shrReg_vyShiftingEnabled_ShiftsVyInsteadOfVx)
 {
-    Processor processorWithVyShifting(memory, display, keyboard, Quirks{ .vyShifting = true }, 0x200);
+    Quirks quirksWithVyShifting = quirks;
+    quirksWithVyShifting.vyShifting = true;
+    Processor processorWithVyShifting(memory, display, keyboard, quirksWithVyShifting, 0x200);
     processorWithVyShifting.execute(0x6002); // LD V0, 0x02
     processorWithVyShifting.execute(0x6104); // LD V1, 0x04
 
@@ -541,7 +555,9 @@ TEST_F(ProcessorTest, shlReg_MsbOne_ShiftsLeftWithOneMsb)
 
 TEST_F(ProcessorTest, shlReg_vyShiftingEnabled_ShiftsVyInsteadOfVx)
 {
-    Processor processorWithVyShifting(memory, display, keyboard, Quirks{ .vyShifting = true }, 0x200);
+    Quirks quirksWithVyShifting = quirks;
+    quirksWithVyShifting.vyShifting = true;
+    Processor processorWithVyShifting(memory, display, keyboard, quirksWithVyShifting, 0x200);
     processorWithVyShifting.execute(0x6001); // LD V0, 0x01
     processorWithVyShifting.execute(0x6102); // LD V1, 0x02
 
@@ -588,7 +604,9 @@ TEST_F(ProcessorTest, jpV0_vxJumpingDisabled_JumpsToAddressPlusV0)
 
 TEST_F(ProcessorTest, jpV0_vxJumpingEnabled_JumpsToAddressPlusVx)
 {
-    Processor processorWithVxJumping(memory, display, keyboard, Quirks{ .vxJumping = true }, 0x200);
+    Quirks quirksWithVxJumping = quirks;
+    quirksWithVxJumping.vxJumping = true;
+    Processor processorWithVxJumping(memory, display, keyboard, quirksWithVxJumping, 0x200);
     processorWithVxJumping.execute(0x6001); // LD V0, 0x01
     processorWithVxJumping.execute(0x6102); // LD V1, 0x02
 
@@ -679,7 +697,9 @@ TEST_F(ProcessorTest, drw_DisplayClippingDisabled_WrapsAround)
 
 TEST_F(ProcessorTest, drw_DisplayClippingEnabled_DoesNotWrap)
 {
-    Processor processorWithClipping(memory, display, keyboard, Quirks{ .displayClipping = true }, 0x200);
+    Quirks quirksWithClipping = quirks;
+    quirksWithClipping.displayClipping = true;
+    Processor processorWithClipping(memory, display, keyboard, quirksWithClipping, 0x200);
     memory.write(0x300, 0b11111111);
     processorWithClipping.execute(0xA300); // LD I, 0x300
     processorWithClipping.execute(0x603E); // LD V0, 0x3E (62)
@@ -693,10 +713,11 @@ TEST_F(ProcessorTest, drw_DisplayClippingEnabled_DoesNotWrap)
     EXPECT_FALSE(display.getPixel(1, 0));
 }
 
-TEST_F(ProcessorTest, drwHires_NoCollision_DrawsSpriteNoCollisionFlag)
+TEST_F(ProcessorTest, drwHires_HiresNoCollision_Draws16x16SpriteNoCollisionFlag)
 {
     memory.write(0x300, 0b10101010);
     memory.write(0x301, 0b01010101);
+    memory.write(0x31E, 0b10000000); // Last row of 16x16 sprite
     processor.execute(0xA300); // LD I, 0x300
     processor.execute(0x6000); // LD V0, 0x00
 
@@ -720,10 +741,12 @@ TEST_F(ProcessorTest, drwHires_NoCollision_DrawsSpriteNoCollisionFlag)
     EXPECT_FALSE(display.getPixel(14, 0));
     EXPECT_TRUE(display.getPixel(15, 0));
 
+    EXPECT_TRUE(display.getPixel(0, 15));
+
     EXPECT_EQ(processor.getRegistersV()[0xF], 0);
 }
 
-TEST_F(ProcessorTest, drwHires_Collision_DrawsSpriteWithCollisionFlag)
+TEST_F(ProcessorTest, drwHires_HiresCollision_Draws16x16SpriteWithCollisionFlag)
 {
     memory.write(0x300, 0b10100101);
     memory.write(0x301, 0b01011010);
@@ -733,10 +756,118 @@ TEST_F(ProcessorTest, drwHires_Collision_DrawsSpriteWithCollisionFlag)
     processor.execute(0xD000); // DRWHIRES V0, V0,
     processor.execute(0xD000); // DRWHIRES V0, V0,
 
-    for (size_t i = 0; i < 16; ++i)
-        EXPECT_FALSE(display.getPixel(i, 0));
-
+    EXPECT_EQ(IsClear(display), true);
     EXPECT_EQ(processor.getRegistersV()[0xF], 1);
+}
+
+TEST_F(ProcessorTest, drwHires_LoresDrawWideNoCollsion_Draws16x16SpriteNoCollisionFlag)
+{
+    Quirks quirksWithWideSprites = quirks;
+    quirksWithWideSprites.loresSpriteHandling = LoresSpriteHandling::DrawWide;
+    Processor processorWithWideSprites(memory, display, keyboard, quirksWithWideSprites, 0x200);
+    memory.write(0x300, 0b10101010);
+    memory.write(0x301, 0b01010101);
+    memory.write(0x31E, 0b10000000);
+    processorWithWideSprites.execute(0xA300); // LD I, 0x300
+    processorWithWideSprites.execute(0x6000); // LD V0, 0x00
+    processorWithWideSprites.execute(0x00FE); // LORES
+
+    processorWithWideSprites.execute(0xD000); // DRWHIRES V0, V0,
+
+    EXPECT_EQ(display.getPixel(0, 0), true);
+    EXPECT_EQ(display.getPixel(1, 0), true);
+    EXPECT_EQ(display.getPixel(2, 0), false);
+    EXPECT_EQ(display.getPixel(3, 0), false);
+
+    EXPECT_EQ(display.getPixel(16, 0), false);
+    EXPECT_EQ(display.getPixel(17, 0), false);
+    EXPECT_EQ(display.getPixel(18, 0), true);
+    EXPECT_EQ(display.getPixel(19, 0), true);
+
+    EXPECT_EQ(display.getPixel(0, 30), true);
+
+    EXPECT_EQ(processorWithWideSprites.getRegistersV()[0xF], 0);
+}
+
+TEST_F(ProcessorTest, drwHires_LoresDrawWideCollision_Draws16x16SpriteWithCollisionFlag)
+{
+    Quirks quirksWithWideSprites = quirks;
+    quirksWithWideSprites.loresSpriteHandling = LoresSpriteHandling::DrawWide;
+    Processor processorWithWideSprites(memory, display, keyboard, quirksWithWideSprites, 0x200);
+    memory.write(0x300, 0b10100101);
+    memory.write(0x301, 0b01011010);
+    processorWithWideSprites.execute(0xA300); // LD I, 0x300
+    processorWithWideSprites.execute(0x6000); // LD V0, 0x00
+    processorWithWideSprites.execute(0x00FE); // LORES
+
+    processorWithWideSprites.execute(0xD000); // DRWHIRES V0, V0,
+    processorWithWideSprites.execute(0xD000); // DRWHIRES V0, V0,
+
+    EXPECT_EQ(IsClear(display), true);
+    EXPECT_EQ(processorWithWideSprites.getRegistersV()[0xF], 1);
+}
+
+TEST_F(ProcessorTest, drwHires_LoresDrawTallNoCollision_Draws8x16SpriteNoCollisionFlag)
+{
+    Quirks quirksWithTallSprites = quirks;
+    quirksWithTallSprites.loresSpriteHandling = LoresSpriteHandling::DrawTall;
+    Processor processorWithTallSprites(memory, display, keyboard, quirksWithTallSprites, 0x200);
+    memory.write(0x300, 0b10101010);
+    memory.write(0x301, 0b01010101);
+    memory.write(0x30F, 0b10000000);
+    processorWithTallSprites.execute(0xA300); // LD I, 0x300
+    processorWithTallSprites.execute(0x6000); // LD V0, 0x00
+    processorWithTallSprites.execute(0x00FE); // LORES
+
+    processorWithTallSprites.execute(0xD000); // DRWHIRES V0, V0,
+
+    EXPECT_EQ(display.getPixel(0, 0), true);
+    EXPECT_EQ(display.getPixel(1, 0), true);
+    EXPECT_EQ(display.getPixel(2, 0), false);
+    EXPECT_EQ(display.getPixel(3, 0), false);
+
+    EXPECT_EQ(display.getPixel(0, 2), false);
+    EXPECT_EQ(display.getPixel(1, 2), false);
+    EXPECT_EQ(display.getPixel(2, 2), true);
+    EXPECT_EQ(display.getPixel(3, 2), true);
+
+    EXPECT_EQ(display.getPixel(0, 30), true);
+
+    EXPECT_EQ(processorWithTallSprites.getRegistersV()[0xF], 0);
+}
+
+TEST_F(ProcessorTest, drwHires_LoresDrawTallCollision_Draws8x16SpriteWithCollisionFlag)
+{
+    Quirks quirksWithTallSprites = quirks;
+    quirksWithTallSprites.loresSpriteHandling = LoresSpriteHandling::DrawTall;
+    Processor processorWithTallSprites(memory, display, keyboard, quirksWithTallSprites, 0x200);
+    memory.write(0x300, 0b10100101);
+    memory.write(0x301, 0b01011010);
+    processorWithTallSprites.execute(0xA300); // LD I, 0x300
+    processorWithTallSprites.execute(0x6000); // LD V0, 0x00
+    processorWithTallSprites.execute(0x00FE); // LORES
+
+    processorWithTallSprites.execute(0xD000); // DRWHIRES V0, V0,
+    processorWithTallSprites.execute(0xD000); // DRWHIRES V0, V0,
+
+    EXPECT_EQ(IsClear(display), true);
+    EXPECT_EQ(processorWithTallSprites.getRegistersV()[0xF], 1);
+}
+
+TEST_F(ProcessorTest, drwHires_LoresNoOperation_DoesNotDrawAnything)
+{
+    Quirks quirksWithNoLoresOperations = quirks;
+    quirksWithNoLoresOperations.loresSpriteHandling = LoresSpriteHandling::NoOperation;
+    Processor processorWithNoLoresOperations(memory, display, keyboard, quirksWithNoLoresOperations, 0x200);
+    memory.write(0x300, 0b10100101);
+    memory.write(0x301, 0b01011010);
+    processorWithNoLoresOperations.execute(0xA300); // LD I, 0x300
+    processorWithNoLoresOperations.execute(0x6000); // LD V0, 0x00
+    processorWithNoLoresOperations.execute(0x00FE); // LORES
+
+    processorWithNoLoresOperations.execute(0xD000); // DRWHIRES V0, V0,
+
+    EXPECT_EQ(IsClear(display), true);
 }
 
 TEST_F(ProcessorTest, skp_KeyPressed_SkipsNextInstruction)
@@ -945,7 +1076,9 @@ TEST_F(ProcessorTest, ldIReg_IndexIncrementDisabled_DoesNotIncrementI)
 
 TEST_F(ProcessorTest, ldIReg_IndexIncrementEnabled_IncrementsI)
 {
-    Processor processorWithIndexIncrement(memory, display, keyboard, Quirks{ .indexIncrement = true }, 0x200);
+    Quirks quirksWithIndexIncrement = quirks;
+    quirksWithIndexIncrement.indexIncrement = true;
+    Processor processorWithIndexIncrement(memory, display, keyboard, quirksWithIndexIncrement, 0x200);
     processorWithIndexIncrement.execute(0x6001); // LD V0, 0x01
     processorWithIndexIncrement.execute(0x6102); // LD V1, 0x02
     processorWithIndexIncrement.execute(0x6203); // LD V2, 0x03
@@ -986,7 +1119,9 @@ TEST_F(ProcessorTest, ldRegI_IndexIncrementDisabled_DoesNotIncrementI)
 
 TEST_F(ProcessorTest, ldRegI_IndexIncrementEnabled_IncrementsI)
 {
-    Processor processorWithIndexIncrement(memory, display, keyboard, Quirks{ .indexIncrement = true }, 0x200);
+    Quirks quirksWithIndexIncrement = quirks;
+    quirksWithIndexIncrement.indexIncrement = true;
+    Processor processorWithIndexIncrement(memory, display, keyboard, quirksWithIndexIncrement, 0x200);
     memory.write(0x300, 0x01);
     memory.write(0x301, 0x02);
     memory.write(0x302, 0x03);

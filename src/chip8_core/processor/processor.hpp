@@ -1,19 +1,10 @@
 #pragma once
 #include <array>
 #include <random>
+#include "quirks.hpp"
 #include "memory/memory.hpp"
 #include "peripherals/display.hpp"
 #include "peripherals/keyboard.hpp"
-
-struct Quirks
-{
-    bool vfReset;
-    bool indexIncrement;
-    bool displayClipping;
-    bool vyShifting;
-    bool vxJumping;
-    bool clearOnDisplayModeChange;
-};
 
 class Processor
 {
