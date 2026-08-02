@@ -3,13 +3,14 @@
 #include <random>
 #include "quirks.hpp"
 #include "memory/memory.hpp"
+#include "memory/storage.hpp"
 #include "peripherals/display.hpp"
 #include "peripherals/keyboard.hpp"
 
 class Processor
 {
 public:
-    Processor(Memory& memory, Display& display, Keyboard& keyboard, const Quirks& quirks, std::uint16_t startProgramCounter);
+    Processor(Memory& memory, Storage& storage, Display& display, Keyboard& keyboard, const Quirks& quirks, std::uint16_t startProgramCounter);
 
     void step();
     void tickTimers();
@@ -47,6 +48,7 @@ private:
     bool halted = false;
 
     Memory& memory;
+    Storage& storage;
     Display& display;
     Keyboard& keyboard;
 
@@ -96,4 +98,6 @@ private:
     void ldB(std::uint8_t x); // Store BCD representation of Vx at (I, I + 1, I + 2)
     void ldIReg(std::uint8_t x); // Store registers V0-Vx in memory starting at address I
     void ldRegI(std::uint8_t x); // Read registers V0-Vx from memory starting at address I
+    void ldRplReg(std::uint8_t x); // Store registers V0-Vx in storage
+    void ldRegRpl(std::uint8_t x); // Read registers V0-Vx from storage
 };

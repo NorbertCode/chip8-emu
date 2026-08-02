@@ -36,8 +36,11 @@ const std::vector<std::uint8_t> FONT_DATA = {
     0xFF, 0xFF, 0xC0, 0xC0, 0xFF, 0xFF, 0xC0, 0xC0, 0xC0, 0xC0  // Hires F
 };
 
-Chip8::Chip8(const Quirks& quirks, const MemoryConfig& memoryConfig, const DisplayConfig& displayConfig)
-    : memory(memoryConfig, FONT_DATA), display(displayConfig), processor(memory, display, keyboard, quirks, memoryConfig.reservedEnd) { }
+Chip8::Chip8(const Quirks& quirks, const MemoryConfig& memoryConfig, const DisplayConfig& displayConfig, std::function<void(const std::array<std::uint8_t, 16>&)> onStorageWriteCallback)
+    : memory(memoryConfig, FONT_DATA), display(displayConfig), processor(memory, storage, display, keyboard, quirks, memoryConfig.reservedEnd) 
+{
+    storage.setOnWriteCallback(std::move(onStorageWriteCallback));
+}
 
 void Chip8::loadRom(const std::vector<std::uint8_t>& rom)
 {

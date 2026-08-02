@@ -266,3 +266,14 @@ void Processor::ldRegI(std::uint8_t x)
     if (quirks.indexIncrement)
         registerI = memoryIndex + 1;
 }
+
+void Processor::ldRplReg(std::uint8_t x)
+{
+    storage.write(std::vector<std::uint8_t>(registersV.begin(), registersV.begin() + x + 1));
+}
+
+void Processor::ldRegRpl(std::uint8_t x)
+{
+    const auto& data = storage.read();
+    std::copy(data.begin(), data.begin() + x + 1, registersV.begin());
+}

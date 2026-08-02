@@ -22,7 +22,7 @@ DesktopLoader::DesktopLoader(const std::string& name, int argc, char* argv[])
         throw std::runtime_error("Failed to parse arguments. Perhaps you forgot to specify ROM file?");
     }
     
-    std::string romPath = parser.get<std::string>("rom");
+    romPath = parser.get<std::string>("rom");
     std::string configPath = parser.get<std::string>("--config");
 
     loadRom(romPath);
@@ -32,6 +32,11 @@ DesktopLoader::DesktopLoader(const std::string& name, int argc, char* argv[])
 const std::vector<std::uint8_t>& DesktopLoader::getRom() const
 {
     return rom;
+}
+
+const std::string& DesktopLoader::getRomPath() const
+{
+    return romPath;
 }
 
 const ApplicationConfig& DesktopLoader::getApplicationConfig() const
@@ -52,6 +57,32 @@ const DisplayConfig& DesktopLoader::getDisplayConfig() const
 const Quirks& DesktopLoader::getQuirks() const
 {
     return quirks;
+}
+
+void DesktopLoader::writeStorage(const std::array<std::uint8_t, 16>& data) const
+{
+    std::ofstream file(romPath + ".rpl", std::ios::binary);
+    if (!file.is_open())
+        return;
+
+    file.write(reinterpret_cast<const char*>(data.data()), data.size() * sizeof(std::uint8_t));
+
+    file.close();
+}
+
+std::array<std::uint8_t, 16> DesktopLoader::readStorage() const
+{
+    std::array<std::uint8_t, 16> data{};
+
+    std::ifstream file(romPath + ".rpl", std::ios::binary);
+    if (!file.is_open())
+        return data;
+
+    file.read(reinterpret_cast<char*>(data.data()), 16);
+
+    file.close();
+
+    return data;
 }
 
 void DesktopLoader::loadRom(const std::string& romPath)

@@ -1,8 +1,8 @@
 #include "processor.hpp"
 #include "opcodes.cpp"
 
-Processor::Processor(Memory& memory, Display& display, Keyboard& keyboard, const Quirks& quirks, std::uint16_t startProgramCounter)
-    : memory(memory), display(display), keyboard(keyboard), quirks(quirks), random(std::random_device{}()), uniformDistribution(0, 255)
+Processor::Processor(Memory& memory, Storage& storage, Display& display, Keyboard& keyboard, const Quirks& quirks, std::uint16_t startProgramCounter)
+    : memory(memory), storage(storage), display(display), keyboard(keyboard), quirks(quirks), random(std::random_device{}()), uniformDistribution(0, 255)
 {
     programCounter = startProgramCounter;
 }
@@ -113,6 +113,8 @@ void Processor::execute(std::uint16_t instruction)
                 case 0x33: ldB(x); break;     // LD B, Vx
                 case 0x55: ldIReg(x); break;  // LD [I], Vx
                 case 0x65: ldRegI(x); break;  // LD Vx, I
+                case 0x75: ldRplReg(x); break;// LD RPL, Vx
+                case 0x85: ldRegRpl(x); break;// LD Vx, RPL
             }
             break;
     }

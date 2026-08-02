@@ -8,14 +8,19 @@ public:
     DesktopLoader(const std::string& name, int argc, char* argv[]);
 
     const std::vector<std::uint8_t>& getRom() const;
+    const std::string& getRomPath() const;
 
     const ApplicationConfig& getApplicationConfig() const;
     const MemoryConfig& getMemoryConfig() const;
     const DisplayConfig& getDisplayConfig() const;
     const Quirks& getQuirks() const;
 
+    void writeStorage(const std::array<std::uint8_t, 16>& data) const;
+    std::array<std::uint8_t, 16> readStorage() const;
+
 private:
     std::vector<std::uint8_t> rom;
+    std::string romPath;
 
     ApplicationConfig applicationConfig;
     MemoryConfig memoryConfig;

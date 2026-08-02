@@ -38,10 +38,11 @@ protected:
 
     Display display;
     Memory memory;
+    Storage storage;
     Keyboard keyboard;
 
     ProcessorTest() 
-        : memory(memoryConfig), display(displayConfig), processor(memory, display, keyboard, quirks, 0x200) { }
+        : memory(memoryConfig), display(displayConfig), processor(memory, storage, display, keyboard, quirks, 0x200) { }
 
 };
 
@@ -206,7 +207,7 @@ TEST_F(ProcessorTest, setDisplayMode_WithClearDisplayQuirk_ClearsDisplay)
 {
     Quirks quirksWithClearDisplay = quirks;
     quirksWithClearDisplay.clearOnDisplayModeChange = true;
-    Processor processorWithClearDisplayQuirk(memory, display, keyboard, quirksWithClearDisplay, 0x200);
+    Processor processorWithClearDisplayQuirk(memory, storage, display, keyboard, quirksWithClearDisplay, 0x200);
     display.xorPixel(0, 0, true, false);
 
     processorWithClearDisplayQuirk.execute(0x00FE); // LORES
@@ -219,7 +220,7 @@ TEST_F(ProcessorTest, setDisplay_WithClearDisplayQuirkToSameMode_DoesNotClearDis
 {
     Quirks quirksWithClearDisplay = quirks;
     quirksWithClearDisplay.clearOnDisplayModeChange = true;
-    Processor processorWithClearDisplayQuirk(memory, display, keyboard, quirksWithClearDisplay, 0x200);
+    Processor processorWithClearDisplayQuirk(memory, storage, display, keyboard, quirksWithClearDisplay, 0x200);
     display.xorPixel(0, 0, true, false);
 
     processorWithClearDisplayQuirk.execute(0x00FF); // HIRES
@@ -351,7 +352,7 @@ TEST_F(ProcessorTest, orReg_vfResetEnabled_ResetsVf)
 {
     Quirks quirksWithVfReset = quirks;
     quirksWithVfReset.vfReset = true;
-    Processor processorWithVfReset(memory, display, keyboard, quirksWithVfReset, 0x200);
+    Processor processorWithVfReset(memory, storage, display, keyboard, quirksWithVfReset, 0x200);
     processorWithVfReset.execute(0x6001); // LD V0, 0x01
     processorWithVfReset.execute(0x6102); // LD V1, 0x02
     processorWithVfReset.execute(0x6FFF); // LD VF, 0xFF
@@ -386,7 +387,7 @@ TEST_F(ProcessorTest, andReg_vfResetEnabled_ResetsVf)
 {
     Quirks quirksWithVfReset = quirks;
     quirksWithVfReset.vfReset = true;
-    Processor processorWithVfReset(memory, display, keyboard, quirksWithVfReset, 0x200);
+    Processor processorWithVfReset(memory, storage, display, keyboard, quirksWithVfReset, 0x200);
     processorWithVfReset.execute(0x6001); // LD V0, 0x01
     processorWithVfReset.execute(0x6103); // LD V1, 0x03
     processorWithVfReset.execute(0x6FFF); // LD VF, 0xFF
@@ -421,7 +422,7 @@ TEST_F(ProcessorTest, xorReg_vfResetEnabled_ResetsVf)
 {
     Quirks quirksWithVfReset = quirks;
     quirksWithVfReset.vfReset = true;
-    Processor processorWithVfReset(memory, display, keyboard, quirksWithVfReset, 0x200);
+    Processor processorWithVfReset(memory, storage, display, keyboard, quirksWithVfReset, 0x200);
     processorWithVfReset.execute(0x6001); // LD V0, 0x01
     processorWithVfReset.execute(0x6103); // LD V1, 0x03
     processorWithVfReset.execute(0x6FFF); // LD VF, 0xFF
@@ -501,7 +502,7 @@ TEST_F(ProcessorTest, shrReg_vyShiftingEnabled_ShiftsVyInsteadOfVx)
 {
     Quirks quirksWithVyShifting = quirks;
     quirksWithVyShifting.vyShifting = true;
-    Processor processorWithVyShifting(memory, display, keyboard, quirksWithVyShifting, 0x200);
+    Processor processorWithVyShifting(memory, storage, display, keyboard, quirksWithVyShifting, 0x200);
     processorWithVyShifting.execute(0x6002); // LD V0, 0x02
     processorWithVyShifting.execute(0x6104); // LD V1, 0x04
 
@@ -558,7 +559,7 @@ TEST_F(ProcessorTest, shlReg_vyShiftingEnabled_ShiftsVyInsteadOfVx)
 {
     Quirks quirksWithVyShifting = quirks;
     quirksWithVyShifting.vyShifting = true;
-    Processor processorWithVyShifting(memory, display, keyboard, quirksWithVyShifting, 0x200);
+    Processor processorWithVyShifting(memory, storage, display, keyboard, quirksWithVyShifting, 0x200);
     processorWithVyShifting.execute(0x6001); // LD V0, 0x01
     processorWithVyShifting.execute(0x6102); // LD V1, 0x02
 
@@ -607,7 +608,7 @@ TEST_F(ProcessorTest, jpV0_vxJumpingEnabled_JumpsToAddressPlusVx)
 {
     Quirks quirksWithVxJumping = quirks;
     quirksWithVxJumping.vxJumping = true;
-    Processor processorWithVxJumping(memory, display, keyboard, quirksWithVxJumping, 0x200);
+    Processor processorWithVxJumping(memory, storage, display, keyboard, quirksWithVxJumping, 0x200);
     processorWithVxJumping.execute(0x6001); // LD V0, 0x01
     processorWithVxJumping.execute(0x6102); // LD V1, 0x02
 
@@ -700,7 +701,7 @@ TEST_F(ProcessorTest, drw_DisplayClippingEnabled_DoesNotWrap)
 {
     Quirks quirksWithClipping = quirks;
     quirksWithClipping.displayClipping = true;
-    Processor processorWithClipping(memory, display, keyboard, quirksWithClipping, 0x200);
+    Processor processorWithClipping(memory, storage, display, keyboard, quirksWithClipping, 0x200);
     memory.write(0x300, 0b11111111);
     processorWithClipping.execute(0xA300); // LD I, 0x300
     processorWithClipping.execute(0x603E); // LD V0, 0x3E (62)
@@ -718,7 +719,7 @@ TEST_F(ProcessorTest, drw_HiresVfCollisionCounter_CountsCollidingRows)
 {
     Quirks quirksWithCollisionCounter = quirks;
     quirksWithCollisionCounter.vfCollisionCounter = true;
-    Processor processorWithCollisionCounter(memory, display, keyboard, quirksWithCollisionCounter, 0x200);
+    Processor processorWithCollisionCounter(memory, storage, display, keyboard, quirksWithCollisionCounter, 0x200);
     memory.write(0x300, 0b11110000);
     memory.write(0x301, 0b11110000);
     processorWithCollisionCounter.execute(0xA300); // LD I, 0x300
@@ -734,7 +735,7 @@ TEST_F(ProcessorTest, drw_LoresVfCollisionCounter_ActsAsFlag)
 {
     Quirks quirksWithCollisionCounter = quirks;
     quirksWithCollisionCounter.vfCollisionCounter = true;
-    Processor processorWithCollisionCounter(memory, display, keyboard, quirksWithCollisionCounter, 0x200);
+    Processor processorWithCollisionCounter(memory, storage, display, keyboard, quirksWithCollisionCounter, 0x200);
     memory.write(0x300, 0b11110000);
     memory.write(0x301, 0b11110000);
     processorWithCollisionCounter.execute(0xA300); // LD I, 0x300
@@ -798,7 +799,7 @@ TEST_F(ProcessorTest, drwHires_LoresDrawWideNoCollsion_Draws16x16SpriteNoCollisi
 {
     Quirks quirksWithWideSprites = quirks;
     quirksWithWideSprites.loresSpriteHandling = LoresSpriteHandling::DrawWide;
-    Processor processorWithWideSprites(memory, display, keyboard, quirksWithWideSprites, 0x200);
+    Processor processorWithWideSprites(memory, storage, display, keyboard, quirksWithWideSprites, 0x200);
     memory.write(0x300, 0b10101010);
     memory.write(0x301, 0b01010101);
     memory.write(0x31E, 0b10000000);
@@ -827,7 +828,7 @@ TEST_F(ProcessorTest, drwHires_LoresDrawWideCollision_Draws16x16SpriteWithCollis
 {
     Quirks quirksWithWideSprites = quirks;
     quirksWithWideSprites.loresSpriteHandling = LoresSpriteHandling::DrawWide;
-    Processor processorWithWideSprites(memory, display, keyboard, quirksWithWideSprites, 0x200);
+    Processor processorWithWideSprites(memory, storage, display, keyboard, quirksWithWideSprites, 0x200);
     memory.write(0x300, 0b10100101);
     memory.write(0x301, 0b01011010);
     processorWithWideSprites.execute(0xA300); // LD I, 0x300
@@ -845,7 +846,7 @@ TEST_F(ProcessorTest, drwHires_LoresDrawTallNoCollision_Draws8x16SpriteNoCollisi
 {
     Quirks quirksWithTallSprites = quirks;
     quirksWithTallSprites.loresSpriteHandling = LoresSpriteHandling::DrawTall;
-    Processor processorWithTallSprites(memory, display, keyboard, quirksWithTallSprites, 0x200);
+    Processor processorWithTallSprites(memory, storage, display, keyboard, quirksWithTallSprites, 0x200);
     memory.write(0x300, 0b10101010);
     memory.write(0x301, 0b01010101);
     memory.write(0x30F, 0b10000000);
@@ -874,7 +875,7 @@ TEST_F(ProcessorTest, drwHires_LoresDrawTallCollision_Draws8x16SpriteWithCollisi
 {
     Quirks quirksWithTallSprites = quirks;
     quirksWithTallSprites.loresSpriteHandling = LoresSpriteHandling::DrawTall;
-    Processor processorWithTallSprites(memory, display, keyboard, quirksWithTallSprites, 0x200);
+    Processor processorWithTallSprites(memory, storage, display, keyboard, quirksWithTallSprites, 0x200);
     memory.write(0x300, 0b10100101);
     memory.write(0x301, 0b01011010);
     processorWithTallSprites.execute(0xA300); // LD I, 0x300
@@ -892,7 +893,7 @@ TEST_F(ProcessorTest, drwHires_LoresNoOperation_DoesNotDrawAnything)
 {
     Quirks quirksWithNoLoresOperations = quirks;
     quirksWithNoLoresOperations.loresSpriteHandling = LoresSpriteHandling::NoOperation;
-    Processor processorWithNoLoresOperations(memory, display, keyboard, quirksWithNoLoresOperations, 0x200);
+    Processor processorWithNoLoresOperations(memory, storage, display, keyboard, quirksWithNoLoresOperations, 0x200);
     memory.write(0x300, 0b10100101);
     memory.write(0x301, 0b01011010);
     processorWithNoLoresOperations.execute(0xA300); // LD I, 0x300
@@ -908,7 +909,7 @@ TEST_F(ProcessorTest, drwHires_HiresVfCollisionCounter_CountsCollidingRows)
 {
     Quirks quirksWithCollisionCounter = quirks;
     quirksWithCollisionCounter.vfCollisionCounter = true;
-    Processor processorWithCollisionCounter(memory, display, keyboard, quirksWithCollisionCounter, 0x200);
+    Processor processorWithCollisionCounter(memory, storage, display, keyboard, quirksWithCollisionCounter, 0x200);
     memory.write(0x300, 0b11110000);
     memory.write(0x302, 0b11110000);
     processorWithCollisionCounter.execute(0xA300); // LD I, 0x300
@@ -924,7 +925,7 @@ TEST_F(ProcessorTest, drwHires_LoresVfCollisionCounter_ActsAsFlag)
 {
     Quirks quirksWithCollisionCounter = quirks;
     quirksWithCollisionCounter.vfCollisionCounter = true;
-    Processor processorWithCollisionCounter(memory, display, keyboard, quirksWithCollisionCounter, 0x200);
+    Processor processorWithCollisionCounter(memory, storage, display, keyboard, quirksWithCollisionCounter, 0x200);
     memory.write(0x300, 0b11110000);
     memory.write(0x302, 0b11110000);
     processorWithCollisionCounter.execute(0xA300); // LD I, 0x300
@@ -1145,7 +1146,7 @@ TEST_F(ProcessorTest, ldIReg_IndexIncrementEnabled_IncrementsI)
 {
     Quirks quirksWithIndexIncrement = quirks;
     quirksWithIndexIncrement.indexIncrement = true;
-    Processor processorWithIndexIncrement(memory, display, keyboard, quirksWithIndexIncrement, 0x200);
+    Processor processorWithIndexIncrement(memory, storage, display, keyboard, quirksWithIndexIncrement, 0x200);
     processorWithIndexIncrement.execute(0x6001); // LD V0, 0x01
     processorWithIndexIncrement.execute(0x6102); // LD V1, 0x02
     processorWithIndexIncrement.execute(0x6203); // LD V2, 0x03
@@ -1188,7 +1189,7 @@ TEST_F(ProcessorTest, ldRegI_IndexIncrementEnabled_IncrementsI)
 {
     Quirks quirksWithIndexIncrement = quirks;
     quirksWithIndexIncrement.indexIncrement = true;
-    Processor processorWithIndexIncrement(memory, display, keyboard, quirksWithIndexIncrement, 0x200);
+    Processor processorWithIndexIncrement(memory, storage, display, keyboard, quirksWithIndexIncrement, 0x200);
     memory.write(0x300, 0x01);
     memory.write(0x301, 0x02);
     memory.write(0x302, 0x03);
@@ -1197,4 +1198,35 @@ TEST_F(ProcessorTest, ldRegI_IndexIncrementEnabled_IncrementsI)
     processorWithIndexIncrement.execute(0xF265); // LD V2, [I]
 
     EXPECT_EQ(processorWithIndexIncrement.getRegisterI(), 0x304);
+}
+
+TEST_F(ProcessorTest, ldRplReg_StoresRegistersInStorage)
+{
+    std::array<std::uint8_t, 16> storageData{};
+    storage.setOnWriteCallback([&storageData](const std::array<std::uint8_t, 16>& data) {
+        storageData = data;
+    });
+    processor.execute(0x6001); // LD V0, 0x01
+    processor.execute(0x6102); // LD V1, 0x02
+    processor.execute(0x6203); // LD V2, 0x03
+    processor.execute(0x6304); // LD V3, 0x04
+
+    processor.execute(0xF275); // LD RPL, V2
+
+    EXPECT_EQ(storageData[0], 0x01);
+    EXPECT_EQ(storageData[1], 0x02);
+    EXPECT_EQ(storageData[2], 0x03);
+    EXPECT_EQ(storageData[3], 0x0);
+}
+
+TEST_F(ProcessorTest, ldRegRpl_ReadRegistersFromStorage)
+{
+    storage.setData({0x01, 0x02, 0x03, 0x04});
+
+    processor.execute(0xF285); // LD V2, RPL
+
+    EXPECT_EQ(processor.getRegistersV()[0], 0x01);
+    EXPECT_EQ(processor.getRegistersV()[1], 0x02);
+    EXPECT_EQ(processor.getRegistersV()[2], 0x03);
+    EXPECT_EQ(processor.getRegistersV()[3], 0x00);
 }
