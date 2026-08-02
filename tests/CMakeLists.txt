@@ -12,6 +12,7 @@ add_executable(
     run_tests
     chip8_core/displayTest.cpp
     chip8_core/memoryTest.cpp
+    chip8_core/storageTest.cpp
     chip8_core/keyboardTest.cpp
     chip8_core/processorTest.cpp
 )

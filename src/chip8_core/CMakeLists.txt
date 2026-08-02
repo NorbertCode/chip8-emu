@@ -1,6 +1,7 @@
 add_library(
     chip8_core
     memory/memory.cpp
+    memory/storage.cpp
     processor/processor.cpp
     peripherals/display.cpp
     peripherals/keyboard.cpp
