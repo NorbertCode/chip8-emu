@@ -26,4 +26,6 @@ private:
     void loadConfig(const std::string& configPath);
 
     std::array<std::string, 16> parseKeyMap(const toml::table& keyMap) const;
+    ResolutionMode parseResolutionMode(const std::string& mode) const;
+    LoresSpriteHandling parseLoresSpriteHandling(const std::string& handling) const;
 };

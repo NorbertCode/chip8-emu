@@ -12,6 +12,7 @@ reserved_read_only = true
 [display]
 width = 64
 height = 32
+default_mode = "hires"
 
 [quirks]
 vf_reset = false
@@ -19,6 +20,9 @@ index_increment = false
 display_clipping = false
 vy_shifting = false
 vx_jumping = false
+clear_on_mode_change = true
+vf_collision_counter = false
+loresSpriteHandling = "draw_wide"
 
 [keymap]
 0 = "X"

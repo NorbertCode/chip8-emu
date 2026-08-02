@@ -105,7 +105,8 @@ void DesktopLoader::loadConfig(const std::string& configPath)
 
     displayConfig = {
         .width = config["display"]["width"].value_or<std::uint8_t>(64),
-        .height = config["display"]["height"].value_or<std::uint8_t>(32)
+        .height = config["display"]["height"].value_or<std::uint8_t>(32),
+        .defaultMode = parseResolutionMode(config["display"]["default_mode"].value_or("hires"))
     };
 
     quirks = {
@@ -114,6 +115,9 @@ void DesktopLoader::loadConfig(const std::string& configPath)
         .displayClipping = config["quirks"]["display_clipping"].value_or(false),
         .vyShifting = config["quirks"]["vy_shifting"].value_or(false),
         .vxJumping = config["quirks"]["vx_jumping"].value_or(false),
+        .clearOnDisplayModeChange = config["quirks"]["clear_on_mode_change"].value_or(true),
+        .vfCollisionCounter = config["quirks"]["vf_collision_counter"].value_or(false),
+        .loresSpriteHandling = parseLoresSpriteHandling(config["quirks"]["loresSpriteHandling"].value_or("draw_wide"))
     };
 }
 
@@ -135,4 +139,22 @@ std::array<std::string, 16> DesktopLoader::parseKeyMap(const toml::table& keyMap
     }
 
     return keyArray;
+}
+
+ResolutionMode DesktopLoader::parseResolutionMode(const std::string& mode) const
+{
+    if (mode == "lores")
+        return ResolutionMode::Lores;
+    else 
+        return ResolutionMode::Hires;
+}
+
+LoresSpriteHandling DesktopLoader::parseLoresSpriteHandling(const std::string& handling) const
+{
+    if (handling == "draw_wide")
+        return LoresSpriteHandling::DrawWide;
+    else if (handling == "draw_tall")
+        return LoresSpriteHandling::DrawTall;
+    else
+        return LoresSpriteHandling::NoOperation;
 }
