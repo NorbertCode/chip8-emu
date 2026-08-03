@@ -19,9 +19,9 @@ public:
     void loadRom(const std::vector<std::uint8_t>& rom);
 
 private:
-    Processor processor;
     Memory memory;
     Storage storage;
     Display display;
     Keyboard keyboard;
+    Processor processor;
 };

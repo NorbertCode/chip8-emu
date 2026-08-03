@@ -6,8 +6,6 @@
 class ProcessorTest : public ::testing::Test
 {
 protected:
-    Processor processor;
-
     const MemoryConfig memoryConfig = {
         .reservedEnd = 0x200,
         .programEnd = 0x1000,
@@ -19,7 +17,7 @@ protected:
         0x20, 0x60, 0x20, 0x20, 0x70 // 1 character
     };
 
-    const DisplayConfig& displayConfig = {
+    const DisplayConfig displayConfig = {
         .width = 64,
         .height = 32,
         .defaultMode = ResolutionMode::Hires
@@ -36,10 +34,12 @@ protected:
         .loresSpriteHandling = LoresSpriteHandling::DrawWide
     };
 
-    Display display;
     Memory memory;
+    Display display;
     Storage storage;
     Keyboard keyboard;
+
+    Processor processor;
 
     ProcessorTest() 
         : memory(memoryConfig), display(displayConfig), processor(memory, storage, display, keyboard, quirks, 0x200) { }
