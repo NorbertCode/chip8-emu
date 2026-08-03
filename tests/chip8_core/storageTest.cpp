@@ -51,7 +51,7 @@ TEST(StorageTest, SetData_CallbackIsNotCalled)
 {
     bool callbackCalled = false;
     Storage storage;
-    storage.setOnWriteCallback([&callbackCalled](const std::array<std::uint8_t, 16>& data) {
+    storage.setOnWriteCallback([&callbackCalled](const std::array<std::uint8_t, 16>&) {
         callbackCalled = true;
     });
     std::array<std::uint8_t, 16> newData = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
