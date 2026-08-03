@@ -1,0 +1,40 @@
+[application]
+loop_frequency = 600
+timer_frequency = 60
+display_frequency = 60
+audio_frequency = 440
+
+[memory]
+reserved_end = 0x200
+program_end = 0x1000
+reserved_read_only = true
+
+[display]
+width = 64
+height = 32
+
+[quirks]
+vf_reset = true
+index_increment = true
+display_clipping = true
+vy_shifting = true
+vx_jumping = false
+loresSpriteHandling = "no_operation"
+
+[keymap]
+0 = "X"
+1 = "1"
+2 = "2"
+3 = "3"
+4 = "Q"
+5 = "W"
+6 = "E"
+7 = "A"
+8 = "S"
+9 = "D"
+A = "Z"
+B = "C"
+C = "4"
+D = "R"
+E = "F"
+F = "V"

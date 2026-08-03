@@ -1,0 +1,43 @@
+[application]
+loop_frequency = 600
+timer_frequency = 60
+display_frequency = 60
+audio_frequency = 440
+
+[memory]
+reserved_end = 0x200
+program_end = 0x1000
+reserved_read_only = true
+
+[display]
+width = 128
+height = 64
+default_mode = "lores"
+
+[quirks]
+vf_reset = false
+index_increment = false
+display_clipping = true
+vy_shifting = false
+vx_jumping = true
+clear_on_mode_change = true
+vf_collision_counter = false
+loresSpriteHandling = "draw_wide"
+
+[keymap]
+0 = "X"
+1 = "1"
+2 = "2"
+3 = "3"
+4 = "Q"
+5 = "W"
+6 = "E"
+7 = "A"
+8 = "S"
+9 = "D"
+A = "Z"
+B = "C"
+C = "4"
+D = "R"
+E = "F"
+F = "V"

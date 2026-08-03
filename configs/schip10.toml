@@ -10,19 +10,19 @@ program_end = 0x1000
 reserved_read_only = true
 
 [display]
-width = 64
-height = 32
-default_mode = "hires"
+width = 128
+height = 64
+default_mode = "lores"
 
 [quirks]
 vf_reset = false
-index_increment = false
-display_clipping = false
+index_increment = true
+display_clipping = true
 vy_shifting = false
-vx_jumping = false
-clear_on_mode_change = true
+vx_jumping = true
+clear_on_mode_change = false
 vf_collision_counter = false
-loresSpriteHandling = "draw_wide"
+loresSpriteHandling = "draw_tall"
 
 [keymap]
 0 = "X"
