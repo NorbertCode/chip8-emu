@@ -8,4 +8,6 @@ add_library(
     chip8.cpp
 )
 
+target_link_libraries(chip8_core PRIVATE warnings)
+
 target_include_directories(chip8_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

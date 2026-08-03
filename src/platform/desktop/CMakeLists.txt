@@ -20,8 +20,11 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(tomlplusplus)
 
-target_link_libraries(chip8 PRIVATE argparse)
-target_link_libraries(chip8 PRIVATE tomlplusplus::tomlplusplus)
-target_link_libraries(chip8 PRIVATE chip8_front)
+target_link_libraries(chip8 PRIVATE
+    argparse
+    tomlplusplus::tomlplusplus
+    chip8_front
+    warnings
+)
 
 target_include_directories(chip8 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

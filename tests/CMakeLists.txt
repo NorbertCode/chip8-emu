@@ -22,6 +22,7 @@ target_link_libraries(
     chip8_core
     gtest
     gtest_main
+    warnings
 )
 
 include(GoogleTest)
