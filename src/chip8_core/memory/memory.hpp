@@ -36,8 +36,8 @@ public:
     InvalidMemoryLayoutException(const std::uint16_t reservedEnd, const std::uint16_t programEnd) 
         : std::logic_error("Invalid memory layout. Reservered end (" + std::to_string(reservedEnd) + ") has to be < program end (" + std::to_string(programEnd) + ") and data size has to be < reserved end"), reservedEnd(reservedEnd), programEnd(programEnd) { }
 
-    const std::uint16_t getReservedEnd() const { return reservedEnd; }
-    const std::uint16_t getProgramEnd() const { return programEnd; }
+    std::uint16_t getReservedEnd() const { return reservedEnd; }
+    std::uint16_t getProgramEnd() const { return programEnd; }
 
 private:
     const std::uint16_t reservedEnd;
