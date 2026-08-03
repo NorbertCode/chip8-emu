@@ -41,12 +41,12 @@ void Renderer::render(const std::vector<std::uint8_t>& display)
     int pitchPixels = pitch / SDL_BYTESPERPIXEL(SDL_PIXELFORMAT_ARGB8888);
     std::uint32_t* pixels32 = static_cast<std::uint32_t*>(pixels);
 
-    for (size_t y = 0; y < height; ++y)
+    for (int y = 0; y < height; ++y)
     {
-        size_t bufferRow = y * pitchPixels;
-        size_t displayRow = y * width;
+        int bufferRow = y * pitchPixels;
+        int displayRow = y * width;
 
-        for (size_t x = 0; x < width; ++x)
+        for (int x = 0; x < width; ++x)
             pixels32[bufferRow + x] = 0xFF000000 | (display[displayRow + x] > 0 ? foregroundColor : backgroundColor);
     }
 
