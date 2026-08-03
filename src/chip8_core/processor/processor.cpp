@@ -93,6 +93,7 @@ void Processor::execute(std::uint16_t instruction)
                 case 0x0: drwHires(x, y); break;       // DRWHIRES Vx, Vy
                 default: drw(x, y, nibbles[3]); break; // DRW Vx, Vy, nibble
             }
+            break;
         case 0xE:
             switch (byte)
             {
