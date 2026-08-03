@@ -3,7 +3,7 @@
 
 Application::Application(Chip8& chip8, const ApplicationConfig& config)
     : chip8(chip8), 
-      renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight()), 
+      renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight(), config.foregroundColor, config.backgroundColor), 
       input(chip8.getKeyboard(), config.keyMap),
       audio(config.audioFrequency),
       processorTime(1000.0 / config.loopFrequency), 

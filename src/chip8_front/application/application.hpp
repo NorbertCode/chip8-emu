@@ -12,6 +12,8 @@ struct ApplicationConfig
     double timerFrequency;
     double displayFrequency;
     double audioFrequency;
+    std::uint32_t foregroundColor;
+    std::uint32_t backgroundColor;
     std::array<std::string, 16> keyMap;
 };
 

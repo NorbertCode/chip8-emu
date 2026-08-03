@@ -11,7 +11,7 @@ DesktopLoader::DesktopLoader(const std::string& name, int argc, char* argv[])
 
     parser.add_argument("-c", "--config")
         .help("path to the TOML configuration file to use")
-        .default_value("./configs/default.toml");
+        .default_value("./configs/example.toml");
 
     try
     {
@@ -125,6 +125,8 @@ void DesktopLoader::loadConfig(const std::string& configPath)
         .timerFrequency = config["application"]["timer_frequency"].value_or<double>(60.0),
         .displayFrequency = config["application"]["display_frequency"].value_or<double>(60.0),
         .audioFrequency = config["application"]["audio_frequency"].value_or<double>(880.0),
+        .foregroundColor = config["application"]["foreground_color"].value_or<std::uint32_t>(0xFFFFFF),
+        .backgroundColor = config["application"]["background_color"].value_or<std::uint32_t>(0x0),
         .keyMap = parseKeyMap(*config["keymap"].as_table())
     };
 

@@ -1,8 +1,8 @@
 #include "renderer.hpp"
 #include <iostream>
-#include <cstdint>
 
-Renderer::Renderer(int width, int height) : width(width), height(height)
+Renderer::Renderer(int width, int height, std::uint32_t foregroundColor, std::uint32_t backgroundColor) 
+    : width(width), height(height), foregroundColor(foregroundColor), backgroundColor(backgroundColor)
 {
     window = SDL_CreateWindow("CHIP-8", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
     if (!window)
@@ -47,7 +47,7 @@ void Renderer::render(const std::vector<std::uint8_t>& display)
         size_t displayRow = y * width;
 
         for (size_t x = 0; x < width; ++x)
-            pixels32[bufferRow + x] = display[displayRow + x] > 0 ? 0xFFFFFFFF : 0xFF000000;
+            pixels32[bufferRow + x] = 0xFF000000 | (display[displayRow + x] > 0 ? foregroundColor : backgroundColor);
     }
 
     SDL_UnlockTexture(displayTexture);
