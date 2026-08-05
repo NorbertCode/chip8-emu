@@ -25,6 +25,7 @@ void Application::run()
         previousTime = currentTime;
 
         processorAccumulator += elapsedTime.count();
+        timerAccumulator += elapsedTime.count();
         displayAccumulator += elapsedTime.count();
 
         input.handleEvents();
@@ -40,7 +41,6 @@ void Application::run()
         while (processorAccumulator >= processorTime)
         {
             chip8.get().getProcessor().step();
-            chip8.get().getProcessor().tickTimers();
 
             processorAccumulator -= processorTime;
         }
