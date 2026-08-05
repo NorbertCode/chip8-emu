@@ -2,9 +2,12 @@
 #include <iostream>
 
 Renderer::Renderer(int width, int height, std::uint32_t foregroundColor, std::uint32_t backgroundColor) 
-    : width(width), height(height), foregroundColor(foregroundColor), backgroundColor(backgroundColor)
+    : window(SDL_CreateWindow("CHIP-8", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN)),
+      width(width), 
+      height(height), 
+      foregroundColor(foregroundColor), 
+      backgroundColor(backgroundColor)
 {
-    window = SDL_CreateWindow("CHIP-8", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
     if (!window)
     {
         std::cerr << "Error creating window: " << SDL_GetError() << '\n';
