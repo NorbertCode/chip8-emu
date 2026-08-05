@@ -3,7 +3,7 @@
 #include <vector>
 #include <type_traits>
 
-enum class ResolutionMode
+enum class ResolutionMode : std::uint8_t
 {
     Lores,
     Hires
