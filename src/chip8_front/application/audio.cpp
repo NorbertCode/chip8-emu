@@ -38,7 +38,7 @@ void Audio::setFrequency(int frequency)
     SDL_UnlockAudioDevice(audioDevice);
 }
 
-int Audio::getFrequency() const
+double Audio::getFrequency() const
 {
     return soundFrequency;
 }
@@ -51,7 +51,7 @@ void Audio::movePhase()
         phase -= TWO_PI;
 }
 
-float Audio::getPhase() const
+double Audio::getPhase() const
 {
     return phase;
 }
@@ -73,7 +73,7 @@ void Audio::callback(void* userdata, std::uint8_t* stream, int len)
 
     for (size_t i = 0; i < len / sizeof(float); ++i)
     {
-        fstream[i] = std::sin(TWO_PI + audio->getPhase());
+        fstream[i] = static_cast<float>(std::sin(TWO_PI + audio->getPhase()));
         audio->movePhase();
     }
 }

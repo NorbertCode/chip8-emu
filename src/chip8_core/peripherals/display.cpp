@@ -4,7 +4,7 @@
 Display::Display(const DisplayConfig& displayConfig) 
     : width(displayConfig.width), height(displayConfig.height), mode(displayConfig.defaultMode)
 {
-    display.resize(width * height, 0x0);
+    display.resize(static_cast<size_t>(width * height), 0x0);
 }
 
 bool Display::getPixel(std::uint8_t x, std::uint8_t y) const
@@ -87,30 +87,34 @@ const ResolutionMode& Display::getResolutionMode() const
 
 void Display::scrollLeft(std::uint8_t pixels)
 {
+    std::ptrdiff_t shift = static_cast<std::ptrdiff_t>(pixels);
+
     for (size_t row = 0; row < height; ++row)
     {
-        const size_t rowStart = row * width;
-        const size_t rowEnd = rowStart + width;
+        const std::ptrdiff_t rowStart = static_cast<std::ptrdiff_t>(row * width);
+        const std::ptrdiff_t rowEnd = static_cast<std::ptrdiff_t>(rowStart + width);
 
-        const auto remainingStart = std::shift_left(display.begin() + rowStart, display.begin() + rowEnd, pixels);
+        const auto remainingStart = std::shift_left(display.begin() + rowStart, display.begin() + rowEnd, shift);
         std::fill(remainingStart, display.begin() + rowEnd, 0);
     }
 }
 
 void Display::scrollRight(std::uint8_t pixels)
 {
+    std::ptrdiff_t shift = static_cast<std::ptrdiff_t>(pixels);
+
     for (size_t row = 0; row < height; ++row)
     {
-        const size_t rowStart = row * width;
-        const size_t rowEnd = rowStart + width;
+        const std::ptrdiff_t rowStart = static_cast<std::ptrdiff_t>(row * width);
+        const std::ptrdiff_t rowEnd = static_cast<std::ptrdiff_t>(rowStart + width);
 
-        const auto remainingEnd = std::shift_right(display.begin() + rowStart, display.begin() + rowEnd, pixels);
+        const auto remainingEnd = std::shift_right(display.begin() + rowStart, display.begin() + rowEnd, shift);
         std::fill(display.begin() + rowStart, remainingEnd, 0);
     }
 }
 
 void Display::scrollDown(std::uint8_t pixels)
 {
-    const auto remainingEnd = std::shift_right(display.begin(), display.end(), pixels * width);
+    const auto remainingEnd = std::shift_right(display.begin(), display.end(), static_cast<std::ptrdiff_t>(pixels * width));
     std::fill(display.begin(), remainingEnd, 0);
 }

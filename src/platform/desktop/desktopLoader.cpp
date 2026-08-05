@@ -2,7 +2,7 @@
 #include <fstream>
 #include <argparse/argparse.hpp>
 
-DesktopLoader::DesktopLoader(const std::string& name, int argc, char* argv[])
+DesktopLoader::DesktopLoader(const std::string& name, int argc, char** argv)
 {
     argparse::ArgumentParser parser(name);
 
@@ -65,7 +65,7 @@ void DesktopLoader::writeStorage(const std::array<std::uint8_t, 16>& data) const
     if (!file.is_open())
         return;
 
-    file.write(reinterpret_cast<const char*>(data.data()), data.size() * sizeof(std::uint8_t));
+    file.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size() * sizeof(std::uint8_t)));
 
     file.close();
 }

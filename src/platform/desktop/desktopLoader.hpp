@@ -5,7 +5,7 @@
 class DesktopLoader
 {
 public:
-    DesktopLoader(const std::string& name, int argc, char* argv[]);
+    DesktopLoader(const std::string& name, int argc, char** argv);
 
     const std::vector<std::uint8_t>& getRom() const;
     const std::string& getRomPath() const;

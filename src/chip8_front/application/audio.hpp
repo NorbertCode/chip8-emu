@@ -7,10 +7,10 @@ public:
     Audio(double soundFrequency);
 
     void setFrequency(int frequency);
-    int getFrequency() const;
+    double getFrequency() const;
 
     void movePhase();
-    float getPhase() const;
+    double getPhase() const;
 
     void enable();
     void disable();
