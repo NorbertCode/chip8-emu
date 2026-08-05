@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cmath>
 #include <numbers>
+#include <cstdint>
 
 const double TWO_PI = 2.0 * std::numbers::pi;
 
