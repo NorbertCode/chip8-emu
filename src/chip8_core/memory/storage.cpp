@@ -10,7 +10,7 @@ void Storage::write(const std::vector<uint8_t>& newData)
 {
     size_t size = std::min<size_t>(newData.size(), data.size());
 
-    std::copy(newData.begin(), newData.begin() + size, data.begin());
+    std::copy_n(newData.begin(), size, data.begin());
 
     if (onWriteCallback)
         onWriteCallback(data);
