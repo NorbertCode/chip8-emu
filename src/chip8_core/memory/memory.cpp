@@ -1,6 +1,6 @@
 #include "memory.hpp"
 
-Memory::Memory(const MemoryConfig& memoryConfig, const std::vector<std::uint8_t>& reservedData) 
+Memory::Memory(MemoryConfig memoryConfig, const std::vector<std::uint8_t>& reservedData) 
     : memoryConfig(memoryConfig)
 {
     if (memoryConfig.reservedEnd >= memoryConfig.programEnd || reservedData.size() > memoryConfig.reservedEnd)

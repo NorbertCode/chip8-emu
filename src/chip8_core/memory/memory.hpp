@@ -13,7 +13,7 @@ struct MemoryConfig
 class Memory
 {
 public:
-    Memory(const MemoryConfig& memoryConfig, const std::vector<std::uint8_t>& reservedData = {});
+    Memory(MemoryConfig memoryConfig, const std::vector<std::uint8_t>& reservedData = {});
 
     std::uint8_t read(std::uint16_t address) const;
     std::vector<std::uint8_t> read_bytes(std::uint16_t address, std::uint16_t bytes) const;
@@ -26,7 +26,7 @@ public:
 private:
     std::vector<std::uint8_t> memory;
 
-    const MemoryConfig& memoryConfig;
+    MemoryConfig memoryConfig;
 };
 
 class InvalidMemoryLayoutException : public std::logic_error
