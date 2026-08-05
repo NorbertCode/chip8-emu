@@ -1,5 +1,4 @@
 #include "processor.hpp"
-#include "opcodes.cpp"
 
 Processor::Processor(Memory& memory, Storage& storage, Display& display, Keyboard& keyboard, const Quirks& quirks, std::uint16_t startProgramCounter)
     : memory(memory), storage(storage), display(display), keyboard(keyboard), quirks(quirks), random(std::random_device{}()), uniformDistribution(0, 255)
