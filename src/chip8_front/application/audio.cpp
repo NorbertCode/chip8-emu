@@ -20,7 +20,7 @@ Audio::Audio(double soundFrequency)
     audioDevice = SDL_OpenAudioDevice(NULL, 0, &spec, NULL, 0);
     if (!audioDevice)
     {
-        std::cerr << "Error opening audio device: " << SDL_GetError() << std::endl;
+        std::cerr << "Error opening audio device: " << SDL_GetError() << '\n';
         return;
     }
 

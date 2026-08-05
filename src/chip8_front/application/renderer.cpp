@@ -7,14 +7,14 @@ Renderer::Renderer(int width, int height, std::uint32_t foregroundColor, std::ui
     window = SDL_CreateWindow("CHIP-8", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
     if (!window)
     {
-        std::cerr << "Error creating window: " << SDL_GetError() << std::endl;
+        std::cerr << "Error creating window: " << SDL_GetError() << '\n';
         return;
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer)
     {
-        std::cerr << "Error creating renderer: " << SDL_GetError() << std::endl;
+        std::cerr << "Error creating renderer: " << SDL_GetError() << '\n';
         return;
     }
 
