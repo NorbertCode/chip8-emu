@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <functional>
 #include <string>
 #include "chip8.hpp"
 #include "renderer.hpp"
@@ -20,7 +21,7 @@ struct ApplicationConfig
 class Application
 {
 public:
-    Application(Chip8 chip8, ApplicationConfig config);
+    Application(Chip8& chip8, ApplicationConfig config);
 
     void run();
 
@@ -29,7 +30,7 @@ private:
     Input input;
     Audio audio;
 
-    Chip8 chip8;
+    std::reference_wrapper<Chip8> chip8;
 
     double processorTime;
     double timerTime;
