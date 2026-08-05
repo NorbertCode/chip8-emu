@@ -18,5 +18,5 @@ private:
     std::unordered_map<SDL_Scancode, std::uint8_t> keyMap;
     bool quit = false;
 
-    Keyboard& keyboard;
+    std::reference_wrapper<Keyboard> keyboard;
 };

@@ -1,7 +1,7 @@
 #include "input.hpp"
-#include <iostream>
 
-Input::Input(Keyboard& keyboard, std::array<std::string, 16> keys) : keyboard(keyboard)
+Input::Input(Keyboard& keyboard, std::array<std::string, 16> keys) 
+    : keyboard(keyboard)
 {
     for (size_t i = 0; i < keys.size(); ++i)
         keyMap[SDL_GetScancodeFromName(keys[i].c_str())] = i;
@@ -25,7 +25,7 @@ void Input::handleEvents()
                 scancode = event.key.keysym.scancode;
 
                 if (keyMap.contains(scancode))
-                    keyboard.keyDown(keyMap.at(event.key.keysym.scancode));
+                    keyboard.get().keyDown(keyMap.at(event.key.keysym.scancode));
 
                 break;
 
@@ -33,7 +33,7 @@ void Input::handleEvents()
                 scancode = event.key.keysym.scancode;
 
                 if (keyMap.contains(scancode))
-                    keyboard.keyUp(keyMap.at(event.key.keysym.scancode));
+                    keyboard.get().keyUp(keyMap.at(event.key.keysym.scancode));
 
                 break;
         }

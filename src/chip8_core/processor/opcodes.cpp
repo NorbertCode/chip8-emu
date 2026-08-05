@@ -3,12 +3,12 @@
 
 void Processor::scrollDown(std::uint8_t pixels)
 {
-    display.scrollDown(pixels);
+    display.get().scrollDown(pixels);
 }
 
 void Processor::cls()
 {
-    display.clear();
+    display.get().clear();
 }
 
 void Processor::ret()
@@ -18,12 +18,12 @@ void Processor::ret()
 
 void Processor::scrollRight()
 {
-    display.scrollRight(4);
+    display.get().scrollRight(4);
 }
 
 void Processor::scrollLeft()
 {
-    display.scrollLeft(4);
+    display.get().scrollLeft(4);
 }
 
 void Processor::exit()
@@ -33,13 +33,13 @@ void Processor::exit()
 
 void Processor::setDisplayMode(ResolutionMode mode)
 {
-    if (display.getResolutionMode() == mode)
+    if (display.get().getResolutionMode() == mode)
         return;
 
     if (quirks.clearOnDisplayModeChange)
-        display.clear();
+        display.get().clear();
 
-    display.setResolutionMode(mode);
+    display.get().setResolutionMode(mode);
 }
 
 void Processor::jp(std::uint16_t addr)
@@ -165,19 +165,19 @@ void Processor::rnd(std::uint8_t x, std::uint8_t byte)
 
 void Processor::drw(std::uint8_t x, std::uint8_t y, std::uint8_t nibble)
 {
-    std::vector<std::uint8_t> sprite = memory.read_bytes(registerI, nibble);
-    int collisions = display.xorSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
-    registersV[0xF] = quirks.vfCollisionCounter && display.getResolutionMode() == ResolutionMode::Hires ? collisions : collisions > 0;
+    std::vector<std::uint8_t> sprite = memory.get().read_bytes(registerI, nibble);
+    int collisions = display.get().xorSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
+    registersV[0xF] = quirks.vfCollisionCounter && display.get().getResolutionMode() == ResolutionMode::Hires ? collisions : collisions > 0;
 }
 
 void Processor::drwHires(std::uint8_t x, std::uint8_t y)
 {
-    std::vector<std::uint8_t> sprite = memory.read_bytes(registerI, 32);
+    std::vector<std::uint8_t> sprite = memory.get().read_bytes(registerI, 32);
 
-    if (display.getResolutionMode() == ResolutionMode::Hires || quirks.loresSpriteHandling == LoresSpriteHandling::DrawWide)
+    if (display.get().getResolutionMode() == ResolutionMode::Hires || quirks.loresSpriteHandling == LoresSpriteHandling::DrawWide)
     {
-        int collisions = display.xorHiresSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
-        registersV[0xF] = quirks.vfCollisionCounter && display.getResolutionMode() == ResolutionMode::Hires ? collisions : collisions > 0;
+        int collisions = display.get().xorHiresSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
+        registersV[0xF] = quirks.vfCollisionCounter && display.get().getResolutionMode() == ResolutionMode::Hires ? collisions : collisions > 0;
     }
     else if (quirks.loresSpriteHandling == LoresSpriteHandling::DrawTall)
         drw(x, y, 16);
@@ -185,12 +185,12 @@ void Processor::drwHires(std::uint8_t x, std::uint8_t y)
 
 void Processor::skp(std::uint8_t x)
 {
-    programCounter += keyboard.getKey(registersV[x]) * 2;
+    programCounter += keyboard.get().getKey(registersV[x]) * 2;
 }
 
 void Processor::sknp(std::uint8_t x)
 {
-    programCounter += !keyboard.getKey(registersV[x]) * 2;
+    programCounter += !keyboard.get().getKey(registersV[x]) * 2;
 }
 
 void Processor::ldRegDT(std::uint8_t x)
@@ -206,10 +206,10 @@ void Processor::ldK(std::uint8_t x)
         registersV[x] = keyCode;
         halted = false;
 
-        keyboard.clearOnKeyPressed();
+        keyboard.get().clearOnKeyPressed();
     };
 
-    keyboard.setOnKeyPressed(onKeyPress);
+    keyboard.get().setOnKeyPressed(onKeyPress);
 }
 
 void Processor::ldDTReg(std::uint8_t x)
@@ -240,17 +240,17 @@ void Processor::ldFHires(std::uint8_t x)
 void Processor::ldB(std::uint8_t x)
 {
     // 8-bit numbers are at most 3-digit
-    memory.write(registerI, registersV[x] / 100);
-    memory.write(registerI + 1, (registersV[x] / 10) % 10);
-    memory.write(registerI + 2, registersV[x] % 10);
+    memory.get().write(registerI, registersV[x] / 100);
+    memory.get().write(registerI + 1, (registersV[x] / 10) % 10);
+    memory.get().write(registerI + 2, registersV[x] % 10);
 }
 
 void Processor::ldIReg(std::uint8_t x)
 {
-    size_t registerIndex, memoryIndex;
+    size_t memoryIndex = registerI;
 
-    for (registerIndex = 0, memoryIndex = registerI; registerIndex <= x; ++registerIndex, ++memoryIndex)
-        memory.write(memoryIndex, registersV[registerIndex]);
+    for (size_t registerIndex = 0; registerIndex <= x; ++registerIndex, ++memoryIndex)
+        memory.get().write(memoryIndex, registersV[registerIndex]);
 
     if (quirks.indexIncrement)
         registerI = memoryIndex + 1;
@@ -258,10 +258,10 @@ void Processor::ldIReg(std::uint8_t x)
 
 void Processor::ldRegI(std::uint8_t x)
 {
-    size_t registerIndex, memoryIndex;
+    size_t memoryIndex = registerI;
 
-    for (registerIndex = 0, memoryIndex = registerI; registerIndex <= x; ++registerIndex, ++memoryIndex)
-        registersV[registerIndex] = memory.read(memoryIndex);
+    for (size_t registerIndex = 0; registerIndex <= x; ++registerIndex, ++memoryIndex)
+        registersV[registerIndex] = memory.get().read(memoryIndex);
 
     if (quirks.indexIncrement)
         registerI = memoryIndex + 1;
@@ -269,11 +269,11 @@ void Processor::ldRegI(std::uint8_t x)
 
 void Processor::ldRplReg(std::uint8_t x)
 {
-    storage.write(std::vector<std::uint8_t>(registersV.begin(), registersV.begin() + x + 1));
+    storage.get().write(std::vector<std::uint8_t>(registersV.begin(), registersV.begin() + x + 1));
 }
 
 void Processor::ldRegRpl(std::uint8_t x)
 {
-    const auto& data = storage.read();
+    const auto& data = storage.get().read();
     std::copy(data.begin(), data.begin() + x + 1, registersV.begin());
 }

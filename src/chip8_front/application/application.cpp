@@ -1,14 +1,15 @@
 #include "application.hpp"
 #include <chrono>
 
-Application::Application(Chip8& chip8, const ApplicationConfig& config)
-    : chip8(chip8), 
-      renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight(), config.foregroundColor, config.backgroundColor), 
+Application::Application(Chip8 chip8, ApplicationConfig config)
+    : renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight(), config.foregroundColor, config.backgroundColor), 
       input(chip8.getKeyboard(), config.keyMap),
       audio(config.audioFrequency),
+      chip8(std::move(chip8)), 
       processorTime(1000.0 / config.loopFrequency), 
       timerTime(1000.0 / config.timerFrequency),
-      displayTime(1000.0 / config.displayFrequency) { }
+      displayTime(1000.0 / config.displayFrequency),
+      applicationConfig(std::move(config)) { }
 
 void Application::run()
 {

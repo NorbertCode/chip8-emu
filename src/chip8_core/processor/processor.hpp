@@ -10,7 +10,7 @@
 class Processor
 {
 public:
-    Processor(Memory& memory, Storage& storage, Display& display, Keyboard& keyboard, const Quirks& quirks, std::uint16_t startProgramCounter);
+    Processor(Memory& memory, Storage& storage, Display& display, Keyboard& keyboard, Quirks quirks, std::uint16_t startProgramCounter);
 
     void step();
     void tickTimers();
@@ -47,12 +47,12 @@ private:
     bool running = true;
     bool halted = false;
 
-    Memory& memory;
-    Storage& storage;
-    Display& display;
-    Keyboard& keyboard;
+    std::reference_wrapper<Memory> memory;
+    std::reference_wrapper<Storage> storage;
+    std::reference_wrapper<Display> display;
+    std::reference_wrapper<Keyboard> keyboard;
 
-    const Quirks& quirks;
+    Quirks quirks;
 
     std::mt19937 random;
     std::uniform_int_distribution<std::uint16_t> uniformDistribution;
