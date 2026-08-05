@@ -10,6 +10,7 @@ FetchContent_Declare(
     argparse
     GIT_REPOSITORY https://github.com/p-ranav/argparse.git
     GIT_TAG        v3.2
+    SYSTEM
 )
 FetchContent_MakeAvailable(argparse)
 
@@ -17,6 +18,7 @@ FetchContent_Declare(
     tomlplusplus
     GIT_REPOSITORY https://github.com/marzer/tomlplusplus.git
     GIT_TAG        v3.4.0
+    SYSTEM
 )
 FetchContent_MakeAvailable(tomlplusplus)
 

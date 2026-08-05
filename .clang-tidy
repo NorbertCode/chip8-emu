@@ -1,0 +1,19 @@
+---
+Checks: >
+  -*,
+  clang-diagnostic-*,
+  clang-analyzer-*,
+  bugprone-*,
+  cppcoreguidelines-*,
+  performance-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-switch-missing-default-case,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-type-reinterpret-cast
+
+WarningsAsErrors: '*'
+HeaderFilterRegex: 'src/.*'
+FormatStyle: none
+...
