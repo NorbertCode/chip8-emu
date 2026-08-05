@@ -26,15 +26,14 @@ Renderer::~Renderer()
     SDL_DestroyTexture(displayTexture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    SDL_Quit();
 }
 
 void Renderer::render(const std::vector<std::uint8_t>& display)
 {
     SDL_RenderClear(renderer);
 
-    void* pixels;
-    int pitch;
+    void* pixels = nullptr;
+    int pitch = 0;
 
     SDL_LockTexture(displayTexture, NULL, (void**)&pixels, &pitch);
 

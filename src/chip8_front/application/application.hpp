@@ -8,13 +8,13 @@
 
 struct ApplicationConfig
 {
-    double loopFrequency;
-    double timerFrequency;
-    double displayFrequency;
-    double audioFrequency;
-    std::uint32_t foregroundColor;
-    std::uint32_t backgroundColor;
-    std::array<std::string, 16> keyMap;
+    double loopFrequency = 0;
+    double timerFrequency = 0;
+    double displayFrequency = 0;
+    double audioFrequency = 0;
+    std::uint32_t foregroundColor = 0;
+    std::uint32_t backgroundColor = 0;
+    std::array<std::string, 16> keyMap{};
 };
 
 class Application

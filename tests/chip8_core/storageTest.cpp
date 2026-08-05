@@ -3,7 +3,7 @@
 
 TEST(StorageTest, Write_LessThanMaxElements_CallbackIsCalledWithCorrectData)
 {
-    std::array<std::uint8_t, 16> callbackData;
+    std::array<std::uint8_t, 16> callbackData{};
     Storage storage;
     storage.setOnWriteCallback([&callbackData](const std::array<std::uint8_t, 16>& data) {
         callbackData = data;
@@ -18,7 +18,7 @@ TEST(StorageTest, Write_LessThanMaxElements_CallbackIsCalledWithCorrectData)
 
 TEST(StorageTest, Write_MoreThanMaxElements_CallbackIsCalledWithCorrectData)
 {
-    std::array<std::uint8_t, 16> callbackData;
+    std::array<std::uint8_t, 16> callbackData{};
     Storage storage;
     storage.setOnWriteCallback([&callbackData](const std::array<std::uint8_t, 16>& data) {
         callbackData = data;
@@ -33,7 +33,7 @@ TEST(StorageTest, Write_MoreThanMaxElements_CallbackIsCalledWithCorrectData)
 
 TEST(StorageTest, Write_ExistingData_OverwritesData)
 {
-    std::array<std::uint8_t, 16> callbackData;
+    std::array<std::uint8_t, 16> callbackData{};
     Storage storage;
     storage.setOnWriteCallback([&callbackData](const std::array<std::uint8_t, 16>& data) {
         callbackData = data;

@@ -12,8 +12,8 @@ enum class ResolutionMode : std::uint8_t
 struct DisplayConfig
 {
     // Coordinates are taken from registers which are 8-bit, hence std::uint8_t
-    std::uint8_t width;
-    std::uint8_t height;
+    std::uint8_t width = 64;
+    std::uint8_t height = 32;
     ResolutionMode defaultMode = ResolutionMode::Hires;
 };
 

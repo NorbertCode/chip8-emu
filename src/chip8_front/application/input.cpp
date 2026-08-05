@@ -13,7 +13,7 @@ void Input::handleEvents()
 
     while (SDL_PollEvent(&event) != 0)
     {
-        SDL_Scancode scancode;
+        SDL_Scancode scancode = SDL_SCANCODE_UNKNOWN;
 
         switch (event.type)
         {

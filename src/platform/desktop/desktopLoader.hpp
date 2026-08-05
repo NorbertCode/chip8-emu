@@ -22,10 +22,10 @@ private:
     std::vector<std::uint8_t> rom;
     std::string romPath;
 
-    ApplicationConfig applicationConfig;
-    MemoryConfig memoryConfig;
-    DisplayConfig displayConfig;
-    Quirks quirks;
+    ApplicationConfig applicationConfig{};
+    MemoryConfig memoryConfig{};
+    DisplayConfig displayConfig{};
+    Quirks quirks{};
 
     void loadRom(const std::string& romPath);
     void loadConfig(const std::string& configPath);
