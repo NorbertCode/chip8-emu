@@ -13,6 +13,8 @@ struct ApplicationConfig
     double timerFrequency = 0;
     double displayFrequency = 0;
     double audioFrequency = 0;
+    int windowWidth = 0;
+    int windowHeight = 0;
     std::uint32_t foregroundColor = 0;
     std::uint32_t backgroundColor = 0;
     std::array<std::string, 16> keyMap{};

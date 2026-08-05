@@ -2,7 +2,7 @@
 #include <chrono>
 
 Application::Application(Chip8& chip8, ApplicationConfig config)
-    : renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight(), config.foregroundColor, config.backgroundColor), 
+    : renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight(), config.windowWidth, config.windowHeight, config.foregroundColor, config.backgroundColor), 
       input(chip8.getKeyboard(), config.keyMap),
       audio(config.audioFrequency),
       chip8(chip8), 

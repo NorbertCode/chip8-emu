@@ -6,7 +6,7 @@
 class Renderer
 {
 public:
-    Renderer(int width, int height, std::uint32_t foregroundColor, std::uint32_t backgroundColor);
+    Renderer(int width, int height, int windowWidth, int windowHeight, std::uint32_t foregroundColor, std::uint32_t backgroundColor);
     ~Renderer();
 
     Renderer(const Renderer&) = delete;
@@ -17,10 +17,11 @@ public:
     void render(const std::vector<std::uint8_t>& display);
 
 private:
+    int width, height;
+    int windowWidth, windowHeight;
+    std::uint32_t foregroundColor, backgroundColor;
+
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Texture* displayTexture;
-
-    int width, height;
-    std::uint32_t foregroundColor, backgroundColor;
 };

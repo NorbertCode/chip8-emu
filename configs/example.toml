@@ -3,6 +3,8 @@ loop_frequency = 600
 timer_frequency = 60
 display_frequency = 60
 audio_frequency = 440
+window_width = 800
+window_height = 600
 foreground_color = 0xFFFFFF
 background_color = 0x000000
 
