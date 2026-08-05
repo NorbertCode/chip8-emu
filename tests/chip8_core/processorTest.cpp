@@ -6,6 +6,8 @@
 class ProcessorTest : public ::testing::Test
 {
 protected:
+    // NOLINTBEGIN(cppcoreguidelines-non-private-member-variables-in-classes)
+
     const MemoryConfig memoryConfig = {
         .reservedEnd = 0x200,
         .programEnd = 0x1000,
@@ -40,6 +42,8 @@ protected:
     Keyboard keyboard;
 
     Processor processor;
+
+    // NOLINTEND(cppcoreguidelines-non-private-member-variables-in-classes)
 
     ProcessorTest() 
         : memory(memoryConfig), display(displayConfig), processor(memory, storage, display, keyboard, quirks, 0x200) { }
