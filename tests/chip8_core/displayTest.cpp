@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include "peripherals/display.hpp"
-#include <bitset>
 
 const std::vector<std::uint8_t> sprite_diagonal = {
     0b10000000,

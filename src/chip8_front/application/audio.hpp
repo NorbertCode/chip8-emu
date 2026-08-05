@@ -1,5 +1,4 @@
 #pragma once
-#include <cstdint>
 #include <SDL2/SDL.h>
 
 class Audio
@@ -24,8 +23,8 @@ private:
     double phase = 0.0;
     double phaseStep;
 
-    const int SAMPLE_FREQUENCY = 44100;
-    const Uint16 BUFFER_SIZE = 512;
+    int SAMPLE_FREQUENCY = 44100;
+    Uint16 BUFFER_SIZE = 512;
 
     static void callback(void* userdata, Uint8* stream, int len);
 };

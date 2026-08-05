@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <vector>
 #include <stdexcept>
-#include <optional>
 
 struct MemoryConfig
 {
@@ -40,6 +39,6 @@ public:
     std::uint16_t getProgramEnd() const { return programEnd; }
 
 private:
-    const std::uint16_t reservedEnd;
-    const std::uint16_t programEnd;
+    std::uint16_t reservedEnd;
+    std::uint16_t programEnd;
 };

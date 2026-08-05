@@ -31,7 +31,7 @@ private:
     Input input;
     Audio audio;
 
-    const double processorTime;
-    const double timerTime;
-    const double displayTime;
+    double processorTime;
+    double timerTime;
+    double displayTime;
 };
