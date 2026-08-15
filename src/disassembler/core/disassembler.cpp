@@ -28,8 +28,8 @@ std::string Disassembler::disassemble(std::uint16_t instruction)
                 case 0x00FB: return "SCR";
                 case 0x00FC: return "SCL";
                 case 0x00FD: return "EXIT";
-                case 0x00FE: return "LORES";
-                case 0x00FF: return "HIRES";
+                case 0x00FE: return "LOW";
+                case 0x00FF: return "HIGH";
                 default: 
                     if (nibbles[2] == 0xC)
                         return std::format("SCD 0x{:X}", nibbles[3]);
@@ -59,12 +59,15 @@ std::string Disassembler::disassemble(std::uint16_t instruction)
             break;
         case 0x9: return std::format("SNE V{:X}, V{:X}", x, y);
         case 0xA: return std::format("LD I, 0x{:03X}", addr);
-        case 0xB: return config.vxJumping ? std::format("JP V{:X}, 0x{:03X}", x, addr) : std::format("JP 0x{:03X}", addr);
+        case 0xB: return config.vxJumping ? std::format("JP V{:X}, 0x{:02X}", x, byte) : std::format("JP V0, 0x{:03X}", addr);
         case 0xC: return std::format("RND V{:X}, 0x{:02X}", x, byte);
         case 0xD: 
             switch (nibbles[3])
             {
-                case 0x0: if (config.hiresOperations) return std::format("DRWHIRES V{:X}, V{:X}", x, y); // If false passes to default
+                case 0x0: 
+                    if (config.hiresOperations) 
+                        return std::format("DRWH V{:X}, V{:X}", x, y);
+                    [[fallthrough]];
                 default: return std::format("DRW V{:X}, V{:X}, 0x{:X}", x, y, nibbles[3]);
             }
             break;
@@ -84,7 +87,7 @@ std::string Disassembler::disassemble(std::uint16_t instruction)
                 case 0x18: return std::format("WRST V{:X}", x);
                 case 0x1E: return std::format("ADDI V{:X}", x);
                 case 0x29: return std::format("LDF V{:X}", x);
-                case 0x30: return std::format("LDFHIRES V{:X}", x);
+                case 0x30: return std::format("LDFH V{:X}", x);
                 case 0x33: return std::format("LDB V{:X}", x);
                 case 0x55: return std::format("WRI V{:X}", x);
                 case 0x65: return std::format("RDI V{:X}", x);
