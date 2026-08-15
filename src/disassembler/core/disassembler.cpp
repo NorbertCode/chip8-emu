@@ -107,9 +107,8 @@ std::vector<std::string> Disassembler::disassemble(const std::vector<std::uint8_
 
     for (size_t i = 0; i < instructionAmount; ++i)
     {
-        std::uint16_t opcode = (static_cast<std::uint16_t>(memory[i * 2]) << 4) + memory[i * 2 + 1];
+        std::uint16_t opcode = (static_cast<std::uint16_t>(memory[i * 2]) << 8) + memory[i * 2 + 1];
         output[i] = disassemble(opcode);
-
     }
 
     return output;
