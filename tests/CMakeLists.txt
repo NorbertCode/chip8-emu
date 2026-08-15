@@ -19,11 +19,13 @@ add_executable(
     chip8/storageTest.cpp
     chip8/keyboardTest.cpp
     chip8/processorTest.cpp
+    disassembler/disassemblerTest.cpp
 )
 
 target_link_libraries(
     run_tests PRIVATE 
     chip8_core
+    disassembler_core
     gtest
     gtest_main
 )
