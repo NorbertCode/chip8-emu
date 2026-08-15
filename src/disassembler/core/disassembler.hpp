@@ -3,9 +3,21 @@
 #include <string>
 #include <vector>
 
+struct DisassemblerConfig
+{
+    bool vyShifting = false;
+    bool vxJumping = false;
+    bool hiresOperations = false;
+};
+
 class Disassembler
 {
 public:
-    static std::string disassemble(std::uint16_t instruction);
-    static std::vector<std::string> disassemble(const std::vector<std::uint8_t>& memory);
+    Disassembler(DisassemblerConfig config);
+
+    std::string disassemble(std::uint16_t instruction);
+    std::vector<std::string> disassemble(const std::vector<std::uint8_t>& memory);
+
+private:
+    DisassemblerConfig config;
 };

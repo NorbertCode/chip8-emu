@@ -1,6 +1,9 @@
 #include "disassembler.hpp"
 #include <format>
 
+Disassembler::Disassembler(DisassemblerConfig config)
+    : config(config) { }
+
 std::string Disassembler::disassemble(std::uint16_t instruction)
 {
     const std::array<std::uint8_t, 4> nibbles = {
@@ -49,19 +52,19 @@ std::string Disassembler::disassemble(std::uint16_t instruction)
                 case 0x3: return std::format("XOR V{:X}, V{:X}", x, y);
                 case 0x4: return std::format("ADD V{:X}, V{:X}", x, y);
                 case 0x5: return std::format("SUB V{:X}, V{:X}", x, y);
-                case 0x6: return std::format("SHR V{:X}, V{:X}", x, y); // TODO: Take quirks into account
+                case 0x6: return config.vyShifting ? std::format("SHR V{:X}, V{:X}", x, y) : std::format("SHR V{:X}", x);
                 case 0x7: return std::format("SUBN V{:X}, V{:X}", x, y);
-                case 0xE: return std::format("SHL V{:X}, V{:X}", x, y); // TODO: Take quirks into account
+                case 0xE: return config.vyShifting ? std::format("SHL V{:X}, V{:X}", x, y) : std::format("SHL V{:X}", x);
             }
             break;
         case 0x9: return std::format("SNE V{:X}, V{:X}", x, y);
         case 0xA: return std::format("LD I, 0x{:03X}", addr);
-        case 0xB: return std::format("JP V{:X}, 0x{:03X}", x, addr);        // TODO: Take quirks into account
+        case 0xB: return config.vxJumping ? std::format("JP V{:X}, 0x{:03X}", x, addr) : std::format("JP 0x{:03X}", addr);
         case 0xC: return std::format("RND V{:X}, 0x{:02X}", x, byte);
         case 0xD: 
             switch (nibbles[3])
             {
-                case 0x0: return std::format("DRWHIRES V{:X}, V{:X}", x, y);
+                case 0x0: if (config.hiresOperations) return std::format("DRWHIRES V{:X}, V{:X}", x, y); // If false passes to default
                 default: return std::format("DRW V{:X}, V{:X}, 0x{:X}", x, y, nibbles[3]);
             }
             break;
