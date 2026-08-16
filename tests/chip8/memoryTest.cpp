@@ -1,3 +1,4 @@
+#include "gmock/gmock.h"
 #include <gtest/gtest.h>
 #include "memory/memory.hpp"
 
@@ -91,7 +92,7 @@ TEST(MemoryTest, ReadBytes_WithinBounds_ReadsCorrectly)
     memory.write(0x11, 0xCD);
     memory.write(0x12, 0xEF);
 
-    EXPECT_EQ(memory.read_bytes(0x10, 3), expected);
+    EXPECT_THAT(memory.read_bytes(0x10, 3), testing::ElementsAreArray(expected));
 }
 
 TEST(MemoryTest, ReadBytes_AboveProgramEnd_ReturnsFF)
@@ -99,9 +100,9 @@ TEST(MemoryTest, ReadBytes_AboveProgramEnd_ReturnsFF)
     Memory memory(memoryConfig);
     std::vector<std::uint8_t> expected = { 0xFF, 0xFF, 0xFF };
 
-    const std::vector<std::uint8_t> output = memory.read_bytes(0xFF, 3);
+    const std::span<const std::uint8_t> output = memory.read_bytes(0xFF, 3);
 
-    EXPECT_EQ(output, expected);
+    EXPECT_THAT(output, testing::ElementsAreArray(expected));
 }
 
 TEST(MemoryTest, ReadBytes_OverlappingProgramEnd_ReturnsFF)
@@ -113,7 +114,7 @@ TEST(MemoryTest, ReadBytes_OverlappingProgramEnd_ReturnsFF)
     memory.write(0xFE, 0xCD);
     memory.write(0xFF, 0xEF);
 
-    EXPECT_EQ(memory.read_bytes(0xFD, 3), expected);
+    EXPECT_THAT(memory.read_bytes(0xFD, 3), testing::ElementsAreArray(expected));
 }
 
 TEST(MemoryTest, WriteBytes_WithinBounds_WritesCorrectly)

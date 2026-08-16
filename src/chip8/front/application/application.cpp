@@ -3,7 +3,7 @@
 
 Application::Application(Chip8& chip8, ApplicationConfig config)
     : renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight(), config.windowWidth, config.windowHeight, config.foregroundColor, config.backgroundColor), 
-      input(chip8.getKeyboard(), config.keyMap),
+      input(chip8.getKeyboard(), std::span<const std::string, 16>(config.keyMap)),
       audio(config.audioFrequency),
       chip8(chip8), 
       processorTime(1000.0 / config.loopFrequency), 

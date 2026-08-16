@@ -33,7 +33,7 @@ Renderer::~Renderer()
     SDL_DestroyWindow(window);
 }
 
-void Renderer::render(const std::vector<std::uint8_t>& display)
+void Renderer::render(std::span<const std::uint8_t> display)
 {
     SDL_RenderClear(renderer);
 

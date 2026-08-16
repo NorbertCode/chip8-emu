@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    auto onStorageWriteCallback = [&loader](const std::array<std::uint8_t, 16>& data) {
+    auto onStorageWriteCallback = [&loader](std::span<const std::uint8_t, 16> data) {
         loader.writeStorage(data);
     };
 

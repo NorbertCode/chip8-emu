@@ -1,27 +1,28 @@
 #include "storage.hpp"
 #include <algorithm>
+#include <cstddef>
 
-const std::array<std::uint8_t, 16>& Storage::read() const
+std::span<const std::uint8_t, 16> Storage::read() const
 {
-    return data;
+    return std::span<const std::uint8_t, 16>(data);
 }
 
-void Storage::write(const std::vector<uint8_t>& newData)
+void Storage::write(const std::span<const std::uint8_t> newData)
 {
-    size_t size = std::min<size_t>(newData.size(), data.size());
+    std::ptrdiff_t size = static_cast<std::ptrdiff_t>(std::min<size_t>(newData.size(), data.size()));
 
-    std::copy_n(newData.begin(), size, data.begin());
+    std::ranges::copy(newData.begin(), newData.begin() + size, data.begin());
 
     if (onWriteCallback)
-        onWriteCallback(data);
+        onWriteCallback(std::span<const std::uint8_t, 16>(data));
 }
 
-void Storage::setData(const std::array<std::uint8_t, 16>& newData)
+void Storage::setData(std::span<const std::uint8_t, 16> newData)
 {
-    data = newData;
+    std::ranges::copy(newData, data.begin());
 }
 
-void Storage::setOnWriteCallback(std::function<void(const std::array<std::uint8_t, 16>&)> onWriteCallback)
+void Storage::setOnWriteCallback(std::function<void(std::span<const std::uint8_t, 16>)> onWriteCallback)
 {
     this->onWriteCallback = std::move(onWriteCallback);
 }

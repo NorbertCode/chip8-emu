@@ -18,13 +18,13 @@ public:
     std::uint16_t fetch();
     void execute(std::uint16_t instruction);
 
-    const std::array<std::uint8_t, 16>& getRegistersV() const { return registersV; }
+    std::span<const std::uint8_t, 16> getRegistersV() const { return registersV; }
     std::uint16_t getRegisterI() const { return registerI; }
 
     std::uint16_t getProgramCounter() const { return programCounter; }
     std::uint8_t getStackPointer() const { return stackPointer; }
 
-    const std::array<std::uint16_t, 16>& getStack() const { return stack; }
+    std::span<const std::uint16_t, 16> getStack() const { return stack; }
 
     std::uint8_t getDelayTimer() const { return delayTimer; }
     std::uint8_t getSoundTimer() const { return soundTimer; }

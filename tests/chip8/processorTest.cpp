@@ -1,3 +1,4 @@
+#include <array>
 #include <gtest/gtest.h>
 #include "memory/memory.hpp"
 #include "processor/processor.hpp"
@@ -1207,8 +1208,8 @@ TEST_F(ProcessorTest, ldRegI_IndexIncrementEnabled_IncrementsI)
 TEST_F(ProcessorTest, ldRplReg_StoresRegistersInStorage)
 {
     std::array<std::uint8_t, 16> storageData{};
-    storage.setOnWriteCallback([&storageData](const std::array<std::uint8_t, 16>& data) {
-        storageData = data;
+    storage.setOnWriteCallback([&storageData](std::span<const std::uint8_t, 16> data) {
+        std::ranges::copy(data, storageData.begin());
     });
     processor.execute(0x6001); // LD V0, 0x01
     processor.execute(0x6102); // LD V1, 0x02
@@ -1225,7 +1226,8 @@ TEST_F(ProcessorTest, ldRplReg_StoresRegistersInStorage)
 
 TEST_F(ProcessorTest, ldRegRpl_ReadRegistersFromStorage)
 {
-    storage.setData({0x01, 0x02, 0x03, 0x04});
+    std::array<std::uint8_t, 16> storageData { 0x01, 0x02, 0x03, 0x04 };
+    storage.setData(storageData);
 
     processor.execute(0xF285); // LD V2, RPL
 

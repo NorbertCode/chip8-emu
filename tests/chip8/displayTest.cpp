@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include "peripherals/display.hpp"
 
 const std::vector<std::uint8_t> sprite_diagonal = {
@@ -169,7 +170,7 @@ TEST(DisplayTest, XorSprite_From0sInBounds_DrawsSprite)
 
     display.xorSprite(0, 0, sprite_diagonal, false);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, XorSprite_From0sInBoundsWithOffset_DrawsSprite)
@@ -186,7 +187,7 @@ TEST(DisplayTest, XorSprite_From0sInBoundsWithOffset_DrawsSprite)
 
     display.xorSprite(2, 0, sprite_diagonal, false);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, XorSprite_CollisionInBounds_XorsExisting)
@@ -202,7 +203,7 @@ TEST(DisplayTest, XorSprite_CollisionInBounds_XorsExisting)
 
     display.xorSprite(0, 0, sprite_diagonal, false);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, XorSprite_OutOfBounds_WrapsAround)
@@ -217,7 +218,7 @@ TEST(DisplayTest, XorSprite_OutOfBounds_WrapsAround)
 
     display.xorSprite(4, 0, sprite_diagonal, false);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, XorSprite_OnBorder_HalfWrapsAround)
@@ -232,7 +233,7 @@ TEST(DisplayTest, XorSprite_OnBorder_HalfWrapsAround)
 
     display.xorSprite(2, 0, sprite_diagonal, false);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, XorSprite_OutOfBoundsClippingTrue_DoesNotDraw)
@@ -260,7 +261,7 @@ TEST(DisplayTest, XorSprite_Lores_DrawsTwiceAsBig)
 
     display.xorSprite(0, 0, sprite_diagonal, true);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, XorHiresSprite_Hires_DrawsSprite)
@@ -287,7 +288,7 @@ TEST(DisplayTest, XorHiresSprite_Hires_DrawsSprite)
 
     display.xorHiresSprite(0, 0, hires_sprite, true);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, XorHiresSprite_NoCollisionHires_ReturnsFalse)
@@ -336,7 +337,7 @@ TEST(DisplayTest, ScrollLeft_InBounds_ScrollsDisplayLeft)
 
     display.scrollLeft(1);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, ScrollLeft_AtEdge_ClipsSprite)
@@ -352,7 +353,7 @@ TEST(DisplayTest, ScrollLeft_AtEdge_ClipsSprite)
 
     display.scrollLeft(1);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, ScrollLeft_0Pixels_DoesNotScroll)
@@ -368,7 +369,7 @@ TEST(DisplayTest, ScrollLeft_0Pixels_DoesNotScroll)
 
     display.scrollLeft(0);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, ScrollLeft_DisplayWidth_ClearsScreen)
@@ -412,7 +413,7 @@ TEST(DisplayTest, ScrollRight_InBounds_ScrollsDisplayRight)
 
     display.scrollRight(2);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, ScrollRight_AtEdge_ClipsSprite)
@@ -428,7 +429,7 @@ TEST(DisplayTest, ScrollRight_AtEdge_ClipsSprite)
 
     display.scrollRight(1);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, ScrollRight_0Pixels_DoesNotScroll)
@@ -444,7 +445,7 @@ TEST(DisplayTest, ScrollRight_0Pixels_DoesNotScroll)
 
     display.scrollRight(0);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, ScrollRight_DisplayWidth_ClearsScreen)
@@ -488,7 +489,7 @@ TEST(DisplayTest, ScrollDown_InBounds_ScrollsDisplayDown)
 
     display.scrollDown(1);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, ScrollDown_AtEdge_ClipsSprite)
@@ -504,7 +505,7 @@ TEST(DisplayTest, ScrollDown_AtEdge_ClipsSprite)
 
     display.scrollDown(3);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, ScrollDown_0Pixels_DoesNotScroll)
@@ -520,7 +521,7 @@ TEST(DisplayTest, ScrollDown_0Pixels_DoesNotScroll)
 
     display.scrollDown(0);
 
-    EXPECT_EQ(display.getDisplay(), expected);
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, ScrollDown_DisplayHeight_ClearsScreen)

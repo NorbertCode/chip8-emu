@@ -100,7 +100,7 @@ std::string Disassembler::disassemble(std::uint16_t instruction)
     return std::format("0x{:04X}", instruction);
 }
 
-std::vector<std::string> Disassembler::disassemble(const std::vector<std::uint8_t>& memory)
+std::vector<std::string> Disassembler::disassemble(std::span<const std::uint8_t> memory)
 {
     size_t instructionAmount = memory.size() / 2;
     std::vector<std::string> output(instructionAmount);

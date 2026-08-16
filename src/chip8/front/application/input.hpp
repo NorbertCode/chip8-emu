@@ -1,5 +1,5 @@
 #pragma once
-#include <array>
+#include <span>
 #include <string>
 #include <cstdint>
 #include <unordered_map>
@@ -9,7 +9,7 @@
 class Input
 {
 public:
-    Input(Keyboard& keyboard, std::array<std::string, 16> keys);
+    Input(Keyboard& keyboard, std::span<const std::string, 16> keys);
 
     void handleEvents();
     bool shouldQuit() const;

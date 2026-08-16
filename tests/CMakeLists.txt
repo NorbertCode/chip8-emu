@@ -28,6 +28,7 @@ target_link_libraries(
     disassembler_core
     gtest
     gtest_main
+    gmock
 )
 
 include(GoogleTest)

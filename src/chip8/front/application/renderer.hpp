@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include <span>
 #include <cstdint>
 #include <SDL2/SDL.h>
 
@@ -14,7 +14,7 @@ public:
     Renderer(Renderer&&) = delete;
     Renderer& operator=(Renderer&&) = delete;
 
-    void render(const std::vector<std::uint8_t>& display);
+    void render(std::span<const std::uint8_t> display);
 
 private:
     int width, height;

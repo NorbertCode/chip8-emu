@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <vector>
+#include <span>
 #include <stdexcept>
 
 struct MemoryConfig
@@ -13,13 +14,13 @@ struct MemoryConfig
 class Memory
 {
 public:
-    Memory(MemoryConfig memoryConfig, const std::vector<std::uint8_t>& reservedData = {});
+    Memory(MemoryConfig memoryConfig, std::span<const std::uint8_t> reservedData = {});
 
     std::uint8_t read(std::uint16_t address) const;
     std::vector<std::uint8_t> read_bytes(std::uint16_t address, std::uint16_t bytes) const;
 
     void write(std::uint16_t address, std::uint8_t data);
-    void write_bytes(std::uint16_t address, const std::vector<std::uint8_t>& data);
+    void write_bytes(std::uint16_t address, std::span<const std::uint8_t> data);
 
     const MemoryConfig& getMemoryConfig() const;
 

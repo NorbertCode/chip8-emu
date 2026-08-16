@@ -12,7 +12,7 @@ bool Display::getPixel(std::uint8_t x, std::uint8_t y) const
     return display[y * width + x];
 }
 
-const std::vector<std::uint8_t>& Display::getDisplay() const
+std::span<const std::uint8_t> Display::getDisplay() const
 {
     return display;
 }
@@ -45,7 +45,7 @@ bool Display::xorPixel(std::uint8_t x, std::uint8_t y, bool value, bool clipping
     return collision;
 }
 
-int Display::xorSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping)
+int Display::xorSprite(std::uint8_t x, std::uint8_t y, std::span<const std::uint8_t> sprite, bool clipping)
 {
     int collisions = 0;
 
@@ -55,7 +55,7 @@ int Display::xorSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::ui
     return collisions;
 }
 
-int Display::xorHiresSprite(std::uint8_t x, std::uint8_t y, const std::vector<std::uint8_t>& sprite, bool clipping)
+int Display::xorHiresSprite(std::uint8_t x, std::uint8_t y, std::span<const std::uint8_t> sprite, bool clipping)
 {
     int collisions = 0;
 

@@ -8,7 +8,7 @@
 class Chip8
 {
 public:
-    Chip8(const Quirks& quirks, const MemoryConfig& memoryConfig, const DisplayConfig& displayConfig, std::function<void(const std::array<std::uint8_t, 16>&)> onStorageWriteCallback);
+    Chip8(const Quirks& quirks, const MemoryConfig& memoryConfig, const DisplayConfig& displayConfig, std::function<void(std::span<const std::uint8_t, 16>)> onStorageWriteCallback);
 
     Processor& getProcessor() { return processor; }
     Memory& getMemory() { return memory; }
@@ -16,7 +16,7 @@ public:
     Display& getDisplay() { return display; }
     Keyboard& getKeyboard() { return keyboard; }
 
-    void loadRom(const std::vector<std::uint8_t>& rom);
+    void loadRom(std::span<const std::uint8_t> rom);
 
 private:
     Memory memory;

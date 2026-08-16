@@ -1,10 +1,10 @@
 #include "input.hpp"
 
-Input::Input(Keyboard& keyboard, std::array<std::string, 16> keys) 
+Input::Input(Keyboard& keyboard, std::span<const std::string, 16> keys) 
     : keyboard(keyboard)
 {
     for (size_t i = 0; i < keys.size(); ++i)
-        keyMap[SDL_GetScancodeFromName(keys[i].c_str())] = i;
+        keyMap[SDL_GetScancodeFromName(keys[i].data())] = i;
 }
 
 void Input::handleEvents()

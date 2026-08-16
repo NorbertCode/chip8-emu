@@ -1,6 +1,6 @@
 #include "memory.hpp"
 
-Memory::Memory(MemoryConfig memoryConfig, const std::vector<std::uint8_t>& reservedData) 
+Memory::Memory(MemoryConfig memoryConfig, std::span<const std::uint8_t> reservedData) 
     : memoryConfig(memoryConfig)
 {
     if (memoryConfig.reservedEnd >= memoryConfig.programEnd || reservedData.size() > memoryConfig.reservedEnd)
@@ -38,7 +38,7 @@ void Memory::write(std::uint16_t address, std::uint8_t data)
     memory[address] = data;
 }
 
-void Memory::write_bytes(std::uint16_t address, const std::vector<std::uint8_t>& data)
+void Memory::write_bytes(std::uint16_t address, const std::span<const std::uint8_t> data)
 {
     for (size_t i = 0; i < data.size(); ++i)
         write(address + i, data[i]);

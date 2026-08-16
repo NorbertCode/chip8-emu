@@ -1,4 +1,5 @@
 #include "desktopLoader.hpp"
+#include <filesystem>
 #include <fstream>
 #include <argparse/argparse.hpp>
 
@@ -29,12 +30,12 @@ DesktopLoader::DesktopLoader(const std::string& name, int argc, char** argv)
     loadConfig(configPath);
 }
 
-const std::vector<std::uint8_t>& DesktopLoader::getRom() const
+std::span<const std::uint8_t> DesktopLoader::getRom() const
 {
     return rom;
 }
 
-const std::string& DesktopLoader::getRomPath() const
+const std::filesystem::path& DesktopLoader::getRomPath() const
 {
     return romPath;
 }
@@ -59,9 +60,12 @@ const Quirks& DesktopLoader::getQuirks() const
     return quirks;
 }
 
-void DesktopLoader::writeStorage(const std::array<std::uint8_t, 16>& data) const
+void DesktopLoader::writeStorage(std::span<const std::uint8_t, 16> data) const
 {
-    std::ofstream file(romPath + ".rpl", std::ios::binary);
+    std::filesystem::path rplPath = romPath;
+    rplPath.replace_extension(".rpl");
+
+    std::ofstream file(rplPath, std::ios::binary);
     if (!file.is_open())
         return;
 
@@ -74,7 +78,10 @@ std::array<std::uint8_t, 16> DesktopLoader::readStorage() const
 {
     std::array<std::uint8_t, 16> data{};
 
-    std::ifstream file(romPath + ".rpl", std::ios::binary);
+    std::filesystem::path rplPath = romPath;
+    rplPath.replace_extension(".rpl");
+
+    std::ifstream file(rplPath, std::ios::binary);
     if (!file.is_open())
         return data;
 
@@ -85,7 +92,7 @@ std::array<std::uint8_t, 16> DesktopLoader::readStorage() const
     return data;
 }
 
-void DesktopLoader::loadRom(const std::string& romPath)
+void DesktopLoader::loadRom(const std::filesystem::path& romPath)
 {
     std::ifstream file(romPath, std::ios::binary | std::ios::ate);
     if (!file.is_open())
@@ -102,13 +109,13 @@ void DesktopLoader::loadRom(const std::string& romPath)
     rom = fileBuffer;
 }
 
-void DesktopLoader::loadConfig(const std::string& configPath)
+void DesktopLoader::loadConfig(const std::filesystem::path& configPath)
 {
     toml::parse_result config;
 
     try
     {
-        config = toml::parse_file(configPath);
+        config = toml::parse_file(configPath.string());
     }
     catch(const std::exception& e)
     {
@@ -176,7 +183,7 @@ std::array<std::string, 16> DesktopLoader::parseKeyMap(const toml::table& keyMap
     return keyArray;
 }
 
-ResolutionMode DesktopLoader::parseResolutionMode(const std::string& mode) const
+ResolutionMode DesktopLoader::parseResolutionMode(std::string_view mode) const
 {
     if (mode == "lores")
         return ResolutionMode::Lores;
@@ -184,7 +191,7 @@ ResolutionMode DesktopLoader::parseResolutionMode(const std::string& mode) const
         return ResolutionMode::Hires;
 }
 
-LoresSpriteHandling DesktopLoader::parseLoresSpriteHandling(const std::string& handling) const
+LoresSpriteHandling DesktopLoader::parseLoresSpriteHandling(std::string_view handling) const
 {
     if (handling == "draw_wide")
         return LoresSpriteHandling::DrawWide;
