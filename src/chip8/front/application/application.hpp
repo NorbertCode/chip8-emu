@@ -7,36 +7,39 @@
 #include "input.hpp"
 #include "audio.hpp"
 
-struct ApplicationConfig
+namespace chip8::front
 {
-    double loopFrequency = 0;
-    double timerFrequency = 0;
-    double displayFrequency = 0;
-    double audioFrequency = 0;
-    int windowWidth = 0;
-    int windowHeight = 0;
-    std::uint32_t foregroundColor = 0;
-    std::uint32_t backgroundColor = 0;
-    std::array<std::string, 16> keyMap{};
-};
+    struct ApplicationConfig
+    {
+        double loopFrequency = 0;
+        double timerFrequency = 0;
+        double displayFrequency = 0;
+        double audioFrequency = 0;
+        int windowWidth = 0;
+        int windowHeight = 0;
+        std::uint32_t foregroundColor = 0;
+        std::uint32_t backgroundColor = 0;
+        std::array<std::string, 16> keyMap{};
+    };
 
-class Application
-{
-public:
-    Application(Chip8& chip8, ApplicationConfig config);
+    class Application
+    {
+    public:
+        Application(core::Chip8& chip8, ApplicationConfig config);
 
-    void run();
+        void run();
 
-private:
-    Renderer renderer;
-    Input input;
-    Audio audio;
+    private:
+        Renderer renderer;
+        Input input;
+        Audio audio;
 
-    std::reference_wrapper<Chip8> chip8;
+        std::reference_wrapper<core::Chip8> chip8;
 
-    double processorTime;
-    double timerTime;
-    double displayTime;
+        double processorTime;
+        double timerTime;
+        double displayTime;
 
-    ApplicationConfig applicationConfig;
-};
+        ApplicationConfig applicationConfig;
+    };
+}

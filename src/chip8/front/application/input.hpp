@@ -6,17 +6,20 @@
 #include <SDL2/SDL.h>
 #include "peripherals/keyboard.hpp"
 
-class Input
+namespace chip8::front
 {
-public:
-    Input(Keyboard& keyboard, std::span<const std::string, 16> keys);
+    class Input
+    {
+    public:
+        Input(core::Keyboard& keyboard, std::span<const std::string, 16> keys);
 
-    void handleEvents();
-    bool shouldQuit() const;
+        void handleEvents();
+        bool shouldQuit() const;
 
-private:
-    std::unordered_map<SDL_Scancode, std::uint8_t> keyMap;
-    bool quit = false;
+    private:
+        std::unordered_map<SDL_Scancode, std::uint8_t> keyMap;
+        bool quit = false;
 
-    std::reference_wrapper<Keyboard> keyboard;
-};
+        std::reference_wrapper<core::Keyboard> keyboard;
+    };
+}

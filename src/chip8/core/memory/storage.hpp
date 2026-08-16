@@ -4,16 +4,19 @@
 #include <cstdint>
 #include <functional>
 
-class Storage
+namespace chip8::core
 {
-public:
-    std::span<const std::uint8_t, 16> read() const;
-    void write(std::span<const std::uint8_t> newData);
+    class Storage
+    {
+    public:
+        std::span<const std::uint8_t, 16> read() const;
+        void write(std::span<const std::uint8_t> newData);
 
-    void setData(std::span<const std::uint8_t, 16> newData);
-    void setOnWriteCallback(std::function<void(std::span<const std::uint8_t, 16>)> onWriteCallback);
+        void setData(std::span<const std::uint8_t, 16> newData);
+        void setOnWriteCallback(std::function<void(std::span<const std::uint8_t, 16>)> onWriteCallback);
 
-private:
-    std::array<std::uint8_t, 16> data{};
-    std::function<void(std::span<const std::uint8_t, 16>)> onWriteCallback;
-};
+    private:
+        std::array<std::uint8_t, 16> data{};
+        std::function<void(std::span<const std::uint8_t, 16>)> onWriteCallback;
+    };
+}

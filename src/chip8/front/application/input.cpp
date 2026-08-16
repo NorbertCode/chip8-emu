@@ -1,46 +1,49 @@
 #include "input.hpp"
 
-Input::Input(Keyboard& keyboard, std::span<const std::string, 16> keys) 
-    : keyboard(keyboard)
+namespace chip8::front
 {
-    for (size_t i = 0; i < keys.size(); ++i)
-        keyMap[SDL_GetScancodeFromName(keys[i].data())] = i;
-}
-
-void Input::handleEvents()
-{
-    SDL_Event event;
-
-    while (SDL_PollEvent(&event) != 0)
+    Input::Input(core::Keyboard& keyboard, std::span<const std::string, 16> keys) 
+        : keyboard(keyboard)
     {
-        SDL_Scancode scancode = SDL_SCANCODE_UNKNOWN;
+        for (size_t i = 0; i < keys.size(); ++i)
+            keyMap[SDL_GetScancodeFromName(keys[i].data())] = i;
+    }
 
-        switch (event.type)
+    void Input::handleEvents()
+    {
+        SDL_Event event;
+
+        while (SDL_PollEvent(&event) != 0)
         {
-            case SDL_QUIT:
-                quit = true;
-                return;
-            
-            case SDL_KEYDOWN:
-                scancode = event.key.keysym.scancode;
+            SDL_Scancode scancode = SDL_SCANCODE_UNKNOWN;
 
-                if (keyMap.contains(scancode))
-                    keyboard.get().keyDown(keyMap.at(event.key.keysym.scancode));
+            switch (event.type)
+            {
+                case SDL_QUIT:
+                    quit = true;
+                    return;
+                
+                case SDL_KEYDOWN:
+                    scancode = event.key.keysym.scancode;
 
-                break;
+                    if (keyMap.contains(scancode))
+                        keyboard.get().keyDown(keyMap.at(event.key.keysym.scancode));
 
-            case SDL_KEYUP:
-                scancode = event.key.keysym.scancode;
+                    break;
 
-                if (keyMap.contains(scancode))
-                    keyboard.get().keyUp(keyMap.at(event.key.keysym.scancode));
+                case SDL_KEYUP:
+                    scancode = event.key.keysym.scancode;
 
-                break;
+                    if (keyMap.contains(scancode))
+                        keyboard.get().keyUp(keyMap.at(event.key.keysym.scancode));
+
+                    break;
+            }
         }
     }
-}
 
-bool Input::shouldQuit() const
-{
-    return quit;
+    bool Input::shouldQuit() const
+    {
+        return quit;
+    }
 }

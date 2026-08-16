@@ -2,6 +2,8 @@
 #include <gtest/gtest.h>
 #include "memory/memory.hpp"
 
+using namespace chip8::core;
+
 const MemoryConfig memoryConfig = {
     .reservedEnd = 0xF,
     .programEnd = 0xFF,

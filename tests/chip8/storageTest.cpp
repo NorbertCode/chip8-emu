@@ -3,6 +3,8 @@
 #include <vector>
 #include "memory/storage.hpp"
 
+using namespace chip8::core;
+
 TEST(StorageTest, Write_LessThanMaxElements_CallbackIsCalledWithCorrectData)
 {
     std::array<std::uint8_t, 16> callbackData{};

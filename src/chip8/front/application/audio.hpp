@@ -1,30 +1,33 @@
 #pragma once
 #include <SDL2/SDL.h>
 
-class Audio
+namespace chip8::front
 {
-public:
-    Audio(double soundFrequency);
+    class Audio
+    {
+    public:
+        Audio(double soundFrequency);
 
-    void setFrequency(int frequency);
-    double getFrequency() const;
+        void setFrequency(int frequency);
+        double getFrequency() const;
 
-    void movePhase();
-    double getPhase() const;
+        void movePhase();
+        double getPhase() const;
 
-    void enable();
-    void disable();
+        void enable();
+        void disable();
 
-private:
-    SDL_AudioDeviceID audioDevice;
+    private:
+        SDL_AudioDeviceID audioDevice;
 
-    double soundFrequency;
+        double soundFrequency;
 
-    double phase = 0.0;
-    double phaseStep;
+        double phase = 0.0;
+        double phaseStep;
 
-    int SAMPLE_FREQUENCY = 44100;
-    Uint16 BUFFER_SIZE = 512;
+        int SAMPLE_FREQUENCY = 44100;
+        Uint16 BUFFER_SIZE = 512;
 
-    static void callback(void* userdata, Uint8* stream, int len);
-};
+        static void callback(void* userdata, Uint8* stream, int len);
+    };
+}

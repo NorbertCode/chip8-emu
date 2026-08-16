@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include "peripherals/keyboard.hpp"
 
+using namespace chip8::core;
+
 TEST(KeyboardTest, GetKey_Initially_ReturnsFalse)
 {
     Keyboard keyboard;

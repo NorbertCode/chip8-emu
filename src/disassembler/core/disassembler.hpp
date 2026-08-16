@@ -4,21 +4,24 @@
 #include <vector>
 #include <span>
 
-struct DisassemblerConfig
+namespace disassembler::core
 {
-    bool vyShifting = false;
-    bool vxJumping = false;
-    bool hiresOperations = false;
-};
+    struct DisassemblerConfig
+    {
+        bool vyShifting = false;
+        bool vxJumping = false;
+        bool hiresOperations = false;
+    };
 
-class Disassembler
-{
-public:
-    Disassembler(DisassemblerConfig config);
+    class Disassembler
+    {
+    public:
+        Disassembler(DisassemblerConfig config);
 
-    std::string disassemble(std::uint16_t instruction);
-    std::vector<std::string> disassemble(std::span<const std::uint8_t> memory);
+        std::string disassemble(std::uint16_t instruction);
+        std::vector<std::string> disassemble(std::span<const std::uint8_t> memory);
 
-private:
-    DisassemblerConfig config;
-};
+    private:
+        DisassemblerConfig config;
+    };
+}

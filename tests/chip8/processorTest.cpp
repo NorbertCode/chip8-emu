@@ -4,6 +4,8 @@
 #include "processor/processor.hpp"
 #include "peripherals/display.hpp"
 
+using namespace chip8::core;
+
 class ProcessorTest : public ::testing::Test
 {
 protected:

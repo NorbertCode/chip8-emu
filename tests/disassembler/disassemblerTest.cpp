@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include "disassembler.hpp"
 
+using namespace disassembler::core;
+
 const DisassemblerConfig defaultConfig = {
     .vyShifting = false,
     .vxJumping = false,

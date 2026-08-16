@@ -2,6 +2,8 @@
 #include <gmock/gmock.h>
 #include "peripherals/display.hpp"
 
+using namespace chip8::core;
+
 const std::vector<std::uint8_t> sprite_diagonal = {
     0b10000000,
     0b01000000,
