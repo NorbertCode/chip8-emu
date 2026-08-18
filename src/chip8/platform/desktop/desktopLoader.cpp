@@ -14,7 +14,7 @@ namespace chip8::front
 
         parser.add_argument("-c", "--config")
             .help("path to the TOML configuration file to use")
-            .default_value("./configs/example.toml");
+            .default_value("./configs/emulator/example.toml");
 
         try
         {

@@ -1,0 +1,4 @@
+[disassembler]
+vy_shifting = true
+vx_jumping = false
+hires_operations = false
