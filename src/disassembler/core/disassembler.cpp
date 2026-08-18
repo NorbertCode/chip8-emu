@@ -6,6 +6,11 @@ namespace disassembler::core
     Disassembler::Disassembler(DisassemblerConfig config)
         : config(config) { }
 
+    std::uint16_t Disassembler::getProgramStart() const
+    {
+        return config.programStart;
+    }
+
     std::string Disassembler::disassemble(std::uint16_t instruction)
     {
         const std::array<std::uint8_t, 4> nibbles = {

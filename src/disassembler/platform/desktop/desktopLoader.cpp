@@ -91,6 +91,7 @@ namespace disassembler::front
         }
 
         disassemblerConfig = {
+            .programStart = config["disassembler"]["program_start"].value_or<std::uint16_t>(0x200),
             .vyShifting = config["disassembler"]["vy_shifting"].value_or(false),
             .vxJumping = config["disassembler"]["vx_jumping"].value_or(false),
             .hiresOperations = config["disassembler"]["hires_operations"].value_or(false)

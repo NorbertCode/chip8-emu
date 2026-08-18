@@ -5,7 +5,7 @@
 
 using namespace disassembler;
 
-int main(int argc, char** argv)
+int main(int argc, char* argv[])
 {
     front::DesktopLoader loader("CHIP8 DISASM", argc, argv);
 
@@ -22,7 +22,7 @@ int main(int argc, char** argv)
     {
         if (loader.shouldPrettify())
         {
-            std::string line = std::format("0x{:04X}", i);
+            std::string line = std::format("0x{:04X}", disasm.getProgramStart() + (i * 2));
             std::string hex = std::format("0x{:04X}", loader.getInput()[i]);
 
             std::cout << std::format("{:<8}{:<8}{:<25}\n", line, hex, output[i]);
