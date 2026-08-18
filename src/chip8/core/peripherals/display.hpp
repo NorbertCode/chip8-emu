@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <vector>
 #include <span>
-#include <type_traits>
+#include <concepts>
 
 namespace chip8::core
 {
@@ -48,8 +48,8 @@ namespace chip8::core
         std::uint8_t width, height;
         ResolutionMode mode;
 
-        template <typename T> requires std::is_integral_v<T>
-        bool xorRow(std::uint8_t x, std::uint8_t y, const T& row, bool clipping)
+        template <std::integral T>
+        bool xorRow(std::uint8_t x, std::uint8_t y, T row, bool clipping)
         {
             bool collision = false;
 
