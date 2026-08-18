@@ -13,12 +13,12 @@ namespace disassembler::front
     public:
         DesktopLoader(const std::string& name, int argc, char** argv);
 
-        std::span<const std::uint8_t> getInput() const;
+        std::span<const std::uint16_t> getInput() const;
         core::DisassemblerConfig getDisassemblerConfig() const;
         bool shouldPrettify() const;
         
     private:
-        std::vector<std::uint8_t> input;
+        std::vector<std::uint16_t> input;
         core::DisassemblerConfig disassemblerConfig;
         bool prettify = false;
 

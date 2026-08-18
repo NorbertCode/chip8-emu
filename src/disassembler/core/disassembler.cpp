@@ -117,16 +117,12 @@ namespace disassembler::core
         return std::format("0x{:04X}", instruction);
     }
 
-    std::vector<std::string> Disassembler::disassemble(std::span<const std::uint8_t> memory)
+    std::vector<std::string> Disassembler::disassemble(std::span<const std::uint16_t> memory)
     {
-        size_t instructionAmount = memory.size() / 2;
-        std::vector<std::string> output(instructionAmount);
+        std::vector<std::string> output(memory.size());
 
-        for (size_t i = 0; i < instructionAmount; ++i)
-        {
-            std::uint16_t opcode = (static_cast<std::uint16_t>(memory[i * 2]) << 8) + memory[i * 2 + 1];
-            output[i] = disassemble(opcode);
-        }
+        for (size_t i = 0; i < memory.size(); ++i)
+            output[i] = disassemble(memory[i]);
 
         return output;
     }

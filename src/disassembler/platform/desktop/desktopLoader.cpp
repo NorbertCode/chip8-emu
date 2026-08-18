@@ -1,6 +1,7 @@
 #include "desktopLoader.hpp"
 #include "disassembler.hpp"
 #include <argparse/argparse.hpp>
+#include <cstdint>
 #include <toml++/toml.hpp>
 #include <exception>
 #include <fstream>
@@ -42,7 +43,7 @@ namespace disassembler::front
         loadConfig(configPath);
     }
 
-    std::span<const std::uint8_t> DesktopLoader::getInput() const
+    std::span<const std::uint16_t> DesktopLoader::getInput() const
     {
         return input;
     }
@@ -66,10 +67,14 @@ namespace disassembler::front
         auto size = file.tellg();
         file.seekg(0, std::ios::beg);
     
-        input.resize(size);
-        file.read(reinterpret_cast<char*>(input.data()), size);
+        std::vector<std::uint8_t> buffer(size);
+        file.read(reinterpret_cast<char*>(buffer.data()), size);
 
         file.close();
+
+        input.resize(buffer.size() / 2);
+        for (size_t i = 0; i < input.size(); ++i)
+            input[i] = static_cast<std::uint16_t>(buffer[i * 2] << 8 | buffer[i * 2 + 1]);
     }
 
     void DesktopLoader::loadConfig(const std::filesystem::path& configPath)

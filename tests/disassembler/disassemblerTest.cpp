@@ -637,10 +637,10 @@ TEST(DisassemblerTest, Disassemble_UnknownInstruction)
 TEST(DisassemblerTest, Disassemble_Memory)
 {
     Disassembler disassembler(defaultConfig);
-    std::vector<std::uint8_t> memory = { 
-        0x00, 0xE0, 
-        0x12, 0x34,
-        0x6A, 0x12
+    std::vector<std::uint16_t> memory = { 
+        0x00E0, 
+        0x1234,
+        0x6A12
     };
     std::vector<std::string> expected = { 
         "CLS", 
