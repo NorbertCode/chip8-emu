@@ -102,7 +102,7 @@ TEST(MemoryTest, ReadBytes_AboveProgramEnd_ReturnsFF)
     Memory memory(memoryConfig);
     std::vector<std::uint8_t> expected = { 0xFF, 0xFF, 0xFF };
 
-    const std::span<const std::uint8_t> output = memory.read_bytes(0xFF, 3);
+    std::vector<std::uint8_t> output = memory.read_bytes(0xFF, 3);
 
     EXPECT_THAT(output, testing::ElementsAreArray(expected));
 }
