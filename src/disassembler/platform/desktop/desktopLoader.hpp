@@ -15,10 +15,12 @@ namespace disassembler::front
 
         std::span<const std::uint8_t> getInput() const;
         core::DisassemblerConfig getDisassemblerConfig() const;
+        bool shouldPrettify() const;
         
     private:
         std::vector<std::uint8_t> input;
         core::DisassemblerConfig disassemblerConfig;
+        bool prettify = false;
 
         void loadInput(const std::filesystem::path& inputPath);
         void loadConfig(const std::filesystem::path& configPath);

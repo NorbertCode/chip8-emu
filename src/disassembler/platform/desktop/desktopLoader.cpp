@@ -20,6 +20,11 @@ namespace disassembler::front
             .help("path to the TOML configuration file to use")
             .default_value("./configs/disassembler/example.toml");
 
+        parser.add_argument("-p", "--prettify")
+            .help("should prettify the output - makes it unusable as input")
+            .default_value(false)
+            .implicit_value(true);
+
         try 
         {
             parser.parse_args(argc, argv);
@@ -31,6 +36,7 @@ namespace disassembler::front
 
         std::string inputPath = parser.get<std::string>("input");
         std::string configPath = parser.get<std::string>("--config");
+        prettify = parser.get<bool>("--prettify");
 
         loadInput(inputPath);
         loadConfig(configPath);
@@ -44,6 +50,11 @@ namespace disassembler::front
     core::DisassemblerConfig DesktopLoader::getDisassemblerConfig() const
     {
         return disassemblerConfig;
+    }
+
+    bool DesktopLoader::shouldPrettify() const
+    {
+        return prettify;
     }
 
     void DesktopLoader::loadInput(const std::filesystem::path& inputPath)
