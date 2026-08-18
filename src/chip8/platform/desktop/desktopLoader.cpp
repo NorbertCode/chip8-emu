@@ -22,7 +22,11 @@ namespace chip8::front
         }
         catch(const std::exception& e)
         {
-            throw std::runtime_error("Failed to parse arguments. Perhaps you forgot to specify ROM file?");
+            std::stringstream error;
+
+            error << "Failed to parse arguments: " << e.what() << "\n\n" << parser;
+
+            throw std::runtime_error(error.str());
         }
         
         romPath = parser.get<std::string>("rom");

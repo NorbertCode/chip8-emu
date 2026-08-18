@@ -2,6 +2,7 @@
 #include "disassembler.hpp"
 #include <argparse/argparse.hpp>
 #include <cstdint>
+#include <sstream>
 #include <toml++/toml.hpp>
 #include <exception>
 #include <fstream>
@@ -32,7 +33,11 @@ namespace disassembler::front
         } 
         catch (const std::exception& e) 
         {
-            throw std::runtime_error("Failed to parse arguments. Perhaps you forgot to specify input file?");
+            std::stringstream error;
+
+            error << "Failed to parse arguments: " << e.what() << "\n\n" << parser;
+
+            throw std::runtime_error(error.str());
         }
 
         std::string inputPath = parser.get<std::string>("input");
