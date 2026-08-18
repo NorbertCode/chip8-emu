@@ -14,18 +14,21 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(
     run_tests
-    chip8_core/displayTest.cpp
-    chip8_core/memoryTest.cpp
-    chip8_core/storageTest.cpp
-    chip8_core/keyboardTest.cpp
-    chip8_core/processorTest.cpp
+    chip8/displayTest.cpp
+    chip8/memoryTest.cpp
+    chip8/storageTest.cpp
+    chip8/keyboardTest.cpp
+    chip8/processorTest.cpp
+    disassembler/disassemblerTest.cpp
 )
 
 target_link_libraries(
     run_tests PRIVATE 
     chip8_core
+    disassembler_core
     gtest
     gtest_main
+    gmock
 )
 
 include(GoogleTest)

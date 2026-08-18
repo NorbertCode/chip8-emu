@@ -1,0 +1,5 @@
+[disassembler]
+program_start = 0x200
+vy_shifting = false
+vx_jumping = false
+hires_operations = false
