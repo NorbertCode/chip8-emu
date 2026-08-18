@@ -103,12 +103,10 @@ namespace chip8::front
         auto size = file.tellg();
         file.seekg(0, std::ios::beg);
 
-        std::vector<std::uint8_t> fileBuffer(size);
-        file.read(reinterpret_cast<char*>(fileBuffer.data()), size);
+        rom.resize(size);
+        file.read(reinterpret_cast<char*>(rom.data()), size);
 
         file.close();
-
-        rom = fileBuffer;
     }
 
     void DesktopLoader::loadConfig(const std::filesystem::path& configPath)
