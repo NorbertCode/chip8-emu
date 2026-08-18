@@ -27,13 +27,25 @@ namespace disassembler::core
                 {
                     case 0x00E0: return "CLS";
                     case 0x00EE: return "RET";
-                    case 0x00FB: return "SCR";
-                    case 0x00FC: return "SCL";
+                    case 0x00FB: 
+                        if (config.hiresOperations) 
+                            return "SCR";
+                        break;
+                    case 0x00FC: 
+                        if (config.hiresOperations) 
+                            return "SCL";
+                        break;
                     case 0x00FD: return "EXIT";
-                    case 0x00FE: return "LOW";
-                    case 0x00FF: return "HIGH";
+                    case 0x00FE: 
+                        if (config.hiresOperations) 
+                            return "LOW";
+                        break;
+                    case 0x00FF: 
+                        if (config.hiresOperations) 
+                            return "HIGH";
+                        break;
                     default: 
-                        if (nibbles[2] == 0xC)
+                        if (nibbles[2] == 0xC && config.hiresOperations)
                             return std::format("SCD 0x{:X}", nibbles[3]);
                         break;
                 }
@@ -89,7 +101,10 @@ namespace disassembler::core
                     case 0x18: return std::format("WRST V{:X}", x);
                     case 0x1E: return std::format("ADDI V{:X}", x);
                     case 0x29: return std::format("LDF V{:X}", x);
-                    case 0x30: return std::format("LDFH V{:X}", x);
+                    case 0x30: 
+                        if (config.hiresOperations) 
+                            return std::format("LDFH V{:X}", x);
+                        break;
                     case 0x33: return std::format("LDB V{:X}", x);
                     case 0x55: return std::format("WRI V{:X}", x);
                     case 0x65: return std::format("RDI V{:X}", x);

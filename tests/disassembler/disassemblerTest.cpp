@@ -31,9 +31,22 @@ TEST(DisassemblerTest, Disassemble_RET)
     EXPECT_EQ(output, expected);
 }
 
-TEST(DisassemblerTest, Disassemble_SCR)
+TEST(DisassemblerTest, Disassemble_HiresDrawingDisabled_SCR)
 {
     Disassembler disassembler(defaultConfig);
+    std::uint16_t input = 0x00FB;
+    std::string expected = "0x00FB";
+
+    std::string output = disassembler.disassemble(input);
+
+    EXPECT_EQ(output, expected);
+}
+
+TEST(DisassemblerTest, Disassemble_HiresDrawingEnabled_SCR)
+{
+    DisassemblerConfig config = defaultConfig;
+    config.hiresOperations = true;
+    Disassembler disassembler(config);
     std::uint16_t input = 0x00FB;
     std::string expected = "SCR";
 
@@ -42,9 +55,22 @@ TEST(DisassemblerTest, Disassemble_SCR)
     EXPECT_EQ(output, expected);
 }
 
-TEST(DisassemblerTest, Disassemble_SCL)
+TEST(DisassemblerTest, Disassemble_HiresDrawingDisabled_SCL)
 {
     Disassembler disassembler(defaultConfig);
+    std::uint16_t input = 0x00FC;
+    std::string expected = "0x00FC";
+
+    std::string output = disassembler.disassemble(input);
+
+    EXPECT_EQ(output, expected);
+}
+
+TEST(DisassemblerTest, Disassemble_HiresDrawingEnabled_SCL)
+{
+    DisassemblerConfig config = defaultConfig;
+    config.hiresOperations = true;
+    Disassembler disassembler(config);
     std::uint16_t input = 0x00FC;
     std::string expected = "SCL";
 
@@ -64,9 +90,22 @@ TEST(DisassemblerTest, Disassemble_EXIT)
     EXPECT_EQ(output, expected);
 }
 
-TEST(DisassemblerTest, Disassemble_LOW)
+TEST(DisassemblerTest, Disassemble_HiresDrawingDisabled_LOW)
 {
     Disassembler disassembler(defaultConfig);
+    std::uint16_t input = 0x00FE;
+    std::string expected = "0x00FE";
+
+    std::string output = disassembler.disassemble(input);
+
+    EXPECT_EQ(output, expected);
+}
+
+TEST(DisassemblerTest, Disassemble_HiresDrawingEnabled_LOW)
+{
+    DisassemblerConfig config = defaultConfig;
+    config.hiresOperations = true;
+    Disassembler disassembler(config);
     std::uint16_t input = 0x00FE;
     std::string expected = "LOW";
 
@@ -75,9 +114,22 @@ TEST(DisassemblerTest, Disassemble_LOW)
     EXPECT_EQ(output, expected);
 }
 
-TEST(DisassemblerTest, Disassemble_HIGH)
+TEST(DisassemblerTest, Disassemble_HiresDrawingDisabled_HIGH)
 {
     Disassembler disassembler(defaultConfig);
+    std::uint16_t input = 0x00FF;
+    std::string expected = "0x00FF";
+
+    std::string output = disassembler.disassemble(input);
+
+    EXPECT_EQ(output, expected);
+}
+
+TEST(DisassemblerTest, Disassemble_HiresDrawingEnabled_HIGH)
+{
+    DisassemblerConfig config = defaultConfig;
+    config.hiresOperations = true;
+    Disassembler disassembler(config);
     std::uint16_t input = 0x00FF;
     std::string expected = "HIGH";
 
@@ -86,9 +138,22 @@ TEST(DisassemblerTest, Disassemble_HIGH)
     EXPECT_EQ(output, expected);
 }
 
-TEST(DisassemblerTest, Disassemble_SCD)
+TEST(DisassemblerTest, Disassemble_HiresDrawingDisabled_SCD)
 {
     Disassembler disassembler(defaultConfig);
+    std::uint16_t input = 0x00CA;
+    std::string expected = "0x00CA";
+
+    std::string output = disassembler.disassemble(input);
+
+    EXPECT_EQ(output, expected);
+}
+
+TEST(DisassemblerTest, Disassemble_HiresDrawingEnabled_SCD)
+{
+    DisassemblerConfig config = defaultConfig;
+    config.hiresOperations = true;
+    Disassembler disassembler(config);
     std::uint16_t input = 0x00CA;
     std::string expected = "SCD 0xA";
 
@@ -479,9 +544,22 @@ TEST(DisassemblerTest, Disassemble_LDF)
     EXPECT_EQ(output, expected);
 }
 
-TEST(DisassemblerTest, Disassemble_LDFH)
+TEST(DisassemblerTest, Disassemble_HiresDrawingDisabled_LDFH)
 {
     Disassembler disassembler(defaultConfig);
+    std::uint16_t input = 0xFA30;
+    std::string expected = "0xFA30";
+
+    std::string output = disassembler.disassemble(input);
+
+    EXPECT_EQ(output, expected);
+}
+
+TEST(DisassemblerTest, Disassemble_HiresDrawingEnabled_LDFH)
+{
+    DisassemblerConfig config = defaultConfig;
+    config.hiresOperations = true;
+    Disassembler disassembler(config);
     std::uint16_t input = 0xFA30;
     std::string expected = "LDFH VA";
 
