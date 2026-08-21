@@ -1,7 +1,7 @@
 #include <exception>
 #include <iostream>
 #include "desktopLoader.hpp"
-#include "application/application.hpp"
+#include "application.hpp"
 
 using namespace chip8;
 

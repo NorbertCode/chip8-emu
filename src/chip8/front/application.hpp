@@ -3,9 +3,9 @@
 #include <functional>
 #include <string>
 #include "chip8.hpp"
-#include "renderer.hpp"
-#include "input.hpp"
-#include "audio.hpp"
+#include "components/renderer.hpp"
+#include "components/input.hpp"
+#include "components/audio.hpp"
 
 namespace chip8::front
 {
