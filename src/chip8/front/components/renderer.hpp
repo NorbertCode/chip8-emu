@@ -16,7 +16,11 @@ namespace chip8::front
         Renderer(Renderer&&) = delete;
         Renderer& operator=(Renderer&&) = delete;
 
-        void render(std::span<const std::uint8_t> display);
+        SDL_Window& getWindow() const;
+        SDL_Renderer& getRenderer() const;
+
+        void drawDisplay(std::span<const std::uint8_t> display);
+        void render();
 
     private:
         int width, height;
