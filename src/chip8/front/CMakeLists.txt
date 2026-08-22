@@ -4,6 +4,7 @@ add_library(
     components/renderer.cpp
     components/input.cpp
     components/audio.cpp
+    debugger/debugger.cpp
 )
 
 find_package(SDL2 REQUIRED)

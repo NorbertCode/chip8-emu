@@ -6,6 +6,7 @@
 #include "components/renderer.hpp"
 #include "components/input.hpp"
 #include "components/audio.hpp"
+#include "debugger/debugger.hpp"
 
 namespace chip8::front
 {
@@ -33,6 +34,7 @@ namespace chip8::front
         Renderer renderer;
         Input input;
         Audio audio;
+        Debugger debugger;
 
         std::reference_wrapper<core::Chip8> chip8;
 

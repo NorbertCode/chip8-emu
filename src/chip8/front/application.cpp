@@ -7,11 +7,19 @@ namespace chip8::front
         : renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight(), config.windowWidth, config.windowHeight, config.foregroundColor, config.backgroundColor), 
         input(chip8.getKeyboard(), std::span<const std::string, 16>(config.keyMap)),
         audio(config.audioFrequency),
+        debugger(renderer.getWindow(), renderer.getRenderer()),
         chip8(chip8), 
         processorTime(1000.0 / config.loopFrequency), 
         timerTime(1000.0 / config.timerFrequency),
         displayTime(1000.0 / config.displayFrequency),
-        applicationConfig(std::move(config)) { }
+        applicationConfig(std::move(config))
+    {
+        auto onEventCallback = [this](const SDL_Event& event) {
+            debugger.processEvent(event);
+        };
+
+        input.setOnEventCallback(onEventCallback);
+    }
 
     void Application::run()
     {
@@ -56,7 +64,10 @@ namespace chip8::front
 
             while (displayAccumulator >= displayTime)
             {
-                renderer.render(chip8.get().getDisplay().getDisplay());
+                debugger.onFrameBegin();
+                renderer.drawDisplay(chip8.get().getDisplay().getDisplay());
+                debugger.onFrameEnd();
+                renderer.render();
 
                 displayAccumulator -= displayTime;
             }
