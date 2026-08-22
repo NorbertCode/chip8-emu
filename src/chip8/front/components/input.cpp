@@ -15,6 +15,9 @@ namespace chip8::front
 
         while (SDL_PollEvent(&event) != 0)
         {
+            if (callback)
+                callback(event);
+
             SDL_Scancode scancode = SDL_SCANCODE_UNKNOWN;
 
             switch (event.type)
@@ -45,5 +48,10 @@ namespace chip8::front
     bool Input::shouldQuit() const
     {
         return quit;
+    }
+
+    void Input::setOnEventCallback(std::function<void(const SDL_Event&)> callback)
+    {
+        this->callback = std::move(callback);
     }
 }
