@@ -25,7 +25,8 @@ namespace chip8::front
         void render(SDL_Renderer& renderer);
 
     private:
-        bool isValid; // Used to allow for moving and prevent double ImGui shutdown
+        bool isValid = false; // Used to allow for moving and prevent double ImGui shutdown
+        bool layoutInitialized = false;
 
         std::vector<std::unique_ptr<DebugWidget>> widgets;
     };

@@ -1,5 +1,6 @@
 #include "debugger.hpp"
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_sdlrenderer2.h>
 #include <utility>
@@ -15,6 +16,10 @@ namespace chip8::front
         isValid(true)
     {
         ImGui::CreateContext();
+
+        ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
         ImGui_ImplSDL2_InitForSDLRenderer(&window, &renderer);
         ImGui_ImplSDLRenderer2_Init(&renderer);
     }
@@ -31,7 +36,8 @@ namespace chip8::front
 
     Debugger::Debugger(Debugger&& other) noexcept
         : widgets(std::move(other.widgets)),
-        isValid(std::exchange(other.isValid, false)) { }
+        isValid(std::exchange(other.isValid, false)),
+        layoutInitialized(std::exchange(other.layoutInitialized, false)) { }
 
     Debugger& Debugger::operator=(Debugger&& other) noexcept
     {
@@ -39,6 +45,7 @@ namespace chip8::front
         {
             widgets = std::move(other.widgets);
             isValid = other.isValid;
+            layoutInitialized = other.layoutInitialized;
 
             other.isValid = false;
         }
@@ -60,6 +67,44 @@ namespace chip8::front
         ImGui_ImplSDLRenderer2_NewFrame();
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
+
+        ImGuiID dockSpaceId = ImGui::GetID("DockSpace");
+
+        if (!layoutInitialized)
+        {
+            layoutInitialized = true;
+
+            ImGui::DockBuilderRemoveNode(dockSpaceId);
+
+            ImGui::DockBuilderAddNode(dockSpaceId, ImGuiDockNodeFlags_DockSpace);
+            ImGui::DockBuilderSetNodeSize(dockSpaceId, ImGui::GetMainViewport()->Size);
+
+            ImGuiID dockMainId = dockSpaceId;
+            ImGuiID dockRightId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Right, 0.25f, nullptr, &dockMainId);
+            ImGuiID dockBottomRightId = ImGui::DockBuilderSplitNode(dockRightId, ImGuiDir_Down, 0.25f, nullptr, &dockRightId);
+        
+            ImGui::DockBuilderDockWindow("Disassembly", dockRightId);
+            ImGui::DockBuilderDockWindow("Memory Viewer", dockRightId);
+            ImGui::DockBuilderDockWindow("Stack Viewer", dockBottomRightId);
+            ImGui::DockBuilderDockWindow("Viewport", dockMainId);
+
+            ImGui::DockBuilderFinish(dockSpaceId);
+        }
+
+        ImGui::SetNextWindowPos(ImGui::GetMainViewport()->Pos);
+        ImGui::SetNextWindowSize(ImGui::GetMainViewport()->Size);
+        ImGui::SetNextWindowViewport(ImGui::GetMainViewport()->ID);
+
+        ImGuiWindowFlags flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | 
+            ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | 
+            ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | 
+            ImGuiWindowFlags_NoNavFocus;
+
+        ImGui::Begin("DockSpace", nullptr, flags);
+
+        ImGui::DockSpace(dockSpaceId);
+
+        ImGui::End();
 
         for (auto& widget : widgets)
             widget->render();
