@@ -1,4 +1,6 @@
 #include "renderer.hpp"
+#include <SDL_stdinc.h>
+#include <SDL_video.h>
 #include <iostream>
 
 namespace chip8::front
@@ -17,6 +19,7 @@ namespace chip8::front
             std::cerr << "Error creating window: " << SDL_GetError() << '\n';
             return;
         }
+        SDL_SetWindowResizable(window, SDL_TRUE);
 
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
         if (!renderer)
