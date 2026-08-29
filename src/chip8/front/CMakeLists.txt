@@ -7,6 +7,7 @@ add_library(
     debugger/debugger.cpp
     debugger/debuggerBuilder.cpp
     debugger/widgets/demoWidget.cpp
+    debugger/widgets/memoryViewerWidget.cpp
 )
 
 find_package(SDL2 REQUIRED)
