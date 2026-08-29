@@ -8,6 +8,7 @@ add_library(
     debugger/debuggerBuilder.cpp
     debugger/widgets/demoWidget.cpp
     debugger/widgets/memoryViewerWidget.cpp
+    debugger/widgets/disassemblyViewerWidget.cpp
 )
 
 find_package(SDL2 REQUIRED)
@@ -18,5 +19,6 @@ target_link_libraries(chip8_front PRIVATE
 )
 
 target_link_libraries(chip8_front PUBLIC chip8_core)
+target_link_libraries(chip8_front PUBLIC disassembler_core)
 
 target_include_directories(chip8_front PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
