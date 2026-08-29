@@ -31,6 +31,8 @@ namespace chip8::core
         std::uint8_t getDelayTimer() const { return delayTimer; }
         std::uint8_t getSoundTimer() const { return soundTimer; }
 
+        const Quirks& getQuirks() const { return quirks; }
+
         bool isRunning() const { return running; }
         bool isHalted() const { return halted; }
 
