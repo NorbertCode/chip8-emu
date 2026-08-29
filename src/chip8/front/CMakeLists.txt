@@ -10,6 +10,7 @@ add_library(
     debugger/widgets/memoryViewerWidget.cpp
     debugger/widgets/disassemblyViewerWidget.cpp
     debugger/widgets/stackViewerWidget.cpp
+    debugger/widgets/viewportWidget.cpp
 )
 
 find_package(SDL2 REQUIRED)

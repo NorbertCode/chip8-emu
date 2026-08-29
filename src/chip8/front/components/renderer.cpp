@@ -35,6 +35,16 @@ namespace chip8::front
         SDL_DestroyWindow(window);
     }
 
+    int Renderer::getWidth() const
+    {
+        return width;
+    }
+
+    int Renderer::getHeight() const
+    {
+        return height;
+    }
+
     SDL_Window& Renderer::getWindow() const
     {
         return *window;
@@ -45,10 +55,18 @@ namespace chip8::front
         return *renderer;
     }
 
-    void Renderer::drawDisplay(std::span<const std::uint8_t> display)
+    SDL_Texture& Renderer::getDisplayTexture() const
+    {
+        return *displayTexture;
+    }
+
+    void Renderer::clearRenderer()
     {
         SDL_RenderClear(renderer);
+    }
 
+    void Renderer::drawDisplay(std::span<const std::uint8_t> display)
+    {
         void* pixels = nullptr;
         int pitch = 0;
 
@@ -67,8 +85,6 @@ namespace chip8::front
         }
 
         SDL_UnlockTexture(displayTexture);
-
-        SDL_RenderCopy(renderer, displayTexture, NULL, NULL);
     }
 
     void Renderer::render()

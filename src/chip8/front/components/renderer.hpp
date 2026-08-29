@@ -16,10 +16,15 @@ namespace chip8::front
         Renderer(Renderer&&) = delete;
         Renderer& operator=(Renderer&&) = delete;
 
+        int getWidth() const;
+        int getHeight() const;
+
         SDL_Window& getWindow() const;
         SDL_Renderer& getRenderer() const;
+        SDL_Texture& getDisplayTexture() const;
 
-        void drawDisplay(std::span<const std::uint8_t> display);
+        void clearRenderer();
+        void drawDisplay(std::span<const std::uint8_t> display); // Draws to displayTexture
         void render();
 
     private:

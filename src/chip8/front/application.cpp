@@ -70,6 +70,8 @@ namespace chip8::front
 
             while (displayAccumulator >= displayTime)
             {
+                renderer.clearRenderer();
+
                 debugger.draw();
                 renderer.drawDisplay(chip8.get().getDisplay().getDisplay());
                 debugger.render(renderer.getRenderer());
