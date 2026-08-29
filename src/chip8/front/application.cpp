@@ -1,5 +1,8 @@
 #include "application.hpp"
+#include "debugger/debuggerBuilder.hpp"
+#include "debugger/widgets/demoWidget.hpp"
 #include <chrono>
+#include <memory>
 
 namespace chip8::front
 {
@@ -7,7 +10,6 @@ namespace chip8::front
         : renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight(), config.windowWidth, config.windowHeight, config.foregroundColor, config.backgroundColor), 
         input(chip8.getKeyboard(), std::span<const std::string, 16>(config.keyMap)),
         audio(config.audioFrequency),
-        debugger(renderer.getWindow(), renderer.getRenderer()),
         chip8(chip8), 
         processorTime(1000.0 / config.loopFrequency), 
         timerTime(1000.0 / config.timerFrequency),
@@ -19,6 +21,10 @@ namespace chip8::front
         };
 
         input.setOnEventCallback(onEventCallback);
+
+        debugger = DebuggerBuilder(renderer.getWindow(), renderer.getRenderer())
+            .addWidget(std::make_unique<DemoWidget>())
+            .build();
     }
 
     void Application::run()
@@ -64,9 +70,9 @@ namespace chip8::front
 
             while (displayAccumulator >= displayTime)
             {
-                debugger.onFrameBegin();
+                debugger.draw();
                 renderer.drawDisplay(chip8.get().getDisplay().getDisplay());
-                debugger.onFrameEnd();
+                debugger.render(renderer.getRenderer());
                 renderer.render();
 
                 displayAccumulator -= displayTime;

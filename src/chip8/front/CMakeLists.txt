@@ -6,6 +6,7 @@ add_library(
     components/audio.cpp
     debugger/debugger.cpp
     debugger/debuggerBuilder.cpp
+    debugger/widgets/demoWidget.cpp
 )
 
 find_package(SDL2 REQUIRED)
