@@ -9,6 +9,7 @@ add_library(
     debugger/widgets/demoWidget.cpp
     debugger/widgets/memoryViewerWidget.cpp
     debugger/widgets/disassemblyViewerWidget.cpp
+    debugger/widgets/stackViewerWidget.cpp
 )
 
 find_package(SDL2 REQUIRED)
