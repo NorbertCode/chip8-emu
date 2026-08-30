@@ -1,14 +1,16 @@
 #include "disassemblyViewerWidget.hpp"
 #include "disassembler.hpp"
 #include "memory/memory.hpp"
+#include "processor/processor.hpp"
 #include "processor/quirks.hpp"
 #include <imgui.h>
 
 namespace chip8::front
 {
-    DisassemblyViewerWidget::DisassemblyViewerWidget(const chip8::core::Memory& memory, const core::Quirks& quirks)
+    DisassemblyViewerWidget::DisassemblyViewerWidget(const chip8::core::Memory& memory, const core::Processor& processor)
         : memory(memory),
-        disassembler(createDisassemblerConfig(memory.getMemoryConfig(), quirks)) { }
+        processor(processor),
+        disassembler(createDisassemblerConfig(memory.getMemoryConfig(), processor.getQuirks())) { }
 
     void DisassemblyViewerWidget::render()
     {
@@ -28,7 +30,10 @@ namespace chip8::front
                 int address = programStart + (row * 2);
                 std::uint16_t instruction = (static_cast<std::uint16_t>(memory.get().read(address)) << 8) + memory.get().read(address + 1);
 
-                ImGui::Text("0x%04X: %s", address, disassembler.disassemble(instruction).c_str());
+                if (address == processor.get().getProgramCounter())
+                    ImGui::TextColored(currentInstructionColor, "0x%04X: %s", address, disassembler.disassemble(instruction).c_str());
+                else
+                    ImGui::Text("0x%04X: %s", address, disassembler.disassemble(instruction).c_str());
             }
         }
 

@@ -27,7 +27,7 @@ namespace chip8::front
 
         debugger = DebuggerBuilder(renderer.getWindow(), renderer.getRenderer())
             .addWidget(std::make_unique<MemoryViewerWidget>(chip8.getMemory(), 2))
-            .addWidget(std::make_unique<DisassemblyViewerWidget>(chip8.getMemory(), chip8.getProcessor().getQuirks()))
+            .addWidget(std::make_unique<DisassemblyViewerWidget>(chip8.getMemory(), chip8.getProcessor()))
             .addWidget(std::make_unique<StackViewerWidget>(chip8.getProcessor()))
             .addWidget(std::make_unique<ViewportWidget>(renderer))
             .build();
