@@ -1,7 +1,10 @@
 #pragma once
 #include <array>
+#include <chrono>
+#include <cstdint>
 #include <functional>
 #include <string>
+#include <unordered_set>
 #include "chip8.hpp"
 #include "components/renderer.hpp"
 #include "components/input.hpp"
@@ -28,7 +31,18 @@ namespace chip8::front
     public:
         Application(core::Chip8& chip8, ApplicationConfig config);
 
-        void run();
+        void reset();
+        void chipStep();
+        void tick();
+
+        bool shouldQuit() const;
+
+        bool isRunning() const;
+        void setRunning(bool value);
+
+        const std::unordered_set<std::uint16_t>& getBreakpoints() const;
+        void addBreakpoint(std::uint16_t line);
+        void removeBreakpoint(std::uint16_t line);
 
     private:
         Renderer renderer;
@@ -41,6 +55,14 @@ namespace chip8::front
         double processorTime;
         double timerTime;
         double displayTime;
+
+        double processorAccumulator = 0.0;
+        double timerAccumulator = 0.0;
+        double displayAccumulator = 0.0;
+        std::chrono::time_point<std::chrono::system_clock> previousTime = std::chrono::high_resolution_clock::now();
+
+        bool running = false;
+        std::unordered_set<std::uint16_t> breakpoints;
 
         ApplicationConfig applicationConfig;
     };

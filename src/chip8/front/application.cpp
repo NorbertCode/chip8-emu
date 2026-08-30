@@ -7,7 +7,9 @@
 #include "debugger/widgets/stackViewerWidget.hpp"
 #include "debugger/widgets/viewportWidget.hpp"
 #include <chrono>
+#include <cstdint>
 #include <memory>
+#include <span>
 
 namespace chip8::front
 {
@@ -37,58 +39,98 @@ namespace chip8::front
             .build();
     }
 
-    void Application::run()
+    void Application::reset()
     {
         double processorAccumulator = 0.0;
         double timerAccumulator = 0.0;
         double displayAccumulator = 0.0;
         auto previousTime = std::chrono::high_resolution_clock::now();
+    }
 
-        while(chip8.get().getProcessor().isRunning())
-        {
-            auto currentTime = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double, std::milli> elapsedTime = currentTime - previousTime;
-            previousTime = currentTime;
+    void Application::chipStep()
+    {
+        chip8.get().getProcessor().step();
+    }
 
+    void Application::tick()
+    {
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsedTime = currentTime - previousTime;
+        previousTime = currentTime;
+
+        if (running)
             processorAccumulator += elapsedTime.count();
-            timerAccumulator += elapsedTime.count();
-            displayAccumulator += elapsedTime.count();
 
-            input.handleEvents();
+        timerAccumulator += elapsedTime.count();
+        displayAccumulator += elapsedTime.count();
 
-            if (input.shouldQuit()) 
-                return;
+        input.handleEvents();
 
-            if (chip8.get().getProcessor().getSoundTimer() > 0)
-                audio.enable();
-            else
-                audio.disable();
+        if (shouldQuit()) 
+            return;
 
-            while (processorAccumulator >= processorTime)
-            {
-                chip8.get().getProcessor().step();
+        if (chip8.get().getProcessor().getSoundTimer() > 0)
+            audio.enable();
+        else
+            audio.disable();
 
-                processorAccumulator -= processorTime;
-            }
+        while (running && processorAccumulator >= processorTime)
+        {
+            chipStep();
 
-            while (timerAccumulator >= timerTime)
-            {
-                chip8.get().getProcessor().tickTimers();
+            processorAccumulator -= processorTime;
 
-                timerAccumulator -= timerTime;
-            }
-
-            while (displayAccumulator >= displayTime)
-            {
-                renderer.clearRenderer();
-
-                debugger.draw();
-                renderer.drawDisplay(chip8.get().getDisplay().getDisplay());
-                debugger.render(renderer.getRenderer());
-                renderer.render();
-
-                displayAccumulator -= displayTime;
-            }
+            if (breakpoints.contains(chip8.get().getProcessor().getProgramCounter()))
+                running = false;
         }
+
+        while (timerAccumulator >= timerTime)
+        {
+            chip8.get().getProcessor().tickTimers();
+
+            timerAccumulator -= timerTime;
+        }
+
+        while (displayAccumulator >= displayTime)
+        {
+            renderer.clearRenderer();
+
+            debugger.draw();
+            renderer.drawDisplay(chip8.get().getDisplay().getDisplay());
+            debugger.render(renderer.getRenderer());
+            renderer.render();
+
+            displayAccumulator -= displayTime;
+        }
+    }
+
+    bool Application::shouldQuit() const
+    {
+        return input.shouldQuit();
+    }
+
+    bool Application::isRunning() const
+    {
+        return running;
+    }
+
+    void Application::setRunning(bool value)
+    {
+        running = value;
+    }
+
+    const std::unordered_set<std::uint16_t>& Application::getBreakpoints() const
+    {
+        return breakpoints;
+    }
+
+    void Application::addBreakpoint(std::uint16_t line)
+    {
+        breakpoints.insert(line);
+    }
+
+    void Application::removeBreakpoint(std::uint16_t line)
+    {
+        breakpoints.erase(line);
     }
 }

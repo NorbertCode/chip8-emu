@@ -26,7 +26,10 @@ int main(int argc, char* argv[])
         chip8.loadRom(loader.getRom());
 
         front::Application app(chip8, loader.getApplicationConfig());
-        app.run();
+        app.reset();
+
+        while (!app.shouldQuit())
+            app.tick();
 
         SDL_Quit();
     }
