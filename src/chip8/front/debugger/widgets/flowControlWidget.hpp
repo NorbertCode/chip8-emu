@@ -8,10 +8,11 @@ namespace chip8::front
     class FlowControlWidget : public DebugWidget
     {
     public:
-        FlowControlWidget(Application& application);
+        FlowControlWidget(Application& application, bool horizontal = false);
         void render() override;
 
     private:
         std::reference_wrapper<Application> application;
+        bool horizontal = false;
     };
 }

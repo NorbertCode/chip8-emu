@@ -4,8 +4,9 @@
 
 namespace chip8::front
 {
-    FlowControlWidget::FlowControlWidget(Application& application)
-        : application(application) { }
+    FlowControlWidget::FlowControlWidget(Application& application, bool horizontal)
+        : application(application),
+        horizontal(horizontal) { }
 
     void FlowControlWidget::render()
     {
@@ -16,11 +17,20 @@ namespace chip8::front
         if (ImGui::Button("Step"))
             application.get().chipStep();
 
+        if (horizontal)
+            ImGui::SameLine();
+
         if (ImGui::Button("Continue"))
             application.get().setRunning(true);
 
+        if (horizontal)
+            ImGui::SameLine();
+
         if (ImGui::Button("Pause"))
             application.get().setRunning(false);
+
+        if (horizontal)
+            ImGui::SameLine();
 
         if (ImGui::Button("Reset"))
             application.get().reset();
