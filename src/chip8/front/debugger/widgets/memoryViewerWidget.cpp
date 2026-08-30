@@ -12,33 +12,39 @@ namespace chip8::front
     {
         ImGui::Begin("Memory Viewer");
 
-        int bytesToRead = memory.get().getMemoryConfig().programEnd;
-        int totalRows = (bytesToRead + bytesPerRow - 1) / bytesPerRow;
+        ImGui::InputInt("Bytes per Row", &bytesPerRow);
 
-        ImGuiListClipper clipper;
-        clipper.Begin(totalRows);
-
-        while (clipper.Step())
+        if (ImGui::BeginChild("Memory View Scroll Region"))
         {
-            for (int row = clipper.DisplayStart; row < clipper.DisplayEnd; ++row)
+            int bytesToRead = memory.get().getMemoryConfig().programEnd;
+            int totalRows = (bytesToRead + bytesPerRow - 1) / bytesPerRow;
+
+            ImGuiListClipper clipper;
+            clipper.Begin(totalRows);
+
+            while (clipper.Step())
             {
-                int baseAddress = row * bytesPerRow;
-
-                ImGui::Text("0x%04X: ", baseAddress);
-                ImGui::SameLine();
-
-                for (int byte = 0; byte < bytesPerRow; ++byte)
+                for (int row = clipper.DisplayStart; row < clipper.DisplayEnd; ++row)
                 {
-                    int address = baseAddress + byte;
+                    int baseAddress = row * bytesPerRow;
 
-                    if (address < bytesToRead)
-                        ImGui::Text("0x%02X", memory.get().read(address));
+                    ImGui::Text("0x%04X: ", baseAddress);
+                    ImGui::SameLine();
 
-                    if (byte < bytesPerRow - 1)
-                        ImGui::SameLine();
+                    for (int byte = 0; byte < bytesPerRow; ++byte)
+                    {
+                        int address = baseAddress + byte;
+
+                        if (address < bytesToRead)
+                            ImGui::Text("0x%02X", memory.get().read(address));
+
+                        if (byte < bytesPerRow - 1)
+                            ImGui::SameLine();
+                    }
                 }
             }
         }
+        ImGui::EndChild();
 
         ImGui::End();
     }
