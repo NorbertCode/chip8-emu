@@ -12,6 +12,7 @@ add_library(
     debugger/widgets/stackViewerWidget.cpp
     debugger/widgets/viewportWidget.cpp
     debugger/widgets/registersViewWidget.cpp
+    debugger/widgets/spritePreviewWidget.cpp
 )
 
 find_package(SDL2 REQUIRED)
