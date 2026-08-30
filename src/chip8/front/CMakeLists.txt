@@ -11,6 +11,7 @@ add_library(
     debugger/widgets/disassemblyViewerWidget.cpp
     debugger/widgets/stackViewerWidget.cpp
     debugger/widgets/viewportWidget.cpp
+    debugger/widgets/registersViewWidget.cpp
 )
 
 find_package(SDL2 REQUIRED)

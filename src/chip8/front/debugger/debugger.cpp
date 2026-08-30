@@ -87,6 +87,7 @@ namespace chip8::front
             ImGui::DockBuilderDockWindow("Memory Viewer", dockRightId);
             ImGui::DockBuilderDockWindow("Stack Viewer", dockBottomRightId);
             ImGui::DockBuilderDockWindow("Viewport", dockMainId);
+            ImGui::DockBuilderDockWindow("Registers Viewer", dockBottomRightId);
 
             ImGui::DockBuilderFinish(dockSpaceId);
         }

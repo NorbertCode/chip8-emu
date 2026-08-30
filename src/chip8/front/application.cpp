@@ -2,6 +2,7 @@
 #include "debugger/debuggerBuilder.hpp"
 #include "debugger/widgets/memoryViewerWidget.hpp"
 #include "debugger/widgets/disassemblyViewerWidget.hpp"
+#include "debugger/widgets/registersViewWidget.hpp"
 #include "debugger/widgets/stackViewerWidget.hpp"
 #include "debugger/widgets/viewportWidget.hpp"
 #include <chrono>
@@ -30,6 +31,7 @@ namespace chip8::front
             .addWidget(std::make_unique<DisassemblyViewerWidget>(chip8.getMemory(), chip8.getProcessor()))
             .addWidget(std::make_unique<StackViewerWidget>(chip8.getProcessor()))
             .addWidget(std::make_unique<ViewportWidget>(renderer))
+            .addWidget(std::make_unique<RegistersViewerWidget>(chip8.getProcessor()))
             .build();
     }
 
