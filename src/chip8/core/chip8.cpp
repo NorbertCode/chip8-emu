@@ -44,8 +44,15 @@ namespace chip8::core
         storage.setOnWriteCallback(std::move(onStorageWriteCallback));
     }
 
+    std::span<const std::uint8_t> Chip8::getRom() const
+    {
+        return rom;
+    }
+
     void Chip8::loadRom(std::span<const std::uint8_t> rom)
     {
         memory.write_bytes(memory.getMemoryConfig().reservedEnd, rom);
+
+        this->rom = rom;
     }
 }

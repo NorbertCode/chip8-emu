@@ -36,6 +36,8 @@ namespace chip8::core
         bool isRunning() const { return running; }
         bool isHalted() const { return halted; }
 
+        void reset();
+
     private:
         std::array<std::uint8_t, 16> registersV{};
         std::uint16_t registerI = 0;

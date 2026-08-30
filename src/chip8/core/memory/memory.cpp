@@ -1,4 +1,5 @@
 #include "memory.hpp"
+#include <algorithm>
 
 namespace chip8::core
 {
@@ -44,6 +45,11 @@ namespace chip8::core
     {
         for (size_t i = 0; i < data.size(); ++i)
             write(address + i, data[i]);
+    }
+
+    void Memory::clear()
+    {
+        std::ranges::fill(memory, 0);
     }
 
     const MemoryConfig& Memory::getMemoryConfig() const

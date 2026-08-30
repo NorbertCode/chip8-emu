@@ -1,4 +1,5 @@
 #include "processor.hpp"
+#include <algorithm>
 
 namespace chip8::core
 {
@@ -123,5 +124,21 @@ namespace chip8::core
                 }
                 break;
         }
+    }
+
+    void Processor::reset()
+    {
+        std::ranges::fill(registersV, 0);
+        std::ranges::fill(stack, 0);
+        
+        registerI = 0;
+        stackPointer = 0;
+        delayTimer = 0;
+        soundTimer = 0;
+
+        running = true;
+        halted = false;
+
+        programCounter = memory.get().getMemoryConfig().reservedEnd;
     }
 }

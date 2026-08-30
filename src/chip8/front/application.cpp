@@ -49,6 +49,12 @@ namespace chip8::front
         double timerAccumulator = 0.0;
         double displayAccumulator = 0.0;
         auto previousTime = std::chrono::high_resolution_clock::now();
+
+        chip8.get().getDisplay().clear();
+        chip8.get().getMemory().clear();
+        chip8.get().getProcessor().reset();
+
+        chip8.get().loadRom(chip8.get().getRom());
     }
 
     void Application::chipStep()
