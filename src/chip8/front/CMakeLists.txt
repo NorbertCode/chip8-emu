@@ -13,6 +13,8 @@ add_library(
     debugger/widgets/viewportWidget.cpp
     debugger/widgets/registersViewWidget.cpp
     debugger/widgets/spritePreviewWidget.cpp
+    debugger/widgets/flowControlWidget.cpp
+    debugger/widgets/breakpointsWidget.cpp
 )
 
 find_package(SDL2 REQUIRED)

@@ -1,5 +1,7 @@
 #include "application.hpp"
 #include "debugger/debuggerBuilder.hpp"
+#include "debugger/widgets/breakpointsWidget.hpp"
+#include "debugger/widgets/flowControlWidget.hpp"
 #include "debugger/widgets/memoryViewerWidget.hpp"
 #include "debugger/widgets/disassemblyViewerWidget.hpp"
 #include "debugger/widgets/registersViewWidget.hpp"
@@ -36,6 +38,8 @@ namespace chip8::front
             .addWidget(std::make_unique<ViewportWidget>(renderer))
             .addWidget(std::make_unique<RegistersViewerWidget>(chip8.getProcessor()))
             .addWidget(std::make_unique<SpritePreviewWidget>(chip8.getProcessor(), chip8.getMemory()))
+            .addWidget(std::make_unique<FlowControlWidget>(*this))
+            .addWidget(std::make_unique<BreakpointsWidget>(*this))
             .build();
     }
 
