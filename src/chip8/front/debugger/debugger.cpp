@@ -80,15 +80,22 @@ namespace chip8::front
             ImGui::DockBuilderSetNodeSize(dockSpaceId, ImGui::GetMainViewport()->Size);
 
             ImGuiID dockMainId = dockSpaceId;
-            ImGuiID dockRightId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Right, 0.25f, nullptr, &dockMainId);
-            ImGuiID dockBottomRightId = ImGui::DockBuilderSplitNode(dockRightId, ImGuiDir_Down, 0.25f, nullptr, &dockRightId);
+            ImGuiID dockBottomId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Down, 0.25f, nullptr, &dockMainId);
+            ImGuiID dockCloserRightId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Right, 0.25f, nullptr, &dockMainId);
+            ImGuiID dockFurtherRightId = ImGui::DockBuilderSplitNode(dockCloserRightId, ImGuiDir_Right, 0.5f, nullptr, &dockCloserRightId);
+            ImGuiID dockBottomFirstQuarterId = ImGui::DockBuilderSplitNode(dockBottomId, ImGuiDir_Left, 0.25f, nullptr, &dockBottomId);
+            ImGuiID dockBottomSecondQuarterId = ImGui::DockBuilderSplitNode(dockBottomId, ImGuiDir_Left, 0.33f, nullptr, &dockBottomId);
+            ImGuiID dockBottomThirdQuarterId = ImGui::DockBuilderSplitNode(dockBottomId, ImGuiDir_Left, 0.50f, nullptr, &dockBottomId);
+            ImGuiID dockBottomFirstQuarterBottomId = ImGui::DockBuilderSplitNode(dockBottomFirstQuarterId, ImGuiDir_Down, 0.65f, nullptr, &dockBottomFirstQuarterId);
         
-            ImGui::DockBuilderDockWindow("Disassembly", dockRightId);
-            ImGui::DockBuilderDockWindow("Memory Viewer", dockRightId);
-            ImGui::DockBuilderDockWindow("Stack Viewer", dockBottomRightId);
             ImGui::DockBuilderDockWindow("Viewport", dockMainId);
-            ImGui::DockBuilderDockWindow("Registers Viewer", dockBottomRightId);
-            ImGui::DockBuilderDockWindow("Sprite Preview", dockBottomRightId);
+            ImGui::DockBuilderDockWindow("Memory Viewer", dockCloserRightId);
+            ImGui::DockBuilderDockWindow("Disassembly", dockFurtherRightId);
+            ImGui::DockBuilderDockWindow("Flow Control", dockBottomFirstQuarterId);
+            ImGui::DockBuilderDockWindow("Breakpoints", dockBottomFirstQuarterBottomId);
+            ImGui::DockBuilderDockWindow("Stack Viewer", dockBottomSecondQuarterId);
+            ImGui::DockBuilderDockWindow("Registers Viewer", dockBottomThirdQuarterId);
+            ImGui::DockBuilderDockWindow("Sprite Preview", dockBottomId);
 
             ImGui::DockBuilderFinish(dockSpaceId);
         }
