@@ -8,10 +8,13 @@ namespace chip8::front
     class StackViewerWidget : public DebugWidget
     {
     public:
-        StackViewerWidget(const core::Processor& processor);
+        StackViewerWidget(const core::Processor& processor, bool horizontal = false);
         void render() override;
 
     private:
         std::reference_wrapper<const core::Processor> processor;
+
+        bool horizontal = false;
+        float spacing = 20.0f;
     };
 }
