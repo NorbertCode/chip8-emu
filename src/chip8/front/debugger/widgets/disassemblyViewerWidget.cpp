@@ -20,6 +20,9 @@ namespace chip8::front
         int bytesToRead = memory.get().getMemoryConfig().programEnd;
         int totalRows = (bytesToRead - programStart + 1) / 2;
 
+        // Update config in case lores sprite handling was updated
+        disassembler.getConfig().hiresOperations = (processor.get().getQuirks().loresSpriteHandling != core::LoresSpriteHandling::NoOperation);
+
         ImGuiListClipper clipper;
         clipper.Begin(totalRows);
 

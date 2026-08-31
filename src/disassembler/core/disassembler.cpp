@@ -131,4 +131,9 @@ namespace disassembler::core
 
         return output;
     }
+
+    DisassemblerConfig& Disassembler::getConfig()
+    {
+        return config;
+    }
 }
