@@ -5,19 +5,19 @@
 
 using namespace chip8::core;
 
-const std::vector<std::uint8_t> sprite_diagonal = {
+const std::vector<std::uint8_t> spriteDiagonal = {
     0b10000000,
     0b01000000,
     0b00100000,
     0b00010000
 };
 
-const std::vector<std::uint8_t> sprite_square = {
+const std::vector<std::uint8_t> spriteSquare = {
     0b11000000,
     0b11000000
 };
 
-const std::vector<std::uint8_t> hires_sprite = {
+const std::vector<std::uint8_t> hiresSprite = {
     0b11000000, 0b00000000,
     0b00110000, 0b00000000,
     0b00001100, 0b00000000,
@@ -171,7 +171,7 @@ TEST(DisplayTest, XorSprite_From0sInBounds_DrawsSprite)
         0, 0, 0, 0, 0, 0, 0, 0
     };
 
-    display.xorSprite(0, 0, sprite_diagonal, false);
+    display.xorSprite(0, 0, spriteDiagonal, false);
 
     EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
@@ -188,7 +188,7 @@ TEST(DisplayTest, XorSprite_From0sInBoundsWithOffset_DrawsSprite)
         0, 0, 0, 0, 0, 0, 0, 0
     };
 
-    display.xorSprite(2, 0, sprite_diagonal, false);
+    display.xorSprite(2, 0, spriteDiagonal, false);
 
     EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
@@ -196,7 +196,7 @@ TEST(DisplayTest, XorSprite_From0sInBoundsWithOffset_DrawsSprite)
 TEST(DisplayTest, XorSprite_CollisionInBounds_XorsExisting)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
     const std::vector<std::uint8_t> expected = {
         0, 0xFF, 0, 0,
         0xFF, 0, 0, 0,
@@ -204,7 +204,7 @@ TEST(DisplayTest, XorSprite_CollisionInBounds_XorsExisting)
         0, 0, 0, 0xFF
     };
 
-    display.xorSprite(0, 0, sprite_diagonal, false);
+    display.xorSprite(0, 0, spriteDiagonal, false);
 
     EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
@@ -219,7 +219,7 @@ TEST(DisplayTest, XorSprite_OutOfBounds_WrapsAround)
         0, 0, 0, 0xFF
     };
 
-    display.xorSprite(4, 0, sprite_diagonal, false);
+    display.xorSprite(4, 0, spriteDiagonal, false);
 
     EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
@@ -234,7 +234,7 @@ TEST(DisplayTest, XorSprite_OnBorder_HalfWrapsAround)
         0, 0xFF, 0, 0
     };
 
-    display.xorSprite(2, 0, sprite_diagonal, false);
+    display.xorSprite(2, 0, spriteDiagonal, false);
 
     EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
@@ -249,7 +249,7 @@ TEST(DisplayTest, XorSprite_OutOfBoundsClippingTrue_WrapsAround)
         0, 0, 0, 0xFF
     };
 
-    display.xorSprite(4, 0, sprite_diagonal, true);
+    display.xorSprite(4, 0, spriteDiagonal, true);
 
     EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
@@ -264,7 +264,7 @@ TEST(DisplayTest, XorSprite_Lores_DrawsTwiceAsBig)
         0, 0, 0xFF, 0xFF
     };
 
-    display.xorSprite(0, 0, sprite_diagonal, true);
+    display.xorSprite(0, 0, spriteDiagonal, true);
 
     EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
@@ -291,7 +291,7 @@ TEST(DisplayTest, XorHiresSprite_Hires_DrawsSprite)
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     };
 
-    display.xorHiresSprite(0, 0, hires_sprite, true);
+    display.xorHiresSprite(0, 0, hiresSprite, true);
 
     EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
@@ -300,7 +300,7 @@ TEST(DisplayTest, XorHiresSprite_NoCollisionHires_ReturnsFalse)
 {
     Display display({16, 16, ResolutionMode::Hires});
 
-    bool collision = display.xorHiresSprite(0, 0, hires_sprite, true);
+    bool collision = display.xorHiresSprite(0, 0, hiresSprite, true);
 
     EXPECT_FALSE(collision);
 }
@@ -308,9 +308,9 @@ TEST(DisplayTest, XorHiresSprite_NoCollisionHires_ReturnsFalse)
 TEST(DisplayTest, XorHiresSprite_CollisionHires_ReturnsTrue)
 {
     Display display({16, 16, ResolutionMode::Hires});
-    display.xorHiresSprite(0, 0, hires_sprite, true);
+    display.xorHiresSprite(0, 0, hiresSprite, true);
 
-    bool collision = display.xorHiresSprite(0, 0, hires_sprite, true);
+    bool collision = display.xorHiresSprite(0, 0, hiresSprite, true);
 
     EXPECT_TRUE(collision);
 }
@@ -318,7 +318,7 @@ TEST(DisplayTest, XorHiresSprite_CollisionHires_ReturnsTrue)
 TEST(DisplayTest, Clear_SetsAllPixelTo0)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_diagonal, false);
+    display.xorSprite(0, 0, spriteDiagonal, false);
 
     display.clear();
 
@@ -332,7 +332,7 @@ TEST(DisplayTest, Clear_SetsAllPixelTo0)
 TEST(DisplayTest, ScrollLeft_InBounds_ScrollsDisplayLeft)
 {
     Display display({4, 4});
-    display.xorSprite(2, 0, sprite_square, false);
+    display.xorSprite(2, 0, spriteSquare, false);
     std::vector<std::uint8_t> expected = {
         0, 0xFF, 0xFF, 0,
         0, 0xFF, 0xFF, 0,
@@ -348,7 +348,7 @@ TEST(DisplayTest, ScrollLeft_InBounds_ScrollsDisplayLeft)
 TEST(DisplayTest, ScrollLeft_AtEdge_ClipsSprite)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
     std::vector<std::uint8_t> expected = {
         0xFF, 0, 0, 0,
         0xFF, 0, 0, 0,
@@ -364,7 +364,7 @@ TEST(DisplayTest, ScrollLeft_AtEdge_ClipsSprite)
 TEST(DisplayTest, ScrollLeft_0Pixels_DoesNotScroll)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
     std::vector<std::uint8_t> expected = {
         0xFF, 0xFF, 0, 0,
         0xFF, 0xFF, 0, 0,
@@ -380,7 +380,7 @@ TEST(DisplayTest, ScrollLeft_0Pixels_DoesNotScroll)
 TEST(DisplayTest, ScrollLeft_DisplayWidth_ClearsScreen)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
 
     display.scrollLeft(4);
 
@@ -394,7 +394,7 @@ TEST(DisplayTest, ScrollLeft_DisplayWidth_ClearsScreen)
 TEST(DisplayTest, ScrollLeft_AboveDisplayWidth_ClearsScreen)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
 
     display.scrollLeft(5);
 
@@ -408,7 +408,7 @@ TEST(DisplayTest, ScrollLeft_AboveDisplayWidth_ClearsScreen)
 TEST(DisplayTest, ScrollRight_InBounds_ScrollsDisplayRight)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
     std::vector<std::uint8_t> expected = {
         0, 0, 0xFF, 0xFF,
         0, 0, 0xFF, 0xFF,
@@ -424,7 +424,7 @@ TEST(DisplayTest, ScrollRight_InBounds_ScrollsDisplayRight)
 TEST(DisplayTest, ScrollRight_AtEdge_ClipsSprite)
 {
     Display display({4, 4});
-    display.xorSprite(2, 0, sprite_square, false);
+    display.xorSprite(2, 0, spriteSquare, false);
     std::vector<std::uint8_t> expected = {
         0, 0, 0, 0xFF,
         0, 0, 0, 0xFF,
@@ -440,7 +440,7 @@ TEST(DisplayTest, ScrollRight_AtEdge_ClipsSprite)
 TEST(DisplayTest, ScrollRight_0Pixels_DoesNotScroll)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
     std::vector<std::uint8_t> expected = {
         0xFF, 0xFF, 0, 0,
         0xFF, 0xFF, 0, 0,
@@ -456,7 +456,7 @@ TEST(DisplayTest, ScrollRight_0Pixels_DoesNotScroll)
 TEST(DisplayTest, ScrollRight_DisplayWidth_ClearsScreen)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
 
     display.scrollRight(4);
 
@@ -470,7 +470,7 @@ TEST(DisplayTest, ScrollRight_DisplayWidth_ClearsScreen)
 TEST(DisplayTest, ScrollRight_AboveDisplayWidth_ClearsScreen)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
 
     display.scrollRight(5);
 
@@ -484,7 +484,7 @@ TEST(DisplayTest, ScrollRight_AboveDisplayWidth_ClearsScreen)
 TEST(DisplayTest, ScrollDown_InBounds_ScrollsDisplayDown)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
     std::vector<std::uint8_t> expected = {
         0, 0, 0, 0,
         0xFF, 0xFF, 0, 0,
@@ -500,7 +500,7 @@ TEST(DisplayTest, ScrollDown_InBounds_ScrollsDisplayDown)
 TEST(DisplayTest, ScrollDown_AtEdge_ClipsSprite)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
     std::vector<std::uint8_t> expected = {
         0, 0, 0, 0,
         0, 0, 0, 0,
@@ -516,7 +516,7 @@ TEST(DisplayTest, ScrollDown_AtEdge_ClipsSprite)
 TEST(DisplayTest, ScrollDown_0Pixels_DoesNotScroll)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
     std::vector<std::uint8_t> expected = {
         0xFF, 0xFF, 0, 0,
         0xFF, 0xFF, 0, 0,
@@ -532,7 +532,7 @@ TEST(DisplayTest, ScrollDown_0Pixels_DoesNotScroll)
 TEST(DisplayTest, ScrollDown_DisplayHeight_ClearsScreen)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
 
     display.scrollDown(4);
 
@@ -546,7 +546,7 @@ TEST(DisplayTest, ScrollDown_DisplayHeight_ClearsScreen)
 TEST(DisplayTest, ScrollDown_AboveDisplayHeight_ClearsScreen)
 {
     Display display({4, 4});
-    display.xorSprite(0, 0, sprite_square, false);
+    display.xorSprite(0, 0, spriteSquare, false);
 
     display.scrollDown(5);
 
