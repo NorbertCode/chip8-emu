@@ -1162,7 +1162,7 @@ TEST_F(ProcessorTest, ldIReg_IndexIncrementEnabled_IncrementsI)
 
     processorWithIndexIncrement.execute(0xF255); // LD [I], V2
 
-    EXPECT_EQ(processorWithIndexIncrement.getRegisterI(), 0x304);
+    EXPECT_EQ(processorWithIndexIncrement.getRegisterI(), 0x303);
 }
 
 TEST_F(ProcessorTest, ldRegI_LoadsMemoryIntoRegisters)
@@ -1204,7 +1204,7 @@ TEST_F(ProcessorTest, ldRegI_IndexIncrementEnabled_IncrementsI)
 
     processorWithIndexIncrement.execute(0xF265); // LD V2, [I]
 
-    EXPECT_EQ(processorWithIndexIncrement.getRegisterI(), 0x304);
+    EXPECT_EQ(processorWithIndexIncrement.getRegisterI(), 0x303);
 }
 
 TEST_F(ProcessorTest, ldRplReg_StoresRegistersInStorage)

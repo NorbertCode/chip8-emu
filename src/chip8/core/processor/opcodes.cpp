@@ -255,7 +255,7 @@ namespace chip8::core
             memory.get().write(memoryIndex, registersV[registerIndex]);
 
         if (quirks.indexIncrement)
-            registerI = memoryIndex + 1;
+            registerI = memoryIndex;
     }
 
     void Processor::ldRegI(std::uint8_t x)
@@ -266,7 +266,7 @@ namespace chip8::core
             registersV[registerIndex] = memory.get().read(memoryIndex);
 
         if (quirks.indexIncrement)
-            registerI = memoryIndex + 1;
+            registerI = memoryIndex;
     }
 
     void Processor::ldRplReg(std::uint8_t x)
