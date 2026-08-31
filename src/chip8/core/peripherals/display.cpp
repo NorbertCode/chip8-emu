@@ -29,6 +29,16 @@ namespace chip8::core
         return height;
     }
 
+    void Display::setWidth(std::uint8_t width)
+    {
+        this->width = width;
+    }
+
+    void Display::setHeight(std::uint8_t height)
+    {
+        this->height = height;
+    }
+
     bool Display::xorPixel(std::uint8_t x, std::uint8_t y, bool value, bool clipping)
     {
         if (!clipping)

@@ -33,7 +33,10 @@ namespace chip8::front
             ImGui::SameLine();
 
         if (ImGui::Button("Reset"))
+        {
             application.get().reset();
+            application.get().setRunning(false);
+        }
 
         ImGui::End();
     }
