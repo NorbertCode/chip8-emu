@@ -41,7 +41,7 @@ namespace chip8::core
         display.resize(static_cast<size_t>(width * height), 0x0);
     }
 
-    bool Display::xorPixel(std::uint8_t x, std::uint8_t y, bool value, bool clipping)
+    bool Display::xorPixel(unsigned int x, unsigned int y, bool value, bool clipping)
     {
         if (!clipping)
         {
@@ -59,7 +59,7 @@ namespace chip8::core
         return collision;
     }
 
-    int Display::xorSprite(std::uint8_t x, std::uint8_t y, std::span<const std::uint8_t> sprite, bool clipping)
+    int Display::xorSprite(unsigned int x, unsigned int y, std::span<const std::uint8_t> sprite, bool clipping)
     {
         int collisions = 0;
 
@@ -69,7 +69,7 @@ namespace chip8::core
         return collisions;
     }
 
-    int Display::xorHiresSprite(std::uint8_t x, std::uint8_t y, std::span<const std::uint8_t> sprite, bool clipping)
+    int Display::xorHiresSprite(unsigned int x, unsigned int y, std::span<const std::uint8_t> sprite, bool clipping)
     {
         int collisions = 0;
 
