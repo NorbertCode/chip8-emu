@@ -92,9 +92,9 @@ TEST_F(ProcessorTest, Step_WaitingForVBlank_DoesNothing)
     Processor processorWithWaitForVBlank(memory, storage, display, keyboard, quirksWithWaitForVBlank, 0x200);
     processorWithWaitForVBlank.execute(0xD001);
 
-    processor.step();
+    processorWithWaitForVBlank.step();
 
-    EXPECT_EQ(processor.getProgramCounter(), 0x200);
+    EXPECT_EQ(processorWithWaitForVBlank.getProgramCounter(), 0x200);
 }
 
 TEST_F(ProcessorTest, TickTimers_AboveZero_TicksDown)
