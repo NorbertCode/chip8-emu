@@ -16,6 +16,7 @@ namespace chip8::core
 
         void step();
         void tickTimers();
+        void resetWaitingForVBlank();
 
         std::uint16_t fetch();
         void execute(std::uint16_t instruction);
@@ -35,7 +36,7 @@ namespace chip8::core
         Quirks& getQuirks() { return quirks; }
 
         bool isRunning() const { return running; }
-        bool isHalted() const { return halted; }
+        bool isHalted() const { return waitingForKeypress; }
 
         void reset();
 
@@ -52,7 +53,8 @@ namespace chip8::core
         std::uint8_t soundTimer = 0;
 
         bool running = true;
-        bool halted = false;
+        bool waitingForKeypress = false; 
+        bool waitingForVBlank = false;
 
         std::reference_wrapper<Memory> memory;
         std::reference_wrapper<Storage> storage;

@@ -112,6 +112,8 @@ namespace chip8::front
             debugger.render(renderer.getRenderer());
             renderer.render();
 
+            chip8.get().getProcessor().resetWaitingForVBlank();
+
             displayAccumulator -= displayTime;
         }
     }

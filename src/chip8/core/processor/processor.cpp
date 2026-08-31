@@ -14,7 +14,7 @@ namespace chip8::core
 
     void Processor::step()
     {
-        if (halted)
+        if (waitingForKeypress || waitingForVBlank)
             return;
 
         execute(fetch());
@@ -27,6 +27,11 @@ namespace chip8::core
 
         if (soundTimer > 0)
             soundTimer--;
+    }
+
+    void Processor::resetWaitingForVBlank()
+    {
+        waitingForVBlank = false;
     }
 
     std::uint16_t Processor::fetch()
@@ -137,7 +142,8 @@ namespace chip8::core
         soundTimer = 0;
 
         running = true;
-        halted = false;
+        waitingForKeypress = false;
+        waitingForVBlank = false;
 
         programCounter = memory.get().getMemoryConfig().reservedEnd;
     }

@@ -27,6 +27,7 @@ namespace chip8::front
             ImGui::Checkbox("Clear on Resolution Mode Change", &quirks.clearOnDisplayModeChange);
             ImGui::Checkbox("VF Collision Counter", &quirks.vfCollisionCounter);
             ImGui::Checkbox("Lores Whole Sprite Scrolling", &quirks.loresWholePixelScrolling);
+            ImGui::Checkbox("Wait for VBlank", &quirks.waitForVBlank);
 
             const core::LoresSpriteHandling currentSpriteHandling = quirks.loresSpriteHandling;
             const std::string& preview = loresSpriteHandlingNames[static_cast<size_t>(currentSpriteHandling)].second;

@@ -20,6 +20,7 @@ namespace chip8::core
         bool clearOnDisplayModeChange;
         bool vfCollisionCounter;
         bool loresWholePixelScrolling;
+        bool waitForVBlank;
         LoresSpriteHandling loresSpriteHandling;
     };
 }

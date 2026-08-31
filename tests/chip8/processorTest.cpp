@@ -36,6 +36,8 @@ protected:
         .vxJumping = false,
         .clearOnDisplayModeChange = false,
         .vfCollisionCounter = false,
+        .loresWholePixelScrolling = false,
+        .waitForVBlank = false,
         .loresSpriteHandling = LoresSpriteHandling::DrawWide
     };
 
@@ -63,7 +65,7 @@ bool IsClear(const Display& display)
     return true;
 }
 
-TEST_F(ProcessorTest, Step_NotHalted_FetchesAndExecutesInstruction)
+TEST_F(ProcessorTest, Step_NotWaiting_FetchesAndExecutesInstruction)
 {
     memory.write(0x200, 0xAB);
     memory.write(0x201, 0xCD);
@@ -73,7 +75,7 @@ TEST_F(ProcessorTest, Step_NotHalted_FetchesAndExecutesInstruction)
     EXPECT_EQ(processor.getProgramCounter(), 0x202);
 }
 
-TEST_F(ProcessorTest, Step_Halted_DoesNothing)
+TEST_F(ProcessorTest, Step_WaitingForKeypress_DoesNothing)
 {
     processor.execute(0xF00A); // LD V0, K (Halts until key press)
 
@@ -81,6 +83,18 @@ TEST_F(ProcessorTest, Step_Halted_DoesNothing)
 
     EXPECT_EQ(processor.getProgramCounter(), 0x200);
     EXPECT_EQ(processor.isHalted(), true);
+}
+
+TEST_F(ProcessorTest, Step_WaitingForVBlank_DoesNothing)
+{
+    Quirks quirksWithWaitForVBlank = quirks;
+    quirksWithWaitForVBlank.waitForVBlank = true;
+    Processor processorWithWaitForVBlank(memory, storage, display, keyboard, quirksWithWaitForVBlank, 0x200);
+    processorWithWaitForVBlank.execute(0xD001);
+
+    processor.step();
+
+    EXPECT_EQ(processor.getProgramCounter(), 0x200);
 }
 
 TEST_F(ProcessorTest, TickTimers_AboveZero_TicksDown)
