@@ -117,30 +117,34 @@ namespace chip8::core
 
     void Processor::subReg(std::uint8_t x, std::uint8_t y)
     {
-        registersV[0xF] = registersV[x] > registersV[y];
+        std::uint8_t flag = registersV[x] >= registersV[y];
+
         registersV[x] -= registersV[y];
+        registersV[0xF] = flag;
     }
 
     void Processor::shrReg(std::uint8_t x, std::uint8_t y)
     {
         std::uint8_t value = quirks.vyShifting ? registersV[y] : registersV[x];
 
-        registersV[0xF] = value & 0x1;
         registersV[x] = value >> 1;
+        registersV[0xF] = value & 0x1;
     }
 
     void Processor::subnReg(std::uint8_t x, std::uint8_t y)
     {
-        registersV[0xF] = registersV[y] > registersV[x];
+        std::uint8_t flag = registersV[y] >= registersV[x];
+
         registersV[x] = registersV[y] - registersV[x];
+        registersV[0xF] = flag;
     }
 
     void Processor::shlReg(std::uint8_t x, std::uint8_t y)
     {
         std::uint8_t value = quirks.vyShifting ? registersV[y] : registersV[x];
 
-        registersV[0xF] = (value & 0x80) >> 7;
         registersV[x] = value << 1;
+        registersV[0xF] = (value & 0x80) >> 7;
     }
 
     void Processor::sneReg(std::uint8_t x, std::uint8_t y)
