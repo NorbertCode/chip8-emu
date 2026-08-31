@@ -41,7 +41,7 @@ namespace chip8::core
         display.resize(static_cast<size_t>(width * height), 0x0);
     }
 
-    bool Display::xorPixel(std::uint8_t x, std::uint8_t y, bool value, bool clipping)
+    bool Display::xorPixel(unsigned int x, unsigned int y, bool value, bool clipping)
     {
         if (!clipping)
         {
@@ -59,9 +59,14 @@ namespace chip8::core
         return collision;
     }
 
-    int Display::xorSprite(std::uint8_t x, std::uint8_t y, std::span<const std::uint8_t> sprite, bool clipping)
+    int Display::xorSprite(unsigned int x, unsigned int y, std::span<const std::uint8_t> sprite, bool clipping)
     {
         int collisions = 0;
+
+        // If a sprite is completely out of bounds it wraps around no matter the clipping
+        // The wrap is dependent on resolution mode (as the sizes are purely logical, width and height are no actually changed)
+        x %= (mode == ResolutionMode::Hires) ? getWidth() : getWidth() / 2;
+        y %= (mode == ResolutionMode::Hires) ? getHeight() : getHeight() / 2;
 
         for (size_t spriteRowIndex = 0; spriteRowIndex < sprite.size(); ++spriteRowIndex)
             collisions += xorRow(x, y + spriteRowIndex, sprite[spriteRowIndex], clipping);
@@ -69,9 +74,13 @@ namespace chip8::core
         return collisions;
     }
 
-    int Display::xorHiresSprite(std::uint8_t x, std::uint8_t y, std::span<const std::uint8_t> sprite, bool clipping)
+    int Display::xorHiresSprite(unsigned int x, unsigned int y, std::span<const std::uint8_t> sprite, bool clipping)
     {
         int collisions = 0;
+
+        // Same thing as in xorSprite()
+        x %= (mode == ResolutionMode::Hires) ? getWidth() : getWidth() / 2;
+        y %= (mode == ResolutionMode::Hires) ? getHeight() : getHeight() / 2;
 
         for (size_t spriteRowIndex = 0; spriteRowIndex < sprite.size() / 2; ++spriteRowIndex)
         {
@@ -99,8 +108,11 @@ namespace chip8::core
         return mode;
     }
 
-    void Display::scrollLeft(std::uint8_t pixels)
+    void Display::scrollLeft(std::uint8_t pixels, bool loresWholePixelScrolling)
     {
+        if (loresWholePixelScrolling && mode == ResolutionMode::Lores)
+            pixels *= 2;
+
         std::ptrdiff_t shift = static_cast<std::ptrdiff_t>(pixels);
 
         for (size_t row = 0; row < height; ++row)
@@ -113,8 +125,11 @@ namespace chip8::core
         }
     }
 
-    void Display::scrollRight(std::uint8_t pixels)
+    void Display::scrollRight(std::uint8_t pixels, bool loresWholePixelScrolling)
     {
+        if (loresWholePixelScrolling && mode == ResolutionMode::Lores)
+            pixels *= 2;
+
         std::ptrdiff_t shift = static_cast<std::ptrdiff_t>(pixels);
 
         for (size_t row = 0; row < height; ++row)
@@ -127,8 +142,11 @@ namespace chip8::core
         }
     }
 
-    void Display::scrollDown(std::uint8_t pixels)
+    void Display::scrollDown(std::uint8_t pixels, bool loresWholePixelScrolling)
     {
+        if (loresWholePixelScrolling && mode == ResolutionMode::Lores)
+            pixels *= 2;
+
         const auto remainingEnd = std::shift_right(display.begin(), display.end(), static_cast<std::ptrdiff_t>(pixels * width));
         std::fill(display.begin(), remainingEnd, 0);
     }

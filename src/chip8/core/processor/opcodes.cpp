@@ -5,7 +5,7 @@ namespace chip8::core
 {
     void Processor::scrollDown(std::uint8_t pixels)
     {
-        display.get().scrollDown(pixels);
+        display.get().scrollDown(pixels, quirks.loresWholePixelScrolling);
     }
 
     void Processor::cls()
@@ -20,12 +20,12 @@ namespace chip8::core
 
     void Processor::scrollRight()
     {
-        display.get().scrollRight(4);
+        display.get().scrollRight(4, quirks.loresWholePixelScrolling);
     }
 
     void Processor::scrollLeft()
     {
-        display.get().scrollLeft(4);
+        display.get().scrollLeft(4, quirks.loresWholePixelScrolling);
     }
 
     void Processor::exit()
@@ -117,30 +117,34 @@ namespace chip8::core
 
     void Processor::subReg(std::uint8_t x, std::uint8_t y)
     {
-        registersV[0xF] = registersV[x] > registersV[y];
+        std::uint8_t flag = registersV[x] >= registersV[y];
+
         registersV[x] -= registersV[y];
+        registersV[0xF] = flag;
     }
 
     void Processor::shrReg(std::uint8_t x, std::uint8_t y)
     {
         std::uint8_t value = quirks.vyShifting ? registersV[y] : registersV[x];
 
-        registersV[0xF] = value & 0x1;
         registersV[x] = value >> 1;
+        registersV[0xF] = value & 0x1;
     }
 
     void Processor::subnReg(std::uint8_t x, std::uint8_t y)
     {
-        registersV[0xF] = registersV[y] > registersV[x];
+        std::uint8_t flag = registersV[y] >= registersV[x];
+
         registersV[x] = registersV[y] - registersV[x];
+        registersV[0xF] = flag;
     }
 
     void Processor::shlReg(std::uint8_t x, std::uint8_t y)
     {
         std::uint8_t value = quirks.vyShifting ? registersV[y] : registersV[x];
 
-        registersV[0xF] = (value & 0x80) >> 7;
         registersV[x] = value << 1;
+        registersV[0xF] = (value & 0x80) >> 7;
     }
 
     void Processor::sneReg(std::uint8_t x, std::uint8_t y)
@@ -255,7 +259,7 @@ namespace chip8::core
             memory.get().write(memoryIndex, registersV[registerIndex]);
 
         if (quirks.indexIncrement)
-            registerI = memoryIndex + 1;
+            registerI = memoryIndex;
     }
 
     void Processor::ldRegI(std::uint8_t x)
@@ -266,7 +270,7 @@ namespace chip8::core
             registersV[registerIndex] = memory.get().read(memoryIndex);
 
         if (quirks.indexIncrement)
-            registerI = memoryIndex + 1;
+            registerI = memoryIndex;
     }
 
     void Processor::ldRplReg(std::uint8_t x)

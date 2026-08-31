@@ -33,17 +33,18 @@ namespace chip8::core
         void setWidth(std::uint8_t width);
         void setHeight(std::uint8_t height);
 
-        bool xorPixel(std::uint8_t x, std::uint8_t y, bool value, bool clipping); // Returns collision (if pixel was erased)
-        int xorSprite(std::uint8_t x, std::uint8_t y, std::span<const std::uint8_t> sprite, bool clipping); // Returns collision (if pixel was erased)
-        int xorHiresSprite(std::uint8_t x, std::uint8_t y, std::span<const std::uint8_t> sprite, bool clipping); // Same as above, but expects a 16x16 sprite
+        // Methods which may wrap around must use a bigger type than uint8_t
+        bool xorPixel(unsigned int x, unsigned int y, bool value, bool clipping); // Returns collision (if pixel was erased)
+        int xorSprite(unsigned int x, unsigned int y, std::span<const std::uint8_t> sprite, bool clipping); // Returns collision (if pixel was erased)
+        int xorHiresSprite(unsigned int x, unsigned int y, std::span<const std::uint8_t> sprite, bool clipping); // Same as above, but expects a 16x16 sprite
         void clear();
 
         void setResolutionMode(ResolutionMode mode);
         const ResolutionMode& getResolutionMode() const;
 
-        void scrollLeft(std::uint8_t pixels);
-        void scrollRight(std::uint8_t pixels);
-        void scrollDown(std::uint8_t pixels);
+        void scrollLeft(std::uint8_t pixels, bool loresWholePixelScrolling = false);
+        void scrollRight(std::uint8_t pixels, bool loresWholePixelScrolling = false);
+        void scrollDown(std::uint8_t pixels, bool loresWholePixelScrolling = false);
 
     private:
         std::vector<std::uint8_t> display;
@@ -52,7 +53,7 @@ namespace chip8::core
         ResolutionMode mode;
 
         template <std::integral T>
-        bool xorRow(std::uint8_t x, std::uint8_t y, T row, bool clipping)
+        bool xorRow(unsigned int x, unsigned int y, T row, bool clipping)
         {
             bool collision = false;
 
@@ -64,8 +65,8 @@ namespace chip8::core
                     collision |= xorPixel(x + columnIndex, y, pixel, clipping);
                 else
                 {
-                    const std::uint8_t doubleX = 2 * (x + columnIndex);
-                    const std::uint8_t doubleY = 2 * y;
+                    const unsigned int doubleX = 2 * (x + columnIndex);
+                    const unsigned int doubleY = 2 * y;
                 
                     collision |= xorPixel(doubleX, doubleY, pixel, clipping);
                     collision |= xorPixel(doubleX + 1, doubleY, pixel, clipping);
