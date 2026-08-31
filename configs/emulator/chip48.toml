@@ -19,6 +19,7 @@ index_increment = true
 display_clipping = true
 vy_shifting = false
 vx_jumping = true
+wait_for_vblank = false
 lores_sprite_handling = "no_operation"
 
 [keymap]
