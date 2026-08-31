@@ -1,8 +1,12 @@
 #pragma once
 #include "chip8.hpp"
 #include "debugger/debugWidget.hpp"
+#include "peripherals/display.hpp"
+#include "processor/quirks.hpp"
 #include <array>
 #include <functional>
+#include <string>
+#include <utility>
 
 namespace chip8::front
 {
@@ -15,8 +19,15 @@ namespace chip8::front
     private:
         std::reference_wrapper<core::Chip8> chip8;
 
-        std::array<std::string, 3> loresSpriteHandlingNames = { "Draw Wide", "Draw Tall", "No Operation" };
-        std::array<std::string, 2> resolutionModeNames = { "Lores", "Hires" };
+        std::array<std::pair<core::LoresSpriteHandling, std::string>, 3> loresSpriteHandlingNames {{ 
+            { core::LoresSpriteHandling::DrawWide, "Draw Wide" }, 
+            { core::LoresSpriteHandling::DrawTall, "Draw Tall" }, 
+            { core::LoresSpriteHandling::NoOperation, "No Operation" }
+        }};
+        std::array<std::pair<core::ResolutionMode, std::string>, 2> resolutionModeNames {{ 
+            { core::ResolutionMode::Lores, "Lores" }, 
+            { core::ResolutionMode::Hires, "Hires" }
+        }};
 
         int resolutionWidth;
         int resolutionHeight;

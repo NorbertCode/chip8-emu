@@ -27,17 +27,17 @@ namespace chip8::front
             ImGui::Checkbox("Clear on Resolution Mode Change", &quirks.clearOnDisplayModeChange);
             ImGui::Checkbox("VF Collision Counter", &quirks.vfCollisionCounter);
 
-            const int currentSpriteHandling = static_cast<int>(chip8.get().getProcessor().getQuirks().loresSpriteHandling);
-            const std::string& preview = loresSpriteHandlingNames[currentSpriteHandling];
+            const core::LoresSpriteHandling currentSpriteHandling = quirks.loresSpriteHandling;
+            const std::string& preview = loresSpriteHandlingNames[static_cast<size_t>(currentSpriteHandling)].second;
         
             if (ImGui::BeginCombo("Lores Sprite Handling", preview.c_str()))
             {
-                for (size_t i = 0; i < loresSpriteHandlingNames.size(); ++i)
+                for (const auto& [enumValue, name] : loresSpriteHandlingNames)
                 {
-                    bool isSelected = currentSpriteHandling == i;
+                    bool isSelected = currentSpriteHandling == enumValue;
 
-                    if (ImGui::Selectable(loresSpriteHandlingNames[i].c_str(), isSelected))
-                        quirks.loresSpriteHandling = static_cast<core::LoresSpriteHandling>(i);
+                    if (ImGui::Selectable(name.c_str(), isSelected))
+                        quirks.loresSpriteHandling = enumValue;
 
                     if (isSelected)
                         ImGui::SetItemDefaultFocus();
@@ -55,17 +55,17 @@ namespace chip8::front
             if (ImGui::InputInt("Height", &resolutionHeight))
                 chip8.get().getDisplay().setHeight(resolutionHeight);
 
-            const int currentResolutionMode = static_cast<int>(chip8.get().getDisplay().getResolutionMode());
-            const std::string& preview = resolutionModeNames[currentResolutionMode];
+            const core::ResolutionMode currentResolutionMode = chip8.get().getDisplay().getResolutionMode();
+            const std::string& preview = resolutionModeNames[static_cast<size_t>(currentResolutionMode)].second;
         
             if (ImGui::BeginCombo("Resolution Mode", preview.c_str()))
             {
-                for (size_t i = 0; i < resolutionModeNames.size(); ++i)
+                for (const auto& [enumValue, name] : resolutionModeNames)
                 {
-                    bool isSelected = currentResolutionMode == i;
+                    bool isSelected = currentResolutionMode == enumValue;
 
-                    if (ImGui::Selectable(resolutionModeNames[i].c_str(), isSelected))
-                        chip8.get().getDisplay().setResolutionMode(static_cast<core::ResolutionMode>(i));
+                    if (ImGui::Selectable(name.c_str(), isSelected))
+                        chip8.get().getDisplay().setResolutionMode(enumValue);
 
                     if (isSelected)
                         ImGui::SetItemDefaultFocus();
