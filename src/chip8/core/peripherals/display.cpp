@@ -63,6 +63,11 @@ namespace chip8::core
     {
         int collisions = 0;
 
+        // If a sprite is completely out of bounds it wraps around no matter the clipping
+        // The wrap is dependent on resolution mode (as the sizes are purely logical, width and height are no actually changed)
+        x %= (mode == ResolutionMode::Hires) ? getWidth() : getWidth() / 2;
+        y %= (mode == ResolutionMode::Hires) ? getHeight() : getHeight() / 2;
+
         for (size_t spriteRowIndex = 0; spriteRowIndex < sprite.size(); ++spriteRowIndex)
             collisions += xorRow(x, y + spriteRowIndex, sprite[spriteRowIndex], clipping);
 
@@ -72,6 +77,10 @@ namespace chip8::core
     int Display::xorHiresSprite(unsigned int x, unsigned int y, std::span<const std::uint8_t> sprite, bool clipping)
     {
         int collisions = 0;
+
+        // Same thing as in xorSprite()
+        x %= (mode == ResolutionMode::Hires) ? getWidth() : getWidth() / 2;
+        y %= (mode == ResolutionMode::Hires) ? getHeight() : getHeight() / 2;
 
         for (size_t spriteRowIndex = 0; spriteRowIndex < sprite.size() / 2; ++spriteRowIndex)
         {

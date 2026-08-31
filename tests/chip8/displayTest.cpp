@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "peripherals/display.hpp"
@@ -238,17 +239,19 @@ TEST(DisplayTest, XorSprite_OnBorder_HalfWrapsAround)
     EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
-TEST(DisplayTest, XorSprite_OutOfBoundsClippingTrue_DoesNotDraw)
+TEST(DisplayTest, XorSprite_OutOfBoundsClippingTrue_WrapsAround)
 {
     Display display({4, 4});
+    const std::vector<std::uint8_t> expected = {
+        0xFF, 0, 0, 0,
+        0, 0xFF, 0, 0,
+        0, 0, 0xFF, 0,
+        0, 0, 0, 0xFF
+    };
 
     display.xorSprite(4, 0, sprite_diagonal, true);
 
-    for (size_t i = 0; i < display.getWidth(); ++i)
-    {
-        for (size_t j = 0; j < display.getHeight(); ++j)
-            EXPECT_FALSE(display.getPixel(i, j));
-    }
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }
 
 TEST(DisplayTest, XorSprite_Lores_DrawsTwiceAsBig)
