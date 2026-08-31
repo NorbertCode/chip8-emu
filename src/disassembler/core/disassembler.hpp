@@ -24,6 +24,8 @@ namespace disassembler::core
         std::string disassemble(std::uint16_t instruction);
         std::vector<std::string> disassemble(std::span<const std::uint16_t> memory);
 
+        DisassemblerConfig& getConfig();
+
     private:
         DisassemblerConfig config;
     };

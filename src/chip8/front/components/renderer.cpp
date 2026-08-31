@@ -1,4 +1,8 @@
 #include "renderer.hpp"
+#include "peripherals/display.hpp"
+#include <SDL_render.h>
+#include <SDL_stdinc.h>
+#include <SDL_video.h>
 #include <iostream>
 
 namespace chip8::front
@@ -17,6 +21,7 @@ namespace chip8::front
             std::cerr << "Error creating window: " << SDL_GetError() << '\n';
             return;
         }
+        SDL_SetWindowResizable(window, SDL_TRUE);
 
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
         if (!renderer)
@@ -35,12 +40,43 @@ namespace chip8::front
         SDL_DestroyWindow(window);
     }
 
-    void Renderer::render(std::span<const std::uint8_t> display)
+    int Renderer::getWidth() const
+    {
+        return width;
+    }
+
+    int Renderer::getHeight() const
+    {
+        return height;
+    }
+
+    SDL_Window& Renderer::getWindow() const
+    {
+        return *window;
+    }
+
+    SDL_Renderer& Renderer::getRenderer() const
+    {
+        return *renderer;
+    }
+
+    SDL_Texture& Renderer::getDisplayTexture() const
+    {
+        return *displayTexture;
+    }
+
+    void Renderer::clearRenderer()
     {
         SDL_RenderClear(renderer);
+    }
 
+    void Renderer::drawDisplay(const core::Display& display)
+    {
         void* pixels = nullptr;
         int pitch = 0;
+
+        if (display.getWidth() != width || display.getHeight() != height)
+            rebuildTexture(display.getWidth(), display.getHeight());
 
         SDL_LockTexture(displayTexture, NULL, (void**)&pixels, &pitch);
 
@@ -53,12 +89,23 @@ namespace chip8::front
             int displayRow = y * width;
 
             for (int x = 0; x < width; ++x)
-                pixels32[bufferRow + x] = 0xFF000000 | (display[displayRow + x] > 0 ? foregroundColor : backgroundColor);
+                pixels32[bufferRow + x] = 0xFF000000 | (display.getDisplay()[displayRow + x] > 0 ? foregroundColor : backgroundColor);
         }
 
         SDL_UnlockTexture(displayTexture);
+    }
 
-        SDL_RenderCopy(renderer, displayTexture, NULL, NULL);
+    void Renderer::render()
+    {
         SDL_RenderPresent(renderer);
+    }
+
+    void Renderer::rebuildTexture(int width, int height)
+    {
+        this->width = width;
+        this->height = height;
+
+        SDL_DestroyTexture(displayTexture);
+        displayTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
     }
 }

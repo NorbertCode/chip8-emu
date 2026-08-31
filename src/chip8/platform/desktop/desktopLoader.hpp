@@ -1,5 +1,5 @@
 #pragma once
-#include "application/application.hpp"
+#include "application.hpp"
 #include <filesystem>
 #include <string_view>
 #include <toml++/toml.hpp>

@@ -24,6 +24,8 @@ namespace chip8::core
         void write(std::uint16_t address, std::uint8_t data);
         void write_bytes(std::uint16_t address, std::span<const std::uint8_t> data);
 
+        void clear();
+
         const MemoryConfig& getMemoryConfig() const;
 
     private:

@@ -31,8 +31,13 @@ namespace chip8::core
         std::uint8_t getDelayTimer() const { return delayTimer; }
         std::uint8_t getSoundTimer() const { return soundTimer; }
 
+        const Quirks& getQuirks() const { return quirks; }
+        Quirks& getQuirks() { return quirks; }
+
         bool isRunning() const { return running; }
         bool isHalted() const { return halted; }
+
+        void reset();
 
     private:
         std::array<std::uint8_t, 16> registersV{};

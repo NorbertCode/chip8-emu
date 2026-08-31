@@ -1,5 +1,5 @@
 #pragma once
-#include <span>
+#include "peripherals/display.hpp"
 #include <cstdint>
 #include <SDL2/SDL.h>
 
@@ -16,7 +16,17 @@ namespace chip8::front
         Renderer(Renderer&&) = delete;
         Renderer& operator=(Renderer&&) = delete;
 
-        void render(std::span<const std::uint8_t> display);
+        int getWidth() const;
+        int getHeight() const;
+
+        SDL_Window& getWindow() const;
+        SDL_Renderer& getRenderer() const;
+        SDL_Texture& getDisplayTexture() const;
+
+        void clearRenderer();
+        void drawDisplay(const core::Display& display); // Draws to displayTexture
+        void render();
+        void rebuildTexture(int width, int height);
 
     private:
         int width, height;

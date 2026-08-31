@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <span>
 #include <string>
 #include <cstdint>
@@ -16,10 +17,14 @@ namespace chip8::front
         void handleEvents();
         bool shouldQuit() const;
 
+        void setOnEventCallback(std::function<void(const SDL_Event&)> callback);
+
     private:
         std::unordered_map<SDL_Scancode, std::uint8_t> keyMap;
         bool quit = false;
 
         std::reference_wrapper<core::Keyboard> keyboard;
+
+        std::function<void(const SDL_Event&)> callback;
     };
 }

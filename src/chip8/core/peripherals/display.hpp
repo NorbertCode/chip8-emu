@@ -30,6 +30,9 @@ namespace chip8::core
         std::uint8_t getWidth() const;
         std::uint8_t getHeight() const;
 
+        void setWidth(std::uint8_t width);
+        void setHeight(std::uint8_t height);
+
         bool xorPixel(std::uint8_t x, std::uint8_t y, bool value, bool clipping); // Returns collision (if pixel was erased)
         int xorSprite(std::uint8_t x, std::uint8_t y, std::span<const std::uint8_t> sprite, bool clipping); // Returns collision (if pixel was erased)
         int xorHiresSprite(std::uint8_t x, std::uint8_t y, std::span<const std::uint8_t> sprite, bool clipping); // Same as above, but expects a 16x16 sprite

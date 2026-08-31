@@ -1,7 +1,7 @@
 #include <exception>
 #include <iostream>
 #include "desktopLoader.hpp"
-#include "application/application.hpp"
+#include "application.hpp"
 
 using namespace chip8;
 
@@ -26,7 +26,10 @@ int main(int argc, char* argv[])
         chip8.loadRom(loader.getRom());
 
         front::Application app(chip8, loader.getApplicationConfig());
-        app.run();
+        app.reset();
+
+        while (!app.shouldQuit())
+            app.tick();
 
         SDL_Quit();
     }

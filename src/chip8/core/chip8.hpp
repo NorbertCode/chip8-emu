@@ -4,6 +4,7 @@
 #include "memory/storage.hpp"
 #include "peripherals/display.hpp"
 #include "peripherals/keyboard.hpp"
+#include <span>
 
 namespace chip8::core
 {
@@ -18,6 +19,7 @@ namespace chip8::core
         Display& getDisplay() { return display; }
         Keyboard& getKeyboard() { return keyboard; }
 
+        std::span<const std::uint8_t> getRom() const;
         void loadRom(std::span<const std::uint8_t> rom);
 
     private:
@@ -26,5 +28,7 @@ namespace chip8::core
         Display display;
         Keyboard keyboard;
         Processor processor;
+
+        std::span<const std::uint8_t> rom;
     };
 }
