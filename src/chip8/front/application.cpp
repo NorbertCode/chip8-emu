@@ -47,10 +47,10 @@ namespace chip8::front
 
     void Application::reset()
     {
-        double processorAccumulator = 0.0;
-        double timerAccumulator = 0.0;
-        double displayAccumulator = 0.0;
-        auto previousTime = std::chrono::high_resolution_clock::now();
+        processorAccumulator = 0.0;
+        timerAccumulator = 0.0;
+        displayAccumulator = 0.0;
+        previousTime = std::chrono::high_resolution_clock::now();
 
         chip8.get().getDisplay().clear();
         chip8.get().getMemory().clear();
