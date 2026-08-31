@@ -32,11 +32,13 @@ namespace chip8::core
     void Display::setWidth(std::uint8_t width)
     {
         this->width = width;
+        display.resize(static_cast<size_t>(width * height), 0x0);
     }
 
     void Display::setHeight(std::uint8_t height)
     {
         this->height = height;
+        display.resize(static_cast<size_t>(width * height), 0x0);
     }
 
     bool Display::xorPixel(std::uint8_t x, std::uint8_t y, bool value, bool clipping)

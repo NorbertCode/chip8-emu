@@ -108,7 +108,7 @@ namespace chip8::front
             renderer.clearRenderer();
 
             debugger.draw();
-            renderer.drawDisplay(chip8.get().getDisplay().getDisplay());
+            renderer.drawDisplay(chip8.get().getDisplay());
             debugger.render(renderer.getRenderer());
             renderer.render();
 

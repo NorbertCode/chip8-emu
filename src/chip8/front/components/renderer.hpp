@@ -1,5 +1,5 @@
 #pragma once
-#include <span>
+#include "peripherals/display.hpp"
 #include <cstdint>
 #include <SDL2/SDL.h>
 
@@ -24,8 +24,9 @@ namespace chip8::front
         SDL_Texture& getDisplayTexture() const;
 
         void clearRenderer();
-        void drawDisplay(std::span<const std::uint8_t> display); // Draws to displayTexture
+        void drawDisplay(const core::Display& display); // Draws to displayTexture
         void render();
+        void rebuildTexture(int width, int height);
 
     private:
         int width, height;
