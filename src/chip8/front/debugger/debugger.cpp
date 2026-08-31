@@ -96,6 +96,7 @@ namespace chip8::front
             ImGui::DockBuilderDockWindow("Stack Viewer", dockBottomSecondQuarterId);
             ImGui::DockBuilderDockWindow("Registers Viewer", dockBottomThirdQuarterId);
             ImGui::DockBuilderDockWindow("Sprite Preview", dockBottomId);
+            ImGui::DockBuilderDockWindow("Configuration", dockBottomId);
 
             ImGui::DockBuilderFinish(dockSpaceId);
         }
