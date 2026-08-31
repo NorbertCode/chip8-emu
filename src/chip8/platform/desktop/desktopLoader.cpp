@@ -163,6 +163,7 @@ namespace chip8::front
             .vxJumping = config["quirks"]["vx_jumping"].value_or(false),
             .clearOnDisplayModeChange = config["quirks"]["clear_on_mode_change"].value_or(true),
             .vfCollisionCounter = config["quirks"]["vf_collision_counter"].value_or(false),
+            .loresWholePixelScrolling = config["quirks"]["lores_whole_pixel_scrolling"].value_or(false),
             .loresSpriteHandling = parseLoresSpriteHandling(config["quirks"]["loresSpriteHandling"].value_or("draw_wide"))
         };
     }

@@ -22,6 +22,7 @@ vy_shifting = false
 vx_jumping = true
 clear_on_mode_change = true
 vf_collision_counter = false
+lores_whole_pixel_scrolling = true
 loresSpriteHandling = "draw_wide"
 
 [keymap]

@@ -17,6 +17,8 @@ const std::vector<std::uint8_t> spriteSquare = {
     0b11000000
 };
 
+const std::vector<std::uint8_t> spriteDot = { 0b10000000 };
+
 const std::vector<std::uint8_t> hiresSprite = {
     0b11000000, 0b00000000,
     0b00110000, 0b00000000,
@@ -405,6 +407,38 @@ TEST(DisplayTest, ScrollLeft_AboveDisplayWidth_ClearsScreen)
     }
 }
 
+TEST(DisplayTest, ScrollLeft_LoresWholePixelScrollingFalse_ScrollsNormal)
+{
+    Display display({4, 4, ResolutionMode::Lores});
+    display.xorSprite(1, 0, spriteDot, false);
+    std::vector<std::uint8_t> expected = {
+        0, 0xFF, 0xFF, 0,
+        0, 0xFF, 0xFF, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    };
+
+    display.scrollLeft(1, false);
+
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
+}
+
+TEST(DisplayTest, ScrollLeft_LoresWholePixelScrollingTrue_ScrollsTwiceAsMuch)
+{
+    Display display({4, 4, ResolutionMode::Lores});
+    display.xorSprite(1, 0, spriteDot, false);
+    std::vector<std::uint8_t> expected = {
+        0xFF, 0xFF, 0, 0,
+        0xFF, 0xFF, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    };
+
+    display.scrollLeft(1, true);
+
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
+}
+
 TEST(DisplayTest, ScrollRight_InBounds_ScrollsDisplayRight)
 {
     Display display({4, 4});
@@ -481,6 +515,38 @@ TEST(DisplayTest, ScrollRight_AboveDisplayWidth_ClearsScreen)
     }
 }
 
+TEST(DisplayTest, ScrollRight_LoresWholePixelScrollingFalse_ScrollsNormal)
+{
+    Display display({4, 4, ResolutionMode::Lores});
+    display.xorSprite(0, 0, spriteDot, false);
+    std::vector<std::uint8_t> expected = {
+        0, 0xFF, 0xFF, 0,
+        0, 0xFF, 0xFF, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    };
+
+    display.scrollRight(1, false);
+
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
+}
+
+TEST(DisplayTest, ScrollRight_LoresWholePixelScrollingTrue_ScrollsTwiceAsMuch)
+{
+    Display display({4, 4, ResolutionMode::Lores});
+    display.xorSprite(0, 0, spriteDot, false);
+    std::vector<std::uint8_t> expected = {
+        0, 0, 0xFF, 0xFF,
+        0, 0, 0xFF, 0xFF,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    };
+
+    display.scrollRight(1, true);
+
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
+}
+
 TEST(DisplayTest, ScrollDown_InBounds_ScrollsDisplayDown)
 {
     Display display({4, 4});
@@ -555,4 +621,36 @@ TEST(DisplayTest, ScrollDown_AboveDisplayHeight_ClearsScreen)
         for (size_t j = 0; j < display.getHeight(); ++j)
             EXPECT_FALSE(display.getPixel(i, j));
     }
+}
+
+TEST(DisplayTest, ScrollDown_LoresWholePixelScrollingFalse_ScrollsNormal)
+{
+    Display display({4, 4, ResolutionMode::Lores});
+    display.xorSprite(0, 0, spriteDot, false);
+    std::vector<std::uint8_t> expected = {
+        0, 0, 0, 0,
+        0xFF, 0xFF, 0, 0,
+        0xFF, 0xFF, 0, 0,
+        0, 0, 0, 0
+    };
+
+    display.scrollDown(1, false);
+
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
+}
+
+TEST(DisplayTest, ScrollDown_LoresWholePixelScrollingTrue_ScrollsTwiceAsMuch)
+{
+    Display display({4, 4, ResolutionMode::Lores});
+    display.xorSprite(0, 0, spriteDot, false);
+    std::vector<std::uint8_t> expected = {
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0xFF, 0xFF, 0, 0,
+        0xFF, 0xFF, 0, 0
+    };
+
+    display.scrollDown(1, true);
+
+    EXPECT_THAT(display.getDisplay(), testing::ElementsAreArray(expected));
 }

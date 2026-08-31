@@ -42,9 +42,9 @@ namespace chip8::core
         void setResolutionMode(ResolutionMode mode);
         const ResolutionMode& getResolutionMode() const;
 
-        void scrollLeft(std::uint8_t pixels);
-        void scrollRight(std::uint8_t pixels);
-        void scrollDown(std::uint8_t pixels);
+        void scrollLeft(std::uint8_t pixels, bool loresWholePixelScrolling = false);
+        void scrollRight(std::uint8_t pixels, bool loresWholePixelScrolling = false);
+        void scrollDown(std::uint8_t pixels, bool loresWholePixelScrolling = false);
 
     private:
         std::vector<std::uint8_t> display;

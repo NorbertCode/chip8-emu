@@ -5,7 +5,7 @@ namespace chip8::core
 {
     void Processor::scrollDown(std::uint8_t pixels)
     {
-        display.get().scrollDown(pixels);
+        display.get().scrollDown(pixels, quirks.loresWholePixelScrolling);
     }
 
     void Processor::cls()
@@ -20,12 +20,12 @@ namespace chip8::core
 
     void Processor::scrollRight()
     {
-        display.get().scrollRight(4);
+        display.get().scrollRight(4, quirks.loresWholePixelScrolling);
     }
 
     void Processor::scrollLeft()
     {
-        display.get().scrollLeft(4);
+        display.get().scrollLeft(4, quirks.loresWholePixelScrolling);
     }
 
     void Processor::exit()

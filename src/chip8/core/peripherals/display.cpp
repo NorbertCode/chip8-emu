@@ -108,8 +108,11 @@ namespace chip8::core
         return mode;
     }
 
-    void Display::scrollLeft(std::uint8_t pixels)
+    void Display::scrollLeft(std::uint8_t pixels, bool loresWholePixelScrolling)
     {
+        if (loresWholePixelScrolling && mode == ResolutionMode::Lores)
+            pixels *= 2;
+
         std::ptrdiff_t shift = static_cast<std::ptrdiff_t>(pixels);
 
         for (size_t row = 0; row < height; ++row)
@@ -122,8 +125,11 @@ namespace chip8::core
         }
     }
 
-    void Display::scrollRight(std::uint8_t pixels)
+    void Display::scrollRight(std::uint8_t pixels, bool loresWholePixelScrolling)
     {
+        if (loresWholePixelScrolling && mode == ResolutionMode::Lores)
+            pixels *= 2;
+
         std::ptrdiff_t shift = static_cast<std::ptrdiff_t>(pixels);
 
         for (size_t row = 0; row < height; ++row)
@@ -136,8 +142,11 @@ namespace chip8::core
         }
     }
 
-    void Display::scrollDown(std::uint8_t pixels)
+    void Display::scrollDown(std::uint8_t pixels, bool loresWholePixelScrolling)
     {
+        if (loresWholePixelScrolling && mode == ResolutionMode::Lores)
+            pixels *= 2;
+
         const auto remainingEnd = std::shift_right(display.begin(), display.end(), static_cast<std::ptrdiff_t>(pixels * width));
         std::fill(display.begin(), remainingEnd, 0);
     }
