@@ -23,6 +23,7 @@ vx_jumping = true
 clear_on_mode_change = false
 vf_collision_counter = false
 lores_whole_pixel_scrolling = false
+wait_for_vblank = false
 lores_sprite_handling = "draw_tall"
 
 [keymap]

@@ -174,6 +174,9 @@ namespace chip8::core
         std::vector<std::uint8_t> sprite = memory.get().read_bytes(registerI, nibble);
         int collisions = display.get().xorSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
         registersV[0xF] = quirks.vfCollisionCounter && display.get().getResolutionMode() == ResolutionMode::Hires ? collisions : collisions > 0;
+
+        if (quirks.waitForVBlank)
+            waitingForVBlank = true;
     }
 
     void Processor::drwHires(std::uint8_t x, std::uint8_t y)
@@ -184,6 +187,9 @@ namespace chip8::core
         {
             int collisions = display.get().xorHiresSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
             registersV[0xF] = quirks.vfCollisionCounter && display.get().getResolutionMode() == ResolutionMode::Hires ? collisions : collisions > 0;
+
+            if (quirks.waitForVBlank)
+                waitingForVBlank = true;
         }
         else if (quirks.loresSpriteHandling == LoresSpriteHandling::DrawTall)
             drw(x, y, 16);
@@ -206,11 +212,11 @@ namespace chip8::core
 
     void Processor::ldK(std::uint8_t x)
     {
-        halted = true;
+        waitingForKeypress = true;
 
         auto onKeyPress = [this, x](std::uint8_t keyCode) {
             registersV[x] = keyCode;
-            halted = false;
+            waitingForKeypress = false;
 
             keyboard.get().clearOnKeyPressed();
         };
