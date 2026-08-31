@@ -15,6 +15,7 @@ namespace chip8::front
     private:
         std::reference_wrapper<Application> application;
 
-        ImU16 line = 0;
+        std::string input = "0000";
+        std::uint16_t line = 0;
     };
 }

@@ -1,6 +1,8 @@
 #include "breakpointsWidget.hpp"
 #include "application.hpp"
 #include <imgui.h>
+#include <imgui_stdlib.h>
+#include <string>
 
 namespace chip8::front
 {
@@ -11,10 +13,8 @@ namespace chip8::front
     {
         ImGui::Begin("Breakpoints");
 
-        ImU16 step = 1;
-        ImU16 stepFast = 16;
-
-        ImGui::InputScalar("Line", ImGuiDataType_U16, &line, &step, &stepFast, "0x%04X", ImGuiInputTextFlags_CharsHexadecimal);
+        if (ImGui::InputText("Line (Hex)", &input, ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_CharsNoBlank))
+            line = std::stoul(input, nullptr, 16);
 
         ImGui::SameLine();
 
