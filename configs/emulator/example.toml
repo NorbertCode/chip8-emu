@@ -27,7 +27,7 @@ vx_jumping = false                  # Whether jump operation uses Vx
 clear_on_mode_change = true         # Whether changing the resolution mode clears the display
 vf_collision_counter = false        # Does the VF register act as a counter or as a flag when drawing
 lores_whole_pixel_scrolling = false # Whether scrolling in lores mode scrolls by whole pixels or by half pixels
-loresSpriteHandling = "draw_wide"   # How hires sprites are handled in lores mode: "draw_wide" - 16x16, "draw_tall" - 8x16, or "no_operation"
+lores_sprite_handling = "draw_wide" # How hires sprites are handled in lores mode: "draw_wide" - 16x16, "draw_tall" - 8x16, or "no_operation"
 
 [keymap]
 0 = "X"

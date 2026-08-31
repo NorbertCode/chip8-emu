@@ -19,7 +19,7 @@ index_increment = true
 display_clipping = true
 vy_shifting = true
 vx_jumping = false
-loresSpriteHandling = "no_operation"
+lores_sprite_handling = "no_operation"
 
 [keymap]
 0 = "X"
