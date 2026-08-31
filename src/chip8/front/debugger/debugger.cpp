@@ -8,8 +8,7 @@
 namespace chip8::front
 {
     Debugger::Debugger()
-        : widgets(0),
-        isValid(false) { }
+        : widgets(0) { }
 
     Debugger::Debugger(SDL_Window& window, SDL_Renderer& renderer, std::vector<std::unique_ptr<DebugWidget>> widgets)
         : widgets(std::move(widgets)),
