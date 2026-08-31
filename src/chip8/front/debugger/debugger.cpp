@@ -80,13 +80,13 @@ namespace chip8::front
             ImGui::DockBuilderSetNodeSize(dockSpaceId, ImGui::GetMainViewport()->Size);
 
             ImGuiID dockMainId = dockSpaceId;
-            ImGuiID dockBottomId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Down, 0.25f, nullptr, &dockMainId);
-            ImGuiID dockCloserRightId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Right, 0.25f, nullptr, &dockMainId);
+            ImGuiID dockBottomId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Down, 0.33f, nullptr, &dockMainId);
+            ImGuiID dockCloserRightId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Right, 0.33f, nullptr, &dockMainId);
             ImGuiID dockFurtherRightId = ImGui::DockBuilderSplitNode(dockCloserRightId, ImGuiDir_Right, 0.5f, nullptr, &dockCloserRightId);
             ImGuiID dockBottomFirstQuarterId = ImGui::DockBuilderSplitNode(dockBottomId, ImGuiDir_Left, 0.25f, nullptr, &dockBottomId);
             ImGuiID dockBottomSecondQuarterId = ImGui::DockBuilderSplitNode(dockBottomId, ImGuiDir_Left, 0.33f, nullptr, &dockBottomId);
             ImGuiID dockBottomThirdQuarterId = ImGui::DockBuilderSplitNode(dockBottomId, ImGuiDir_Left, 0.50f, nullptr, &dockBottomId);
-            ImGuiID dockBottomFirstQuarterBottomId = ImGui::DockBuilderSplitNode(dockBottomFirstQuarterId, ImGuiDir_Down, 0.65f, nullptr, &dockBottomFirstQuarterId);
+            ImGuiID dockBottomFirstQuarterBottomId = ImGui::DockBuilderSplitNode(dockBottomFirstQuarterId, ImGuiDir_Down, 0.75f, nullptr, &dockBottomFirstQuarterId);
         
             ImGui::DockBuilderDockWindow("Viewport", dockMainId);
             ImGui::DockBuilderDockWindow("Memory Viewer", dockCloserRightId);

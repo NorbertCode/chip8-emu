@@ -20,7 +20,7 @@ namespace chip8::front
         if (horizontal)
             ImGui::SameLine();
 
-        if (ImGui::Button("Continue"))
+        if (ImGui::Button("Run"))
             application.get().setRunning(true);
 
         if (horizontal)
