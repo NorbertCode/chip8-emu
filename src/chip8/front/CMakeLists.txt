@@ -18,9 +18,9 @@ add_library(
     debugger/widgets/configurationWidget.cpp
 )
 
-find_package(SDL2 REQUIRED)
+find_package(SDL2 REQUIRED CONFIG)
 
-target_link_libraries(chip8_front PRIVATE 
+target_link_libraries(chip8_front PUBLIC 
     SDL2::SDL2
     imgui
 )
