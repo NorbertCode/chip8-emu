@@ -30,8 +30,8 @@ namespace chip8::core
         std::uint8_t getWidth() const;
         std::uint8_t getHeight() const;
 
-        void setWidth(std::uint8_t width);
-        void setHeight(std::uint8_t height);
+        void setWidth(std::uint8_t newWidth);
+        void setHeight(std::uint8_t newHeight);
 
         // Methods which may wrap around must use a bigger type than uint8_t
         bool xorPixel(unsigned int x, unsigned int y, bool value, bool clipping); // Returns collision (if pixel was erased)
@@ -39,7 +39,7 @@ namespace chip8::core
         int xorHiresSprite(unsigned int x, unsigned int y, std::span<const std::uint8_t> sprite, bool clipping); // Same as above, but expects a 16x16 sprite
         void clear();
 
-        void setResolutionMode(ResolutionMode mode);
+        void setResolutionMode(ResolutionMode newMode);
         const ResolutionMode& getResolutionMode() const;
 
         void scrollLeft(std::uint8_t pixels, bool loresWholePixelScrolling = false);
@@ -57,7 +57,7 @@ namespace chip8::core
         {
             bool collision = false;
 
-            for (size_t columnIndex = 0; columnIndex < sizeof(T) * 8; ++columnIndex)
+            for (unsigned int columnIndex = 0; columnIndex < sizeof(T) * 8; ++columnIndex)
             {
                 const bool pixel = ((row >> ((sizeof(T) * 8) - columnIndex - 1)) & 0x1) > 0;
 

@@ -1,6 +1,4 @@
 #include "debuggerBuilder.hpp"
-#include <SDL_render.h>
-#include <SDL_video.h>
 
 namespace chip8::front
 {

@@ -90,7 +90,7 @@ namespace disassembler::front
         {
             config = toml::parse_file(configPath.string());
         }
-        catch(const std::exception& e)
+        catch(const std::exception&)
         {
             throw std::runtime_error("Failed to parse configuration file");
         }

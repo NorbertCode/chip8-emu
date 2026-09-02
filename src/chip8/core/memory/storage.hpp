@@ -13,7 +13,7 @@ namespace chip8::core
         void write(std::span<const std::uint8_t> newData);
 
         void setData(std::span<const std::uint8_t, 16> newData);
-        void setOnWriteCallback(std::function<void(std::span<const std::uint8_t, 16>)> onWriteCallback);
+        void setOnWriteCallback(std::function<void(std::span<const std::uint8_t, 16>)> newOnWriteCallback);
 
     private:
         std::array<std::uint8_t, 16> data{};

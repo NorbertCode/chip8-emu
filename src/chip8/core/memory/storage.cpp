@@ -24,8 +24,8 @@ namespace chip8::core
         std::ranges::copy(newData, data.begin());
     }
 
-    void Storage::setOnWriteCallback(std::function<void(std::span<const std::uint8_t, 16>)> onWriteCallback)
+    void Storage::setOnWriteCallback(std::function<void(std::span<const std::uint8_t, 16>)> newOnWriteCallback)
     {
-        this->onWriteCallback = std::move(onWriteCallback);
+        onWriteCallback = std::move(newOnWriteCallback);
     }
 }

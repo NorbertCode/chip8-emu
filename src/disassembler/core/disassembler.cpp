@@ -1,5 +1,6 @@
 #include "disassembler.hpp"
 #include <format>
+#include <array>
 
 namespace disassembler::core
 {

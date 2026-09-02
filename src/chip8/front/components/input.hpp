@@ -4,7 +4,7 @@
 #include <string>
 #include <cstdint>
 #include <unordered_map>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "peripherals/keyboard.hpp"
 
 namespace chip8::front

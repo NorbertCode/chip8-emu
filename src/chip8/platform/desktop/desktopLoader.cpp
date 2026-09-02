@@ -98,9 +98,9 @@ namespace chip8::front
         return data;
     }
 
-    void DesktopLoader::loadRom(const std::filesystem::path& romPath)
+    void DesktopLoader::loadRom(const std::filesystem::path& newRomPath)
     {
-        std::ifstream file(romPath, std::ios::binary | std::ios::ate);
+        std::ifstream file(newRomPath, std::ios::binary | std::ios::ate);
         if (!file.is_open())
             throw std::runtime_error("Failed to open ROM file");
 
@@ -121,7 +121,7 @@ namespace chip8::front
         {
             config = toml::parse_file(configPath.string());
         }
-        catch(const std::exception& e)
+        catch(const std::exception&)
         {
             throw std::runtime_error("Failed to parse configuration file");
         }

@@ -178,8 +178,8 @@ TEST_F(ProcessorTest, ret_EmptyStack_Underflows)
 
     processor.execute(0x00EE); // RET
 
-    EXPECT_EQ(processor.getProgramCounter(), processor.getStack()[0xFF]);
-    EXPECT_EQ(processor.getStackPointer(), 0xFF);
+    EXPECT_EQ(processor.getProgramCounter(), processor.getStack()[processor.getStack().size() - 1]);
+    EXPECT_EQ(processor.getStackPointer(), processor.getStack().size() - 1);
 }
 
 TEST_F(ProcessorTest, scrollRight_ScrollsDisplayRightBy4Pixels)

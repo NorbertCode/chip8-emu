@@ -1,7 +1,7 @@
 #pragma once
 #include "debugger/debugWidget.hpp"
 #include "debugger/debugger.hpp"
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <functional>
 #include <memory>
 #include <vector>

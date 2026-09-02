@@ -29,16 +29,16 @@ namespace chip8::core
         return height;
     }
 
-    void Display::setWidth(std::uint8_t width)
+    void Display::setWidth(std::uint8_t newWidth)
     {
-        this->width = width;
-        display.resize(static_cast<size_t>(width * height), 0x0);
+        width = newWidth;
+        display.resize(static_cast<size_t>(newWidth * height), 0x0);
     }
 
-    void Display::setHeight(std::uint8_t height)
+    void Display::setHeight(std::uint8_t newHeight)
     {
-        this->height = height;
-        display.resize(static_cast<size_t>(width * height), 0x0);
+        height = newHeight;
+        display.resize(static_cast<size_t>(width * newHeight), 0x0);
     }
 
     bool Display::xorPixel(unsigned int x, unsigned int y, bool value, bool clipping)
@@ -69,7 +69,7 @@ namespace chip8::core
         y %= (mode == ResolutionMode::Hires) ? getHeight() : getHeight() / 2;
 
         for (size_t spriteRowIndex = 0; spriteRowIndex < sprite.size(); ++spriteRowIndex)
-            collisions += xorRow(x, y + spriteRowIndex, sprite[spriteRowIndex], clipping);
+            collisions += xorRow(x, y + static_cast<unsigned int>(spriteRowIndex), sprite[spriteRowIndex], clipping);
 
         return collisions;
     }
@@ -86,7 +86,7 @@ namespace chip8::core
         {
             const std::uint16_t row = (sprite[2 * spriteRowIndex] << 8) | sprite[2 * spriteRowIndex + 1];
 
-            collisions += xorRow(x, y + spriteRowIndex, row, clipping);
+            collisions += xorRow(x, y + static_cast<unsigned int>(spriteRowIndex), row, clipping);
         }
 
         return collisions;
@@ -98,9 +98,9 @@ namespace chip8::core
             display[i] = 0;
     }
 
-    void Display::setResolutionMode(ResolutionMode mode)
+    void Display::setResolutionMode(ResolutionMode newMode)
     {
-        this->mode = mode;
+        mode = newMode;
     }
 
     const ResolutionMode& Display::getResolutionMode() const
@@ -121,7 +121,7 @@ namespace chip8::core
             const std::ptrdiff_t rowEnd = static_cast<std::ptrdiff_t>(rowStart + width);
 
             const auto remainingStart = std::shift_left(display.begin() + rowStart, display.begin() + rowEnd, shift);
-            std::fill(remainingStart, display.begin() + rowEnd, 0);
+            std::fill(remainingStart, display.begin() + rowEnd, std::uint8_t{0});
         }
     }
 
@@ -138,7 +138,7 @@ namespace chip8::core
             const std::ptrdiff_t rowEnd = static_cast<std::ptrdiff_t>(rowStart + width);
 
             const auto remainingEnd = std::shift_right(display.begin() + rowStart, display.begin() + rowEnd, shift);
-            std::fill(display.begin() + rowStart, remainingEnd, 0);
+            std::fill(display.begin() + rowStart, remainingEnd, std::uint8_t{0});
         }
     }
 
@@ -148,6 +148,6 @@ namespace chip8::core
             pixels *= 2;
 
         const auto remainingEnd = std::shift_right(display.begin(), display.end(), static_cast<std::ptrdiff_t>(pixels * width));
-        std::fill(display.begin(), remainingEnd, 0);
+        std::fill(display.begin(), remainingEnd, std::uint8_t{0});
     }
 }

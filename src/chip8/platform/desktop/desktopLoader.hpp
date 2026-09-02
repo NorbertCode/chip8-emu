@@ -31,7 +31,7 @@ namespace chip8::front
         core::DisplayConfig displayConfig{};
         core::Quirks quirks{};
 
-        void loadRom(const std::filesystem::path& romPath);
+        void loadRom(const std::filesystem::path& newRomPath);
         void loadConfig(const std::filesystem::path& configPath);
 
         std::array<std::string, 16> parseKeyMap(const toml::table& keyMap) const;
