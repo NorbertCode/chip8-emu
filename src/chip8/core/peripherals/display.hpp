@@ -57,7 +57,7 @@ namespace chip8::core
         {
             bool collision = false;
 
-            for (size_t columnIndex = 0; columnIndex < sizeof(T) * 8; ++columnIndex)
+            for (unsigned int columnIndex = 0; columnIndex < sizeof(T) * 8; ++columnIndex)
             {
                 const bool pixel = ((row >> ((sizeof(T) * 8) - columnIndex - 1)) & 0x1) > 0;
 

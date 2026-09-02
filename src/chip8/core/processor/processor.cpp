@@ -133,8 +133,8 @@ namespace chip8::core
 
     void Processor::reset()
     {
-        std::ranges::fill(registersV, 0);
-        std::ranges::fill(stack, 0);
+        std::ranges::fill(registersV, std::uint8_t{0});
+        std::ranges::fill(stack, std::uint16_t{0});
         
         registerI = 0;
         stackPointer = 0;

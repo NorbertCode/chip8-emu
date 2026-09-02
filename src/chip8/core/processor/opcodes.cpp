@@ -173,7 +173,7 @@ namespace chip8::core
     {
         std::vector<std::uint8_t> sprite = memory.get().read_bytes(registerI, nibble);
         int collisions = display.get().xorSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
-        registersV[0xF] = quirks.vfCollisionCounter && display.get().getResolutionMode() == ResolutionMode::Hires ? collisions : collisions > 0;
+        registersV[0xF] = static_cast<std::uint8_t>(quirks.vfCollisionCounter && display.get().getResolutionMode() == ResolutionMode::Hires ? collisions : collisions > 0);
 
         if (quirks.waitForVBlank)
             waitingForVBlank = true;
@@ -186,7 +186,7 @@ namespace chip8::core
         if (display.get().getResolutionMode() == ResolutionMode::Hires || quirks.loresSpriteHandling == LoresSpriteHandling::DrawWide)
         {
             int collisions = display.get().xorHiresSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
-            registersV[0xF] = quirks.vfCollisionCounter && display.get().getResolutionMode() == ResolutionMode::Hires ? collisions : collisions > 0;
+            registersV[0xF] = static_cast<std::uint8_t>(quirks.vfCollisionCounter && display.get().getResolutionMode() == ResolutionMode::Hires ? collisions : collisions > 0);
 
             if (quirks.waitForVBlank)
                 waitingForVBlank = true;
@@ -259,7 +259,7 @@ namespace chip8::core
 
     void Processor::ldIReg(std::uint8_t x)
     {
-        size_t memoryIndex = registerI;
+        std::uint16_t memoryIndex = registerI;
 
         for (size_t registerIndex = 0; registerIndex <= x; ++registerIndex, ++memoryIndex)
             memory.get().write(memoryIndex, registersV[registerIndex]);
@@ -270,7 +270,7 @@ namespace chip8::core
 
     void Processor::ldRegI(std::uint8_t x)
     {
-        size_t memoryIndex = registerI;
+        std::uint16_t memoryIndex = registerI;
 
         for (size_t registerIndex = 0; registerIndex <= x; ++registerIndex, ++memoryIndex)
             registersV[registerIndex] = memory.get().read(memoryIndex);
