@@ -15,6 +15,9 @@ namespace chip8::core
 
     void Processor::ret()
     {
+        if (stackPointer <= 0)
+            stackPointer = stack.size();
+
         programCounter = stack[--stackPointer];
     }
 
