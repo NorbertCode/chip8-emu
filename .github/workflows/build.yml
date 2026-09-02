@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - ci-matrix
   pull_request:
     branches:
       - main
@@ -11,22 +12,31 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Dependencies
-        run: sudo apt-get update && sudo apt-get install -y libsdl2-dev
+      - uses: libsdl-org/setup-sdl@main
+        id: sdl
+        with:
+          install-linux-dependencies: true
+          version: 2-latest
+          version-sdl-image: 2-latest
 
       - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_PREFIX_PATH=${{ steps.sdl.outputs.prefix }}
 
       - name: Build
         run: cmake --build build
 
       - uses: actions/upload-artifact@v4
         with:
-          name: compiled-build-folder
+          name: compiled-build-${{ matrix.os }}
           path: build/
 
   static-analysis:
@@ -38,11 +48,18 @@ jobs:
       
       - uses: actions/download-artifact@v4
         with:
-          name: compiled-build-folder
+          name: compiled-build-ubuntu-latest
           path: build/
 
-      - name: Install Dependencies
-        run: sudo apt-get update && sudo apt-get install -y clang-tidy && sudo apt-get install -y libsdl2-dev
+      - uses: libsdl-org/setup-sdl@main
+        id: sdl
+        with:
+          install-linux-dependencies: true
+          version: 2-latest
+          version-sdl-image: 2-latest
+
+      - name: Install Clang-Tidy
+        run: sudo apt-get update && sudo apt-get install -y clang-tidy
 
       - name: Run Clang-Tidy
         run: run-clang-tidy -p build
@@ -56,7 +73,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: compiled-build-folder
+          name: compiled-build-ubuntu-latest
           path: build/
 
       - name: Install Dependencies
@@ -70,16 +87,26 @@ jobs:
   tests:
     name: Run Tests
     needs: build
-    runs-on: ubuntu-latest
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/download-artifact@v4
         with:
-          name: compiled-build-folder
+          name: compiled-build-${{ matrix.os }}
           path: build/
 
-      - name: Run Tests
+      - name: Run Tests (Unix)
+        if: runner.os != 'Windows'
         run: |
           chmod +x build/tests/run_tests
           ./build/tests/run_tests
+
+      - name: Run Tests (Windows)
+        if: runner.os == 'Windows'
+        run: .\build\tests\Debug\run_tests.exe
