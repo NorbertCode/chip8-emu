@@ -1,7 +1,7 @@
 #pragma once
 #include "peripherals/display.hpp"
 #include <cstdint>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 namespace chip8::front
 {

@@ -1,8 +1,5 @@
 #include "renderer.hpp"
 #include "peripherals/display.hpp"
-#include <SDL_render.h>
-#include <SDL_stdinc.h>
-#include <SDL_video.h>
 #include <iostream>
 
 namespace chip8::front
