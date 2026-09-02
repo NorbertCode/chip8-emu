@@ -20,7 +20,7 @@ namespace chip8::core
         Keyboard& getKeyboard() { return keyboard; }
 
         std::span<const std::uint8_t> getRom() const;
-        void loadRom(std::span<const std::uint8_t> rom);
+        void loadRom(std::span<const std::uint8_t> newRom);
 
     private:
         Memory memory;

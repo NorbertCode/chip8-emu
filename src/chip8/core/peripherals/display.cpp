@@ -29,16 +29,16 @@ namespace chip8::core
         return height;
     }
 
-    void Display::setWidth(std::uint8_t width)
+    void Display::setWidth(std::uint8_t newWidth)
     {
-        this->width = width;
-        display.resize(static_cast<size_t>(width * height), 0x0);
+        width = newWidth;
+        display.resize(static_cast<size_t>(newWidth * height), 0x0);
     }
 
-    void Display::setHeight(std::uint8_t height)
+    void Display::setHeight(std::uint8_t newHeight)
     {
-        this->height = height;
-        display.resize(static_cast<size_t>(width * height), 0x0);
+        height = newHeight;
+        display.resize(static_cast<size_t>(width * newHeight), 0x0);
     }
 
     bool Display::xorPixel(unsigned int x, unsigned int y, bool value, bool clipping)
@@ -98,9 +98,9 @@ namespace chip8::core
             display[i] = 0;
     }
 
-    void Display::setResolutionMode(ResolutionMode mode)
+    void Display::setResolutionMode(ResolutionMode newMode)
     {
-        this->mode = mode;
+        mode = newMode;
     }
 
     const ResolutionMode& Display::getResolutionMode() const
