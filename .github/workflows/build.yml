@@ -1,10 +1,9 @@
-name: Build, Analyze and Test
+name: Build Analyze and Test
 
 on: 
   push:
     branches:
       - main
-      - ci-matrix
   pull_request:
     branches:
       - main
