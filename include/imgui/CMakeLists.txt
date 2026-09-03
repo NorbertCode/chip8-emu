@@ -10,7 +10,12 @@ add_library(
     backends/imgui_impl_sdlrenderer2.cpp
 )
 
-find_package(SDL2 REQUIRED)
-target_link_libraries(imgui PRIVATE SDL2::SDL2)
+if (NOT EMSCRIPTEN)
+    find_package(SDL2 REQUIRED)
+    target_link_libraries(imgui PRIVATE SDL2::SDL2)
+else ()
+    target_compile_options(imgui PUBLIC "-sUSE_SDL=2")
+    target_link_options(imgui PUBLIC "-sUSE_SDL=2")
+endif ()
 
 target_include_directories(imgui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/backends)

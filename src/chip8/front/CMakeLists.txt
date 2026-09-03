@@ -1,6 +1,7 @@
 add_library(
     chip8_front
     application.cpp
+    loader.cpp
     components/renderer.cpp
     components/input.cpp
     components/audio.cpp
@@ -18,14 +19,19 @@ add_library(
     debugger/widgets/configurationWidget.cpp
 )
 
-find_package(SDL2 REQUIRED CONFIG)
+if (NOT EMSCRIPTEN)
+    find_package(SDL2 REQUIRED CONFIG)
+    target_link_libraries(chip8_front PUBLIC SDL2::SDL2)
+else ()
+    target_compile_options(chip8_front PUBLIC "-sUSE_SDL=2")
+    target_link_options(chip8_front PUBLIC "-sUSE_SDL=2")
+endif ()
 
 target_link_libraries(chip8_front PUBLIC 
-    SDL2::SDL2
+    chip8_core
+    disassembler_core
+    tomlplusplus::tomlplusplus
     imgui
 )
-
-target_link_libraries(chip8_front PUBLIC chip8_core)
-target_link_libraries(chip8_front PUBLIC disassembler_core)
 
 target_include_directories(chip8_front PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

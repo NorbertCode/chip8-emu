@@ -15,6 +15,8 @@ endif ()
 add_subdirectory(src)
 add_subdirectory(include/imgui SYSTEM)
 
-set_target_properties(imgui PROPERTIES EXPORT_COMPILE_COMMANDS OFF)
+if (NOT EMSCRIPTEN)
+    set_target_properties(imgui PROPERTIES EXPORT_COMPILE_COMMANDS OFF)
 
-add_subdirectory(tests)
+    add_subdirectory(tests)
+endif ()
