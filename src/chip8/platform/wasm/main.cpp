@@ -94,7 +94,6 @@ int main()
         app->getInput().addOnEventCallback([loader, chip8, app](const SDL_Event& event) {
             if (event.type == SDL_DROPFILE)
             {
-                std::cout << "dupa\n";
                 char* droppedFile = event.drop.file;
                 
                 loader->loadRom(droppedFile);
