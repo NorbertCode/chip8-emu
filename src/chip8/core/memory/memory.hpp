@@ -20,10 +20,10 @@ namespace chip8::core
         Memory(MemoryConfig memoryConfig, std::span<const std::uint8_t> reservedData = {});
 
         std::uint8_t read(std::uint16_t address) const;
-        std::vector<std::uint8_t> read_bytes(std::uint16_t address, std::uint16_t bytes) const;
+        std::vector<std::uint8_t> readBytes(std::uint16_t address, std::uint16_t bytes) const;
 
         void write(std::uint16_t address, std::uint8_t data);
-        void write_bytes(std::uint16_t address, std::span<const std::uint8_t> data);
+        void writeBytes(std::uint16_t address, std::span<const std::uint8_t> data);
 
         void forceWrite(std::uint16_t address, std::uint8_t data);
         void forceWriteBytes(std::uint16_t address, std::span<const std::uint8_t> data);
