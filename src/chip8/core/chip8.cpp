@@ -58,6 +58,6 @@ namespace chip8::core
 
     void Chip8::loadFont()
     {
-        memory.write_bytes(0x0, FONT_DATA);
+        memory.forceWriteBytes(0x0, FONT_DATA);
     }
 }
