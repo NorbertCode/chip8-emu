@@ -6,10 +6,13 @@
 
 namespace chip8::front
 {
-    ConfigurationWidget::ConfigurationWidget(core::Chip8& chip8)
+    ConfigurationWidget::ConfigurationWidget(core::Chip8& chip8, Renderer& renderer)
         : chip8(chip8),
+        renderer(renderer),
         resolutionWidth(chip8.getDisplay().getWidth()),
-        resolutionHeight(chip8.getDisplay().getHeight()) { }
+        resolutionHeight(chip8.getDisplay().getHeight()),
+        foregroundColor(hexToArrayColor(renderer.getForegroundColor())),
+        backgroundColor(hexToArrayColor(renderer.getBackgroundColor())) { }
 
     void ConfigurationWidget::render()
     {
@@ -79,8 +82,36 @@ namespace chip8::front
             ImGui::Text("When running ROMs which do not support resolution modes please default to Hires");
             ImGui::Text("When running games which support resolution modes this should be set to Lores on start");
             ImGui::Text("Changing this setting when the game is running may result in undefined behaviour");
-        }
+
+            if (ImGui::ColorEdit3("Foreground", foregroundColor.data()))
+                renderer.get().setForegroundColor(arrayToHexColor(foregroundColor));
+
+            if (ImGui::ColorEdit3("Background", backgroundColor.data()))
+                renderer.get().setBackgroundColor(arrayToHexColor(backgroundColor));
+        }   
 
         ImGui::End();
+    }
+
+    std::uint32_t ConfigurationWidget::arrayToHexColor(std::span<const float, 3> array) const
+    {
+        const std::uint32_t red = static_cast<std::uint32_t>(array[0] * 255);
+        const std::uint32_t green = static_cast<std::uint32_t>(array[1] * 255);
+        const std::uint32_t blue = static_cast<std::uint32_t>(array[2] * 255);
+
+        return (red << 16) | (green << 8) | blue;
+    }
+
+    std::array<float, 3> ConfigurationWidget::hexToArrayColor(std::uint32_t color) const
+    {
+        const std::uint32_t red = (color & 0xFF0000) >> 16;
+        const std::uint32_t green = (color & 0xFF00) >> 8;
+        const std::uint32_t blue = color & 0xFF;
+
+        return std::array<float, 3> { 
+            static_cast<float>(red) / 255.0f,
+            static_cast<float>(green) / 255.0f,
+            static_cast<float>(blue) / 255.0f
+        };
     }
 }
