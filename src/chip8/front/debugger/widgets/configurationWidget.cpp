@@ -79,9 +79,9 @@ namespace chip8::front
                 ImGui::EndCombo();
             }
 
-            ImGui::Text("When running ROMs which do not support resolution modes please default to Hires");
-            ImGui::Text("When running games which support resolution modes this should be set to Lores on start");
-            ImGui::Text("Changing this setting when the game is running may result in undefined behaviour");
+            ImGui::TextWrapped("When running ROMs which do not support resolution modes please default to Hires");
+            ImGui::TextWrapped("When running games which support resolution modes this should be set to Lores on start");
+            ImGui::TextWrapped("Changing this setting when the game is running may result in undefined behaviour");
 
             if (ImGui::ColorEdit3("Foreground", foregroundColor.data()))
                 renderer.get().setForegroundColor(arrayToHexColor(foregroundColor));
