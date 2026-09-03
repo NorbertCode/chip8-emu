@@ -53,6 +53,8 @@ namespace chip8::front
         displayAccumulator = 0.0;
         previousTime = std::chrono::high_resolution_clock::now();
 
+        running = false;
+
         chip8.get().getDisplay().clear();
         chip8.get().getMemory().clear();
         chip8.get().getProcessor().reset();
