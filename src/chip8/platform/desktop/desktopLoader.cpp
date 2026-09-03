@@ -29,11 +29,8 @@ namespace chip8::front
             throw std::runtime_error(error.str());
         }
         
-        romPath = parser.get<std::string>("rom");
-        std::string configPath = parser.get<std::string>("--config");
-
-        loadRom(romPath);
-        loadConfig(configPath);
+        loadRom(parser.get<std::string>("rom"));
+        loadConfig(parser.get<std::string>("--config"));
     }
 
     std::span<const std::uint8_t> DesktopLoader::getRom() const
@@ -100,6 +97,8 @@ namespace chip8::front
 
     void DesktopLoader::loadRom(const std::filesystem::path& newRomPath)
     {
+        romPath = newRomPath;
+
         std::ifstream file(newRomPath, std::ios::binary | std::ios::ate);
         if (!file.is_open())
             throw std::runtime_error("Failed to open ROM file");
