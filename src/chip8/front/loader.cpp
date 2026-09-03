@@ -106,8 +106,8 @@ namespace chip8::front
             .timerFrequency = config["application"]["timer_frequency"].value_or<double>(60.0),
             .displayFrequency = config["application"]["display_frequency"].value_or<double>(60.0),
             .audioFrequency = config["application"]["audio_frequency"].value_or<double>(880.0),
-            .windowWidth = config["application"]["window_width"].value_or<int>(800),
-            .windowHeight = config["application"]["window_height"].value_or<int>(600),
+            .windowWidth = config["application"]["window_width"].value_or<int>(1200),
+            .windowHeight = config["application"]["window_height"].value_or<int>(800),
             .foregroundColor = config["application"]["foreground_color"].value_or<std::uint32_t>(0xFFFFFF),
             .backgroundColor = config["application"]["background_color"].value_or<std::uint32_t>(0x0),
             .keyMap = parseKeyMap(*config["keymap"].as_table())
