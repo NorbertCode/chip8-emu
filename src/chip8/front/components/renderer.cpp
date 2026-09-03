@@ -47,6 +47,26 @@ namespace chip8::front
         return height;
     }
 
+    void Renderer::setForegroundColor(std::uint32_t color)
+    {
+        foregroundColor = color;
+    }
+
+    void Renderer::setBackgroundColor(std::uint32_t color)
+    {
+        backgroundColor = color;
+    }
+
+    std::uint32_t Renderer::getForegroundColor() const
+    {
+        return foregroundColor;
+    }
+
+    std::uint32_t Renderer::getBackgroundColor() const
+    {
+        return backgroundColor;
+    }
+
     SDL_Window& Renderer::getWindow() const
     {
         return *window;

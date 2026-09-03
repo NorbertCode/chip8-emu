@@ -19,6 +19,11 @@ namespace chip8::front
         int getWidth() const;
         int getHeight() const;
 
+        void setForegroundColor(std::uint32_t color);
+        void setBackgroundColor(std::uint32_t color);
+        std::uint32_t getForegroundColor() const;
+        std::uint32_t getBackgroundColor() const;
+
         SDL_Window& getWindow() const;
         SDL_Renderer& getRenderer() const;
         SDL_Texture& getDisplayTexture() const;
