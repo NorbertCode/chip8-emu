@@ -38,13 +38,24 @@ namespace chip8::core
         if ((address < memoryConfig.reservedEnd && memoryConfig.reservedReadOnly) || address >= memoryConfig.programEnd)
             return;
 
-        memory[address] = data;
+        forceWrite(address, data);
     }
 
     void Memory::write_bytes(std::uint16_t address, const std::span<const std::uint8_t> data)
     {
         for (size_t i = 0; i < data.size(); ++i)
             write(address + static_cast<std::uint16_t>(i), data[i]);
+    }
+
+    void Memory::forceWrite(std::uint16_t address, std::uint8_t data)
+    {
+        memory[address] = data;
+    }
+
+    void Memory::forceWriteBytes(std::uint16_t address, const std::span<const std::uint8_t> data)
+    {
+        for (size_t i = 0; i < data.size(); ++i)
+            forceWrite(address + static_cast<std::uint16_t>(i), data[i]);
     }
 
     void Memory::clear()

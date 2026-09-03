@@ -22,6 +22,8 @@ namespace chip8::core
         std::span<const std::uint8_t> getRom() const;
         void loadRom(std::span<const std::uint8_t> newRom);
 
+        void loadFont();
+
     private:
         Memory memory;
         Storage storage;
