@@ -1,4 +1,8 @@
 add_subdirectory(core)
 add_subdirectory(front)
 
-add_subdirectory(platform/desktop)
+if (EMSCRIPTEN)
+    add_subdirectory(platform/wasm)
+else ()
+    add_subdirectory(platform/desktop)
+endif ()
