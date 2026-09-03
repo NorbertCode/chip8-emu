@@ -14,6 +14,8 @@ set_target_properties(chip8_wasm PROPERTIES SUFFIX ".html")
 target_link_options(chip8_wasm PRIVATE 
     "-sUSE_SDL=2" 
     "-sALLOW_MEMORY_GROWTH=1"
+    "-sFORCE_FILESYSTEM=1"
+    "-sEXPORTED_RUNTIME_METHODS=ccall"
     "--preload-file=${CMAKE_SOURCE_DIR}/roms@/roms"
 )
 
