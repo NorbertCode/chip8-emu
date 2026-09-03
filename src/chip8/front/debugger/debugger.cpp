@@ -85,7 +85,7 @@ namespace chip8::front
             ImGuiID dockBottomFirstQuarterId = ImGui::DockBuilderSplitNode(dockBottomId, ImGuiDir_Left, 0.25f, nullptr, &dockBottomId);
             ImGuiID dockBottomSecondQuarterId = ImGui::DockBuilderSplitNode(dockBottomId, ImGuiDir_Left, 0.33f, nullptr, &dockBottomId);
             ImGuiID dockBottomThirdQuarterId = ImGui::DockBuilderSplitNode(dockBottomId, ImGuiDir_Left, 0.50f, nullptr, &dockBottomId);
-            ImGuiID dockBottomFirstQuarterBottomId = ImGui::DockBuilderSplitNode(dockBottomFirstQuarterId, ImGuiDir_Down, 0.75f, nullptr, &dockBottomFirstQuarterId);
+            ImGuiID dockBottomFirstQuarterBottomId = ImGui::DockBuilderSplitNode(dockBottomFirstQuarterId, ImGuiDir_Down, 0.67f, nullptr, &dockBottomFirstQuarterId);
         
             ImGui::DockBuilderDockWindow("Viewport", dockMainId);
             ImGui::DockBuilderDockWindow("Memory Viewer", dockCloserRightId);
