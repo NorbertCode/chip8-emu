@@ -1,7 +1,6 @@
 add_executable(
     chip8_wasm
     main.cpp
-    wasmLoader.cpp
 )
 
 target_link_libraries(chip8_wasm PRIVATE
@@ -16,7 +15,7 @@ target_link_options(chip8_wasm PRIVATE
     "-sALLOW_MEMORY_GROWTH=1"
     "-sFORCE_FILESYSTEM=1"
     "-sEXPORTED_RUNTIME_METHODS=ccall"
-    "--preload-file=${CMAKE_SOURCE_DIR}/roms@/roms"
+    "--preload-file=${CMAKE_SOURCE_DIR}/configs/emulator@/configs"
 )
 
 target_include_directories(chip8_wasm PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

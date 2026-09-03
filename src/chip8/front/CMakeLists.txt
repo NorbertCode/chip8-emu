@@ -1,6 +1,7 @@
 add_library(
     chip8_front
     application.cpp
+    loader.cpp
     components/renderer.cpp
     components/input.cpp
     components/audio.cpp
@@ -29,6 +30,7 @@ endif ()
 target_link_libraries(chip8_front PUBLIC 
     chip8_core
     disassembler_core
+    tomlplusplus::tomlplusplus
     imgui
 )
 

@@ -1,6 +1,6 @@
 #include "application.hpp"
 #include "chip8.hpp"
-#include "wasmLoader.hpp"
+#include "loader.hpp"
 #include <SDL.h>
 #include <emscripten.h>
 #include <exception>
@@ -61,7 +61,7 @@ EM_JS(void, hijackDropZone, (), {
             catch (err) {
                 console.error("ccall failed");
             }
-        }
+        };
         reader.readAsArrayBuffer(file);
     });
 });
@@ -78,7 +78,8 @@ int main()
 
         hijackDropZone();
 
-        front::WasmLoader* loader = new front::WasmLoader(); // NOLINT: Object must stay on the heap to work with WASM
+        front::Loader* loader = new front::Loader; // NOLINT: Object must stay on the heap to work with WASM
+        loader->loadConfig("configs/cosmac.toml");
 
         auto onStorageWriteCallback = [loader](std::span<const std::uint8_t, 16> data) {
             loader->writeStorage(data);
@@ -86,14 +87,11 @@ int main()
 
         core::Chip8* chip8 = new core::Chip8(loader->getQuirks(), loader->getMemoryConfig(), loader->getDisplayConfig(), onStorageWriteCallback); // NOLINT: Object must stay on the heap to work with WASM
         chip8->getStorage().setData(loader->readStorage());
-        chip8->loadRom(loader->getRom());
 
         front::Application* app = new front::Application(*chip8, loader->getApplicationConfig()); // NOLINT: Object must stay on the heap to work with WASM
         app->reset();
 
         app->getInput().addOnEventCallback([loader, chip8, app](const SDL_Event& event) {
-            std::cout << "amogus\n";
-
             if (event.type == SDL_DROPFILE)
             {
                 std::cout << "dupa\n";

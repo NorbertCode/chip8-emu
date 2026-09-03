@@ -1,14 +1,14 @@
 #pragma once
 #include "application.hpp"
 #include <filesystem>
+#include <string_view>
+#include <toml++/toml.hpp>
 
 namespace chip8::front
 {
-    class WasmLoader
+    class Loader
     {
     public:
-        WasmLoader();
-
         std::span<const std::uint8_t> getRom() const;
         const std::filesystem::path& getRomPath() const;
 
@@ -21,6 +21,7 @@ namespace chip8::front
         std::array<std::uint8_t, 16> readStorage() const;
 
         void loadRom(const std::filesystem::path& newRomPath);
+        void loadConfig(const std::filesystem::path& configPath);
 
     private:
         std::vector<std::uint8_t> rom;
@@ -30,5 +31,9 @@ namespace chip8::front
         core::MemoryConfig memoryConfig{};
         core::DisplayConfig displayConfig{};
         core::Quirks quirks{};
+
+        std::array<std::string, 16> parseKeyMap(const toml::table& keyMap) const;
+        core::ResolutionMode parseResolutionMode(std::string_view mode) const;
+        core::LoresSpriteHandling parseLoresSpriteHandling(std::string_view handling) const;
     };
 }
