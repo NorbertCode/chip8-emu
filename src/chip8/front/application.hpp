@@ -44,6 +44,8 @@ namespace chip8::front
         void addBreakpoint(std::uint16_t line);
         void removeBreakpoint(std::uint16_t line);
 
+        Input& getInput();
+
     private:
         Renderer renderer;
         Input input;

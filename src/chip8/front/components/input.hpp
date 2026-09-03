@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <unordered_map>
 #include <SDL.h>
+#include <vector>
 #include "peripherals/keyboard.hpp"
 
 namespace chip8::front
@@ -17,7 +18,7 @@ namespace chip8::front
         void handleEvents();
         bool shouldQuit() const;
 
-        void setOnEventCallback(std::function<void(const SDL_Event&)> callback);
+        void addOnEventCallback(std::function<void(const SDL_Event&)> callback);
 
     private:
         std::unordered_map<SDL_Scancode, std::uint8_t> keyMap;
@@ -25,6 +26,6 @@ namespace chip8::front
 
         std::reference_wrapper<core::Keyboard> keyboard;
 
-        std::function<void(const SDL_Event&)> callback;
+        std::vector<std::function<void(const SDL_Event&)>> callbacks;
     };
 }

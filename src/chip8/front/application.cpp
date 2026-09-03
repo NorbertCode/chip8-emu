@@ -1,4 +1,5 @@
 #include "application.hpp"
+#include "components/input.hpp"
 #include "debugger/debuggerBuilder.hpp"
 #include "debugger/widgets/breakpointsWidget.hpp"
 #include "debugger/widgets/configurationWidget.hpp"
@@ -30,7 +31,7 @@ namespace chip8::front
             debugger.processEvent(event);
         };
 
-        input.setOnEventCallback(onEventCallback);
+        input.addOnEventCallback(onEventCallback);
 
         debugger = DebuggerBuilder(renderer.getWindow(), renderer.getRenderer())
             .addWidget(std::make_unique<MemoryViewerWidget>(chip8.getMemory(), 4))
@@ -146,5 +147,10 @@ namespace chip8::front
     void Application::removeBreakpoint(std::uint16_t line)
     {
         breakpoints.erase(line);
+    }
+
+    Input& Application::getInput()
+    {
+        return input;
     }
 }
