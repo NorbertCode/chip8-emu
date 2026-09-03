@@ -51,7 +51,7 @@ namespace chip8::core
 
     void Chip8::loadRom(std::span<const std::uint8_t> newRom)
     {
-        memory.write_bytes(memory.getMemoryConfig().reservedEnd, newRom);
+        memory.writeBytes(memory.getMemoryConfig().reservedEnd, newRom);
 
         rom = newRom;
     }

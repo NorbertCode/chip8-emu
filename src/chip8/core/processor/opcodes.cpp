@@ -174,7 +174,7 @@ namespace chip8::core
 
     void Processor::drw(std::uint8_t x, std::uint8_t y, std::uint8_t nibble)
     {
-        std::vector<std::uint8_t> sprite = memory.get().read_bytes(registerI, nibble);
+        std::vector<std::uint8_t> sprite = memory.get().readBytes(registerI, nibble);
         int collisions = display.get().xorSprite(registersV[x], registersV[y], sprite, quirks.displayClipping);
         registersV[0xF] = static_cast<std::uint8_t>(quirks.vfCollisionCounter && display.get().getResolutionMode() == ResolutionMode::Hires ? collisions : collisions > 0);
 
@@ -184,7 +184,7 @@ namespace chip8::core
 
     void Processor::drwHires(std::uint8_t x, std::uint8_t y)
     {
-        std::vector<std::uint8_t> sprite = memory.get().read_bytes(registerI, 32);
+        std::vector<std::uint8_t> sprite = memory.get().readBytes(registerI, 32);
 
         if (display.get().getResolutionMode() == ResolutionMode::Hires || quirks.loresSpriteHandling == LoresSpriteHandling::DrawWide)
         {

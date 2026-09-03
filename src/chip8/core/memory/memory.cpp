@@ -23,7 +23,7 @@ namespace chip8::core
         return memory[address];
     }
 
-    std::vector<std::uint8_t> Memory::read_bytes(std::uint16_t address, std::uint16_t bytes) const
+    std::vector<std::uint8_t> Memory::readBytes(std::uint16_t address, std::uint16_t bytes) const
     {
         std::vector<std::uint8_t> output(bytes);
 
@@ -41,7 +41,7 @@ namespace chip8::core
         forceWrite(address, data);
     }
 
-    void Memory::write_bytes(std::uint16_t address, const std::span<const std::uint8_t> data)
+    void Memory::writeBytes(std::uint16_t address, const std::span<const std::uint8_t> data)
     {
         for (size_t i = 0; i < data.size(); ++i)
             write(address + static_cast<std::uint16_t>(i), data[i]);

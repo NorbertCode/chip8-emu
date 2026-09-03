@@ -94,7 +94,7 @@ TEST(MemoryTest, ReadBytes_WithinBounds_ReadsCorrectly)
     memory.write(0x11, 0xCD);
     memory.write(0x12, 0xEF);
 
-    EXPECT_THAT(memory.read_bytes(0x10, 3), testing::ElementsAreArray(expected));
+    EXPECT_THAT(memory.readBytes(0x10, 3), testing::ElementsAreArray(expected));
 }
 
 TEST(MemoryTest, ReadBytes_AboveProgramEnd_ReturnsFF)
@@ -102,7 +102,7 @@ TEST(MemoryTest, ReadBytes_AboveProgramEnd_ReturnsFF)
     Memory memory(memoryConfig);
     std::vector<std::uint8_t> expected = { 0xFF, 0xFF, 0xFF };
 
-    std::vector<std::uint8_t> output = memory.read_bytes(0xFF, 3);
+    std::vector<std::uint8_t> output = memory.readBytes(0xFF, 3);
 
     EXPECT_THAT(output, testing::ElementsAreArray(expected));
 }
@@ -116,7 +116,7 @@ TEST(MemoryTest, ReadBytes_OverlappingProgramEnd_ReturnsFF)
     memory.write(0xFE, 0xCD);
     memory.write(0xFF, 0xEF);
 
-    EXPECT_THAT(memory.read_bytes(0xFD, 3), testing::ElementsAreArray(expected));
+    EXPECT_THAT(memory.readBytes(0xFD, 3), testing::ElementsAreArray(expected));
 }
 
 TEST(MemoryTest, WriteBytes_WithinBounds_WritesCorrectly)
@@ -124,7 +124,7 @@ TEST(MemoryTest, WriteBytes_WithinBounds_WritesCorrectly)
     Memory memory(memoryConfig);
     std::vector<std::uint8_t> data = { 0xAB, 0xCD, 0xEF };
 
-    memory.write_bytes(0x10, data);
+    memory.writeBytes(0x10, data);
 
     EXPECT_EQ(memory.read(0x10), 0xAB);
     EXPECT_EQ(memory.read(0x11), 0xCD);
@@ -136,7 +136,7 @@ TEST(MemoryTest, WriteBytes_AboveProgramEnd_DoesNothing)
     Memory memory(memoryConfig);
     std::vector<std::uint8_t> data = { 0xAB, 0xCD, 0xEF };
 
-    memory.write_bytes(0xFF, data);
+    memory.writeBytes(0xFF, data);
 
     EXPECT_EQ(memory.read(0xFF), 0xFF);
 }
@@ -146,7 +146,7 @@ TEST(MemoryTest, WriteBytes_OverlappingProgramEnd_WritesPartially)
     Memory memory(memoryConfig);
     std::vector<std::uint8_t> data = { 0xAB, 0xCD, 0xEF };
 
-    memory.write_bytes(0xFE, data);
+    memory.writeBytes(0xFE, data);
 
     EXPECT_EQ(memory.read(0xFE), 0xAB);
     EXPECT_EQ(memory.read(0xFF), 0xFF);
@@ -158,7 +158,7 @@ TEST(MemoryTest, WriteBytes_ReservedReadOnly_DoesNothing)
     Memory memory(memoryConfig);
     std::vector<std::uint8_t> data = { 0xAB, 0xCD, 0xEF };
 
-    memory.write_bytes(0xC, data);
+    memory.writeBytes(0xC, data);
 
     EXPECT_EQ(memory.read(0xC), 0x0);
     EXPECT_EQ(memory.read(0xD), 0x0);
