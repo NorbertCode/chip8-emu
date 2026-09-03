@@ -55,4 +55,9 @@ namespace chip8::core
 
         rom = newRom;
     }
+
+    void Chip8::loadFont()
+    {
+        memory.write_bytes(0x0, FONT_DATA);
+    }
 }

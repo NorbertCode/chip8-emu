@@ -59,6 +59,7 @@ namespace chip8::front
         chip8.get().getMemory().clear();
         chip8.get().getProcessor().reset();
 
+        chip8.get().loadFont();
         chip8.get().loadRom(chip8.get().getRom());
     }
 
