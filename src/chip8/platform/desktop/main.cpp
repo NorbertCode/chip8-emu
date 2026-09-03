@@ -32,6 +32,19 @@ int main(int argc, char* argv[])
         front::Application app(chip8, loader.getApplicationConfig());
         app.reset();
 
+        app.getInput().addOnEventCallback([&loader, &chip8, &app](const SDL_Event& event) {
+            if (event.type == SDL_DROPFILE)
+            {
+                char* droppedFile = event.drop.file;
+                
+                loader.loadRom(droppedFile);
+                chip8.loadRom(loader.getRom());
+                app.reset();
+
+                SDL_free(droppedFile);
+            }
+        });
+
         while (!app.shouldQuit())
             app.tick();
 
