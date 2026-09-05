@@ -13,7 +13,7 @@ namespace chip8::front
     {
         ImGui::Begin("Breakpoints");
 
-        if (ImGui::InputText("Line (Hex)", &input, ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_CharsNoBlank))
+        if (ImGui::InputText("Line (Hex)", &input, ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_CharsNoBlank) && !input.empty())
             line = std::stoul(input, nullptr, 16);
 
         if (ImGui::Button("Add"))
