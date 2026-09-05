@@ -162,6 +162,19 @@ TEST(DisassemblerTest, Disassemble_HiresDrawingEnabled_SCD)
     EXPECT_EQ(output, expected);
 }
 
+TEST(DisassemblerTest, Disassemble_SecondNibbleMustBe0_SCD)
+{
+    DisassemblerConfig config = defaultConfig;
+    config.hiresOperations = true;
+    Disassembler disassembler(config);
+    std::uint16_t input = 0x01CA;
+    std::string expected = "0x01CA";
+
+    std::string output = disassembler.disassemble(input);
+
+    EXPECT_EQ(output, expected);
+}
+
 TEST(DisassemblerTest, Disassemble_JP)
 {
     Disassembler disassembler(defaultConfig);
