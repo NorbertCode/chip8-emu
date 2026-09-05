@@ -51,7 +51,7 @@ namespace disassembler::core
                             return "HIGH";
                         break;
                     default: 
-                        if (nibbles[2] == 0xC && config.hiresOperations)
+                        if (nibbles[1] == 0x0 && nibbles[2] == 0xC && config.hiresOperations)
                             return std::format("SCD 0x{:X}", nibbles[3]);
                         break;
                 }
