@@ -51,6 +51,8 @@ It aims to most authentically replicate the inner workings of the original virtu
 - **Several included configs** - COSMAC, CHIP-48, SCHIP 1.0, SCHIP 1.1, SCHIP-MODERN  
 - **Configurable emulator properties** like foreground and background colors, keymap and more
 
+https://github.com/user-attachments/assets/00f15381-7c85-48e1-b3af-4895b2389c79
+
 <details>
 <summary>Screenshots (click to expand)</summary>
 
