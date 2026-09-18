@@ -18,7 +18,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: libsdl-org/setup-sdl@main
         id: sdl
@@ -31,18 +31,18 @@ jobs:
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_PREFIX_PATH=${{ steps.sdl.outputs.prefix }}
 
       - name: Build
-        run: cmake --build build
+        run: cmake --build build --config Debug
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
-          name: compiled-build-${{ matrix.os }}
+          name: debug-build-${{ matrix.os }}
           path: build/
 
   build-wasm:
-    name: Build for WebAssembly
+    name: Build (wasm)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: emscripten-core/setup-emsdk@v15
         with: 
@@ -60,11 +60,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
-          name: compiled-build-ubuntu-latest
+          name: debug-build-ubuntu-latest
           path: build/
 
       - uses: libsdl-org/setup-sdl@main
@@ -85,11 +85,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
-          name: compiled-build-ubuntu-latest
+          name: debug-build-ubuntu-latest
           path: build/
 
       - name: Install Dependencies
@@ -110,11 +110,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
-          name: compiled-build-${{ matrix.os }}
+          name: debug-build-${{ matrix.os }}
           path: build/
 
       - name: Run Tests (Unix)
