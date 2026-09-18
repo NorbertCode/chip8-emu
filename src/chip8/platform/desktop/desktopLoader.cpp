@@ -8,8 +8,9 @@ namespace chip8::front
     {
         argparse::ArgumentParser parser(name);
 
-        parser.add_argument("rom")
-            .help("path to the ROM file to execute");
+        parser.add_argument("-r", "rom")
+            .help("path to the ROM file to execute")
+            .default_value("");
 
         parser.add_argument("-c", "--config")
             .help("path to the TOML configuration file to use")
@@ -28,7 +29,10 @@ namespace chip8::front
             throw std::runtime_error(error.str());
         }
         
-        loadRom(parser.get<std::string>("rom"));
+        std::string rom = parser.get<std::string>("rom");
+        if (!rom.empty())
+            loadRom(rom);
+
         loadConfig(parser.get<std::string>("--config"));
     }
 }
