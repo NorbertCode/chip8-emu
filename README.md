@@ -33,7 +33,7 @@ Configurable CHIP-8 emulator, debugger and disassembler.
     6. [Disassembler](#disassembler)
     7. [Dependencies](#dependencies)
     8. [Tests](#tests)
-    9. [CI](#ci)
+    9. [CI/CD](#cicd)
 7. [Sources](#sources)
 
 
@@ -75,7 +75,7 @@ I learned a lot and had a lot of fun developing this project, and I hope you too
 
 ## Prerequisites
 
-Compiling and running the program for the desktop requires you to have the `SDL2` library installed on your system. Other used libraries are linked statically, so you don't need to install them yourself. Installing `SDL2` is explained in the section depending on your OS.
+Compiling the program for the desktop requires you to have the `SDL2` library installed on your system. Other used libraries are linked statically, so you don't need to install them yourself. Installing `SDL2` is explained in the section depending on your OS.
 
 ## Linux
 
@@ -174,7 +174,9 @@ Otherwise, you must use the command line to launch and configure the program. Th
 
 ## Launching the Emulator
 
-In order to launch the emulator you must use the following command (this assumes the `chip8-disasm` executable is in your current directory):
+If you are using Linux or MacOS you must have `SDL2` installed on your system. The [Compilation Prerequisites](#prerequisites) section has instructions on how to install it. Windows has the package bundled with the executable.
+
+In order to launch the emulator you must use the following command (this assumes the `chip8` executable is in your current directory):
 
 ```bash
 chip8 rom_path [--config PATH]
@@ -781,17 +783,21 @@ Output: Arrows are displayed correctly.
 
 </details>
 
-## CI
+## CI/CD
 
-There is currently only one CI pipeline. The pipeline has 5 jobs:
+There are currently two CI/CD workflows: `Build Analyze and Test` and `Deploy`.
 
-- `Build` - Uses a build matrix to build the toolchain for multiple operating systems.
-- `Build for WebAssembly` - Builds the emulator for WebAssembly using `emscripten`.
+### Build Analyze and Test
+
+This workflow is run on every pull request to main, and on every push to main. It consists of the following jobs:
+
+- `Build` - Uses a build matrix to build the debug version of the toolchain for multiple operating systems.
+- `Build (wasm)` - Builds the emulator for WebAssembly using `emscripten`.
 - `Run Clang-Tidy` - Runs clang-tidy static analysis.
 - `Run Valgrind` - Runs Valgrind on the tests executable.
 - `Run Tests` - Uses a build matrix to run tests on multiple operating systems.
 
-`Build` and `Build for WebAssembly` are the first jobs to run. They run in parallel and upload their artifacts.
+`Build` and `Build (wasm)` are the first jobs to run. They run in parallel and upload their artifacts.
 
 `Run Clang-Tidy`, `Run Valgrind` and `Run Tests` all run in parallel. They download the artifacts uploaded by previous jobs and use them.
 
@@ -808,6 +814,15 @@ performance-*,
 ```
 
 I also decided to exclude a few checks due to the nature of the project - magic numbers, pointer arithmetic, and reinterpret cast are all things which would otherwise be enabled, but an emulator heavily relies on them.
+
+### Deploy
+
+This workflow is run when a new tag is pushed. It consists of the following jobs:
+
+- `Build for Release` - Uses a build matrix to build the release version of the toolchain for multipe operating systems and zips them.
+- `Build for Release (wasm)` - Builds the release version of the emulator for WebAssembly using `emscripten` and zips it.
+- `Deploy to GitHub` - Creates a GitHub release and uploads the builds.
+- `Deploy to itch.io` - Uses `Butler` to push the builds to itch.io
 
 
 # Sources

@@ -26,3 +26,12 @@ add_custom_command(
         "${CMAKE_CURRENT_SOURCE_DIR}/index.html"
         "$<TARGET_FILE_DIR:chip8_wasm>/index.html"
 )
+
+install(TARGETS chip8_wasm DESTINATION .)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/configs DESTINATION .)
+install(FILES 
+    ${CMAKE_CURRENT_BINARY_DIR}/chip8_wasm.data
+    ${CMAKE_CURRENT_BINARY_DIR}/chip8_wasm.wasm
+    ${CMAKE_CURRENT_BINARY_DIR}/index.html
+    DESTINATION .
+)

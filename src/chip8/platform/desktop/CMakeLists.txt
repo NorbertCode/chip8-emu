@@ -30,3 +30,11 @@ target_link_libraries(chip8 PRIVATE
 )
 
 target_include_directories(chip8 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+install(TARGETS chip8 DESTINATION .)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/configs DESTINATION .)
+install(FILES ${CMAKE_SOURCE_DIR}/README.md DESTINATION .)
+
+if (WIN32)
+    install(FILES $<TARGET_RUNTIME_DLLS:chip8> DESTINATION .)
+endif ()

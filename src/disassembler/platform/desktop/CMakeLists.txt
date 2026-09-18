@@ -30,3 +30,6 @@ target_link_libraries(chip8-disasm PRIVATE
 )
 
 target_include_directories(chip8-disasm PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+install(TARGETS chip8-disasm DESTINATION .)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/configs DESTINATION .)
