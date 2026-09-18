@@ -170,24 +170,25 @@ The emulator is available as a desktop application and in the browser.
 
 If you wish to use the emulator in the browser, it is available [here](https://berecik.itch.io/chip8-emu). Then only the [Loading ROMs](#loading-roms) and [Emulator Interface](#emulator-interface) sections apply to you.
 
-Otherwise, you must use the command line to launch and configure the program. This gives you more options of configuration compared to just using the browser version, as not all options present in config files are available through the graphical interface.
+Otherwise, you can use the desktop application. You can either run it like an app - then it behaves exactly as the browser version, or you can run it from the CLI.
+
+The command line interface gives you more options of configuration compared to the browser version, as not all options present in config files are available through the graphical interface.
 
 ## Launching the Emulator
 
 If you are using Linux or MacOS you must have `SDL2` installed on your system. The [Compilation Prerequisites](#prerequisites) section has instructions on how to install it. Windows has the package bundled with the executable.
 
-In order to launch the emulator you must use the following command (this assumes the `chip8` executable is in your current directory):
+It order to launch the emulator you can run it like a normal app. Then it will behave exactly as the browser version - no ROM will be loaded and you must load one as described in the [Loading ROMs](#loading-roms) section.
+
+You can also use the command line interface to launch the emulator (this assumes the `chip8` executable is in your current directory):
 
 ```bash
-chip8 rom_path [--config PATH]
+chip8 [--rom PATH] [--config PATH]
 ```
 
-Where the required argument is:
+Where the optional arguments are:
 
-- `rom_path` - Path to the ROM file.
-
-And the optional argument is:
-
+- `-r PATH`, `--rom PATH` - Path to the ROM file. If left empty then no ROM is loaded and you must load it by drag-and-drop.
 - `-c PATH`, `--config PATH` - Specifies path to the config file (`./configs/emulator/example.toml` by default on desktop, the COSMAC config at `./configs/emulator/cosmac.toml` is used in the WebAssembly build).
 
 ## Emulator Configuration
