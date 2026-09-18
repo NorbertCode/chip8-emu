@@ -1,0 +1,115 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build for Release
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: libsdl-org/setup-sdl@main
+        id: sdl
+        with: 
+          install-linux-dependencies: true
+          version: 2-latest
+          version-sdl-image: 2-latest
+
+      - name: Configure CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${{ steps.sdl.outputs.prefix }}
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Install
+        run: cmake --install build --prefix chip8-emu
+
+      - name: Zip
+        run: cmake -E tar cfv chip8-emu-${{ matrix.os }}.zip --format=zip chip8-emu
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: chip8-emu-${{ matrix.os }}
+          path: chip8-emu-${{ matrix.os }}.zip
+
+  build-wasm:
+    name: Build for Release (wasm)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: emscripten-core/setup-emsdk@v15
+        with: 
+          version: 6.0.9
+          actions-cache-folder: 'emsdk-cache'
+
+      - name: Configure CMake
+        run: emcmake cmake -S . -B build-wasm -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build-wasm --config Release
+
+      - name: Install
+        run: cmake --install build-wasm --prefix chip8-emu-wasm
+
+      - name: Zip
+        run: cd chip8-emu-wasm && zip -r ../chip8-emu-wasm.zip .
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: chip8-emu-wasm
+          path: chip8-emu-wasm.zip
+
+  deploy-github:
+    name: Deploy to GitHub
+    needs: [build, build-wasm]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v7
+        with:
+          path: builds
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        run: >
+          gh release create ${{ github.ref_name }} 
+          --generate-notes
+          builds/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-itch:
+    name: Deploy to itch.io
+    needs: [build, build-wasm]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          path: builds
+          merge-multiple: true
+
+      - name: Setup Butler
+        uses: remarkablegames/setup-butler@v3
+
+      - name: Upload to itch.io
+        run: |
+          butler push builds/chip8-emu-ubuntu-latest.zip berecik/chip8-emu:linux --userversion ${{ github.ref_name}}
+          butler push builds/chip8-emu-windows-latest.zip berecik/chip8-emu:windows --userversion ${{ github.ref_name }}
+          butler push builds/chip8-emu-macos-latest.zip berecik/chip8-emu:mac --userversion ${{ github.ref_name }}
+          butler push builds/chip8-emu-wasm.zip berecik/chip8-emu:web --userversion ${{ github.ref_name }}
+        env:
+          BUTLER_API_KEY: ${{ secrets.ITCH_API_KEY }}
