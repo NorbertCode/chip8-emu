@@ -69,7 +69,7 @@ namespace chip8::core
                     case 0x00FD: exit(); break;  // EXIT
                     case 0x00FE: setDisplayMode(ResolutionMode::Lores); break; // LORES
                     case 0x00FF: setDisplayMode(ResolutionMode::Hires); break; // HIRES
-                    default: if (nibbles[2] == 0xC) scrollDown(nibbles[3]); break; // SCD
+                    default: if (nibbles[1] == 0x0 && nibbles[2] == 0xC) scrollDown(nibbles[3]); break; // SCD
                 }
                 break;
             case 0x1: jp(addr); break;            // JP
