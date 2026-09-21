@@ -145,6 +145,16 @@ TEST_F(ProcessorTest, scrollDown_ScrollsDisplayDownByNRows)
     EXPECT_TRUE(display.getPixel(0, 2));
 }
 
+TEST_F(ProcessorTest, scrollDown_InvalidSecondNibble_IsNotMisinterpretedAsSCD)
+{
+    display.xorPixel(0, 0, true, false);
+
+    processor.execute(0x01C2); // Invalid second nibble - not SCD
+
+    EXPECT_TRUE(display.getPixel(0, 0));
+    EXPECT_FALSE(display.getPixel(0, 2));
+}
+
 TEST_F(ProcessorTest, cls_DisplayWithPixels_ClearsDisplay)
 {
     display.xorPixel(0, 0, true, false);
