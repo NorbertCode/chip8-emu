@@ -29,6 +29,8 @@ target_link_libraries(chip8 PRIVATE
     warnings
 )
 
+set_target_properties(chip8 PROPERTIES WIN32_EXECUTABLE TRUE)
+
 target_include_directories(chip8 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 install(TARGETS chip8 DESTINATION .)

@@ -1,5 +1,3 @@
-#define SDL_MAIN_HANDLED
-
 #include <exception>
 #include <iostream>
 #include "desktopLoader.hpp"
@@ -11,8 +9,6 @@ int main(int argc, char* argv[])
 {
     try
     {
-        SDL_SetMainReady(); // Prevents SDL from hijacking entry point on Windows (along with the define at the very top)
-
         front::DesktopLoader loader("CHIP8", argc, argv);
 
         if (SDL_Init(SDL_INIT_EVERYTHING) < 0)

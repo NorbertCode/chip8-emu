@@ -22,6 +22,10 @@ add_library(
 if (NOT EMSCRIPTEN)
     find_package(SDL2 REQUIRED CONFIG)
     target_link_libraries(chip8_front PUBLIC SDL2::SDL2)
+
+    if (TARGET SDL2::SDL2main)
+        target_link_libraries(chip8_front PUBLIC SDL2::SDL2main)
+    endif ()
 else ()
     target_compile_options(chip8_front PUBLIC "-sUSE_SDL=2")
     target_link_options(chip8_front PUBLIC "-sUSE_SDL=2")
