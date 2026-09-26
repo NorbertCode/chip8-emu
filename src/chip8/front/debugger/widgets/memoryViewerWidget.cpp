@@ -1,5 +1,6 @@
 #include "memoryViewerWidget.hpp"
 #include "memory/memory.hpp"
+#include <algorithm>
 #include <imgui.h>
 
 namespace chip8::front
@@ -12,7 +13,8 @@ namespace chip8::front
     {
         ImGui::Begin("Memory Viewer");
 
-        ImGui::InputInt("Bytes per Row", &bytesPerRow);
+        if (ImGui::InputInt("Bytes per Row", &bytesPerRow))
+            bytesPerRow = std::max(bytesPerRow, 1); // Prevent 0 and negative numbers
 
         if (ImGui::BeginChild("Memory View Scroll Region"))
         {

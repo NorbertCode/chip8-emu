@@ -2,6 +2,7 @@
 #include "chip8.hpp"
 #include "peripherals/display.hpp"
 #include "processor/quirks.hpp"
+#include <algorithm>
 #include <imgui.h>
 
 namespace chip8::front
@@ -55,10 +56,16 @@ namespace chip8::front
         if (ImGui::CollapsingHeader("Display"))
         {
             if (ImGui::InputInt("Width", &resolutionWidth))
+            {
+                resolutionWidth = std::max(resolutionWidth, 1);
                 chip8.get().getDisplay().setWidth(resolutionWidth);
+            }
 
             if (ImGui::InputInt("Height", &resolutionHeight))
+            {
+                resolutionHeight = std::max(resolutionHeight, 1);
                 chip8.get().getDisplay().setHeight(resolutionHeight);
+            }
 
             const core::ResolutionMode currentResolutionMode = chip8.get().getDisplay().getResolutionMode();
             const std::string& preview = resolutionModeNames[static_cast<size_t>(currentResolutionMode)].second;
