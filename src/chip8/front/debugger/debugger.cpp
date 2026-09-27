@@ -113,10 +113,12 @@ namespace chip8::front
             ImGui::DockBuilderDockWindow("Disassembly", dockFurtherRightId);
             ImGui::DockBuilderDockWindow("Flow Control", dockBottomFirstQuarterId);
             ImGui::DockBuilderDockWindow("Breakpoints", dockBottomFirstQuarterBottomId);
+            ImGui::DockBuilderDockWindow("ROM Selector", dockBottomFirstQuarterBottomId);
             ImGui::DockBuilderDockWindow("Stack Viewer", dockBottomSecondQuarterId);
             ImGui::DockBuilderDockWindow("Registers Viewer", dockBottomThirdQuarterId);
-            ImGui::DockBuilderDockWindow("Sprite Preview", dockBottomId);
+            ImGui::DockBuilderDockWindow("Sprite Preview", dockBottomThirdQuarterId);
             ImGui::DockBuilderDockWindow("Configuration", dockBottomId);
+            ImGui::DockBuilderDockWindow("Config Selector", dockBottomId);
 
             ImGui::DockBuilderFinish(dockSpaceId);
         }

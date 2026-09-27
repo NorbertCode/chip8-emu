@@ -3,10 +3,12 @@ loop_frequency = 600
 timer_frequency = 60
 display_frequency = 60
 audio_frequency = 440
-window_width = 800
-window_height = 600
+window_width = 1200
+window_height = 800
 foreground_color = 0xFFFFFF
 background_color = 0x000000
+roms_path = "roms"
+configs_path = "configs/emulator"
 
 [memory]
 reserved_end = 0x200

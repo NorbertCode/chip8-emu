@@ -18,7 +18,8 @@ target_link_options(chip8_wasm PRIVATE
     "-sFORCE_FILESYSTEM=1"
     "-sEXPORTED_RUNTIME_METHODS=ccall"
     "-fwasm-exceptions"
-    "--preload-file=${CMAKE_SOURCE_DIR}/configs/emulator@/configs"
+    "--preload-file=${CMAKE_SOURCE_DIR}/configs/emulator@/configs/emulator"
+    "--preload-file=${CMAKE_SOURCE_DIR}/roms@/roms"
 )
 
 target_include_directories(chip8_wasm PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -32,6 +33,7 @@ add_custom_command(
 
 install(TARGETS chip8_wasm DESTINATION .)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/configs DESTINATION .)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/roms DESTINATION .)
 install(FILES 
     ${CMAKE_CURRENT_BINARY_DIR}/chip8_wasm.data
     ${CMAKE_CURRENT_BINARY_DIR}/chip8_wasm.wasm

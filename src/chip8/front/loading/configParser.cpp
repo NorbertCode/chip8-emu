@@ -1,6 +1,7 @@
 #include "configParser.hpp"
 #include <charconv>
 #include <format>
+#include <string>
 #include <string_view>
 
 namespace chip8::front
@@ -34,6 +35,8 @@ namespace chip8::front
             .windowHeight = result["application"]["window_height"].value_or<int>(800),
             .foregroundColor = result["application"]["foreground_color"].value_or<std::uint32_t>(0xFFFFFF),
             .backgroundColor = result["application"]["background_color"].value_or<std::uint32_t>(0x0),
+            .romsPath = result["application"]["roms_path"].value_or<std::string>("roms"),
+            .configsPath = result["application"]["configs_path"].value_or<std::string>("configs/emulator"),
             .keyMap = parseKeyMap(*keymapTable)
         };
 

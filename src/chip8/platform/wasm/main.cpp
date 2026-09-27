@@ -68,7 +68,7 @@ EM_JS(void, hijackDropZone, (), {
     });
 });
 
-constexpr std::string_view DEFAULT_CONFIG = "configs/cosmac.toml";
+constexpr std::string_view DEFAULT_CONFIG = "configs/emulator/cosmac.toml";
 
 int main()
 {

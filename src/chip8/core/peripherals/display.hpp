@@ -23,7 +23,7 @@ namespace chip8::core
     class Display
     {
     public:
-        Display(const DisplayConfig& displayConfig);
+        Display(DisplayConfig displayConfig);
 
         bool getPixel(std::uint8_t x, std::uint8_t y) const;
         std::span<const std::uint8_t> getDisplay() const;
@@ -45,6 +45,8 @@ namespace chip8::core
         void scrollLeft(std::uint8_t pixels, bool loresWholePixelScrolling = false);
         void scrollRight(std::uint8_t pixels, bool loresWholePixelScrolling = false);
         void scrollDown(std::uint8_t pixels, bool loresWholePixelScrolling = false);
+
+        void setDisplayConfig(DisplayConfig config);
 
     private:
         std::vector<std::uint8_t> display;

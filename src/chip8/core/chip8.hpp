@@ -4,6 +4,7 @@
 #include "memory/storage.hpp"
 #include "peripherals/display.hpp"
 #include "peripherals/keyboard.hpp"
+#include "processor/quirks.hpp"
 #include <span>
 
 namespace chip8::core
@@ -11,7 +12,7 @@ namespace chip8::core
     class Chip8
     {
     public:
-        Chip8(const Quirks& quirks, const MemoryConfig& memoryConfig, const DisplayConfig& displayConfig, std::function<void(std::span<const std::uint8_t, 16>)> onStorageWriteCallback);
+        Chip8(Quirks quirks, MemoryConfig memoryConfig, DisplayConfig displayConfig, std::function<void(std::span<const std::uint8_t, 16>)> onStorageWriteCallback);
 
         Processor& getProcessor() { return processor; }
         Memory& getMemory() { return memory; }
@@ -23,6 +24,8 @@ namespace chip8::core
         void loadRom(std::span<const std::uint8_t> newRom);
 
         void loadFont();
+
+        void loadConfigs(Quirks quirks, MemoryConfig memoryConfig, DisplayConfig displayConfig);
 
     private:
         Memory memory;

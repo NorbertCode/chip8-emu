@@ -193,7 +193,7 @@ Where the optional arguments are:
 
 ## Emulator Configuration
 
-Configuration files can be passed to the CLI application as arguments. A set of config files for different variants is provided with the software. This includes configuration files for: COSMAC VIP, CHIP-48, SCHIP 1.0, SCHIP 1.1, SCHIP-MODERN. You can also modify them or create your own.
+Configuration files can be passed to the CLI application as arguments or selected from the Config Selector Widget. A set of config files for different variants is provided with the software. This includes configuration files for: COSMAC VIP, CHIP-48, SCHIP 1.0, SCHIP 1.1, SCHIP-MODERN. You can also modify them or create your own.
 
 Here is an example config file:
 
@@ -203,10 +203,12 @@ loop_frequency = 600
 timer_frequency = 60
 display_frequency = 60
 audio_frequency = 440
-window_width = 800
-window_height = 600
+window_width = 1200
+window_height = 800
 foreground_color = 0xFFFFFF
 background_color = 0x000000
+roms_path = "roms"
+configs_path = "configs/emulator"
 
 [memory]
 reserved_end = 0x200
@@ -268,6 +270,10 @@ Any options not specified within a configuration file have chosen default option
 - `foreground_color` - Color of enabled pixels written in hex. For example `0xFF0000` is red and `0x00FF00` is green. `0xFFFFFF` (white) by default.
 
 - `background_color` - Color of disabled pixels written in hex. For example `0xFF0000` is red and `0x00FF00` is green. `0x0` (black) by default.
+
+- `roms_path` - Path (relative to where you launch the emulator from) where the ROM Selector Widget will look for ROMs. `rom` by default.
+
+- `configs_path` - Path (relative to where you launch the emulator from) where the Config Selector Widget will look for config files. `configs/emulator` by default.
 
 ### Memory Options
 
@@ -355,7 +361,10 @@ The keymap **must** be defined in all configs. It is the one thing that does not
 
 Only the desktop version supports loading ROMs as command line arguments.
 
-However both versions support loading ROMs by drag-and-drop. Simply drop the ROM you wish to load onto the emulator's window.
+However both versions support loading ROMs by:
+
+- Drag-and-drop - Simply drop the ROM you wish to load onto the emulator's window.
+- ROM Selector Widget - Select ROMs in the ROM Selector Widget. On desktop this searches a specific directory - drop `.ch8` files there and you will be able to load them from the emulator. In the browser this provides a set of built-in ROMs.
 
 ROMs begin in a paused state. In order to actually play a ROM you must press the Run button in the `Flow Control` widget.
 
@@ -389,9 +398,13 @@ The interface is comprised of many widgets. They are resizable and dockable - yo
 
 - `Registers Viewer` - Visible to the right of `Stack Viewer`. Displays all the processor's registers - all V registers on the left, and the rest on the right. Can be configured to list it vertically or horizontally. The horizontal distance between elements may also be configured.
 
-- `Sprite Preview` - Visible on the right of `Registers Viewer` on the first screenshot. Previews the sprite present at the I register. You can configure whether the sprite is shown as if it was a `hires` sprite or not. The sprite's height must also be manually configured, as there's no way to know how much of the sprite will be drawn until a `DRW` instruction.
+- `Sprite Preview` - Docked in the same place as `Registers Viewer`. Previews the sprite present at the I register. You can configure whether the sprite is shown as if it was a `hires` sprite or not. The sprite's height must also be manually configured, as there's no way to know how much of the sprite will be drawn until a `DRW` instruction.
 
-- `Configuration` - Docked in the same place as `Sprite Preview`, visible on the second screenshot. Allows you to configure the emulator during its runtime. If you want to know what the options do, refer to the [Emulator Configuration](#emulator-configuration).
+- `Configuration` - Visible on the right of `Sprite Preview`, visible on the second screenshot. Allows you to configure the emulator during its runtime. If you want to know what the options do, refer to the [Emulator Configuration](#emulator-configuration).
+
+- `ROM Selector Widget` - Docked in the same place as `Breakpoints`. Displays ROMs at the configured path and allows for loading them from within the emulator.
+
+- `Config Selector Widget` - Docked in the same place as `Configuration`. Displays config files at the configured path and allows for changing them during runtime.
 
 
 # Disassembler Instructions
@@ -839,3 +852,5 @@ While working on this project I spent a lot of time looking for, and looking at 
 [CHIP-8 Research Facility](https://chip-8.github.io/)
 
 [chip8-test-suite, Tim "Timendus" Franssen](https://github.com/Timendus/chip8-test-suite)
+
+The included ROMs are public domain and come from: [Zophar's Domain](https://www.zophar.net/pdroms/chip8.html)

@@ -1,4 +1,6 @@
 #include "chip8.hpp"
+#include "memory/memory.hpp"
+#include "peripherals/display.hpp"
 
 namespace chip8::core
 {
@@ -38,7 +40,7 @@ namespace chip8::core
         0xFF, 0xFF, 0xC0, 0xC0, 0xFF, 0xFF, 0xC0, 0xC0, 0xC0, 0xC0  // Hires F
     };
 
-    Chip8::Chip8(const Quirks& quirks, const MemoryConfig& memoryConfig, const DisplayConfig& displayConfig, std::function<void(std::span<const std::uint8_t, 16>)> onStorageWriteCallback)
+    Chip8::Chip8(Quirks quirks, MemoryConfig memoryConfig, DisplayConfig displayConfig, std::function<void(std::span<const std::uint8_t, 16>)> onStorageWriteCallback)
         : memory(memoryConfig, FONT_DATA), display(displayConfig), processor(memory, storage, display, keyboard, quirks, memoryConfig.reservedEnd) 
     {
         storage.setOnWriteCallback(std::move(onStorageWriteCallback));
@@ -59,5 +61,12 @@ namespace chip8::core
     void Chip8::loadFont()
     {
         memory.forceWriteBytes(0x0, FONT_DATA);
+    }
+
+    void Chip8::loadConfigs(Quirks quirks, MemoryConfig memoryConfig, DisplayConfig displayConfig)
+    {
+        processor.setQuirks(quirks);
+        memory.setMemoryConfig(memoryConfig);
+        display.setDisplayConfig(displayConfig);
     }
 }

@@ -5,11 +5,13 @@
 #include "components/renderer.hpp"
 #include "debugger/debuggerBuilder.hpp"
 #include "debugger/widgets/breakpointsWidget.hpp"
+#include "debugger/widgets/configSelectorWidget.hpp"
 #include "debugger/widgets/configurationWidget.hpp"
 #include "debugger/widgets/flowControlWidget.hpp"
 #include "debugger/widgets/memoryViewerWidget.hpp"
 #include "debugger/widgets/disassemblyViewerWidget.hpp"
 #include "debugger/widgets/registersViewWidget.hpp"
+#include "debugger/widgets/romSelectorWidget.hpp"
 #include "debugger/widgets/spritePreviewWidget.hpp"
 #include "debugger/widgets/stackViewerWidget.hpp"
 #include "debugger/widgets/viewportWidget.hpp"
@@ -23,16 +25,16 @@
 namespace chip8::front
 {
     Application::Application(Configs configs, Rom rom)
-        : chip8(configs.quirks, configs.memoryConfig, configs.displayConfig, [this](std::span<const std::uint8_t, 16> data) { writeStorage(data); }),
-        renderer(configs.displayConfig.width, configs.displayConfig.height, 
-                 configs.applicationConfig.windowWidth, configs.applicationConfig.windowHeight, 
-                 configs.applicationConfig.foregroundColor, configs.applicationConfig.backgroundColor),
-        input(chip8.getKeyboard(), configs.applicationConfig.keyMap),
-        audio(configs.applicationConfig.audioFrequency),
-        processorTime(1000.0 / configs.applicationConfig.loopFrequency),
-        timerTime(1000.0 / configs.applicationConfig.timerFrequency),
-        displayTime(1000.0 / configs.applicationConfig.displayFrequency),
-        configs(std::move(configs)),
+        : configs(std::move(configs)),
+        chip8(this->configs.quirks, this->configs.memoryConfig, this->configs.displayConfig, [this](std::span<const std::uint8_t, 16> data) { writeStorage(data); }),
+        renderer(this->configs.displayConfig.width, this->configs.displayConfig.height, 
+                 this->configs.applicationConfig.windowWidth, this->configs.applicationConfig.windowHeight, 
+                 this->configs.applicationConfig.foregroundColor, this->configs.applicationConfig.backgroundColor),
+        input(chip8.getKeyboard(), this->configs.applicationConfig.keyMap),
+        audio(this->configs.applicationConfig.audioFrequency),
+        processorTime(1000.0 / this->configs.applicationConfig.loopFrequency),
+        timerTime(1000.0 / this->configs.applicationConfig.timerFrequency),
+        displayTime(1000.0 / this->configs.applicationConfig.displayFrequency),
         rom(std::move(rom))
     {
         chip8.getStorage().setData(ResourceLoader::readStorage(this->rom.path));
@@ -54,6 +56,8 @@ namespace chip8::front
             .addWidget(std::make_unique<FlowControlWidget>(*this, true))
             .addWidget(std::make_unique<BreakpointsWidget>(debugger))
             .addWidget(std::make_unique<ConfigurationWidget>(chip8, renderer))
+            .addWidget(std::make_unique<ConfigSelectorWidget>(*this, this->configs.applicationConfig.configsPath))
+            .addWidget(std::make_unique<RomSelectorWidget>(*this, this->configs.applicationConfig.romsPath))
             .build();
     }
 
@@ -150,8 +154,16 @@ namespace chip8::front
 
     void Application::setRom(Rom newRom)
     {
+        reset();
+
         rom = std::move(newRom);
         chip8.loadRom(rom.content);
+    }
+
+    void Application::setConfigs(Configs newConfigs)
+    {
+        configs = std::move(newConfigs);
+        chip8.loadConfigs(configs.quirks, configs.memoryConfig, configs.displayConfig);
     }
 
     void Application::attachCallbackToInput(std::function<void(const SDL_Event&)> callback)
