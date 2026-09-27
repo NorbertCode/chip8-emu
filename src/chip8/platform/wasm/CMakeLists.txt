@@ -3,6 +3,8 @@ add_executable(
     main.cpp
 )
 
+target_compile_options(chip8_wasm PRIVATE "-fwasm-exceptions")
+
 target_link_libraries(chip8_wasm PRIVATE
     chip8_front
     warnings
@@ -15,6 +17,7 @@ target_link_options(chip8_wasm PRIVATE
     "-sALLOW_MEMORY_GROWTH=1"
     "-sFORCE_FILESYSTEM=1"
     "-sEXPORTED_RUNTIME_METHODS=ccall"
+    "-fwasm-exceptions"
     "--preload-file=${CMAKE_SOURCE_DIR}/configs/emulator@/configs"
 )
 
