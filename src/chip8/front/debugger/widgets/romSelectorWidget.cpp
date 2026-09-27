@@ -1,6 +1,7 @@
 #include "romSelectorWidget.hpp"
 #include "application.hpp"
 #include "loading/resourceLoader.hpp"
+#include <algorithm>
 #include <filesystem>
 #include <imgui.h>
 
@@ -8,15 +9,17 @@ namespace chip8::front
 {
     RomSelectorWidget::RomSelectorWidget(Application& application, const std::filesystem::path& romsPath)
         : application(application),
-        romsPath(romsPath),
-        roms(ResourceLoader::findAllRoms(romsPath)) { }
+        romsPath(romsPath) 
+    {
+        refreshRoms();
+    }
 
     void RomSelectorWidget::render()
     {
         ImGui::Begin("ROM Selector");
 
         if (ImGui::Button("Refresh"))
-            roms = ResourceLoader::findAllRoms(romsPath);
+            refreshRoms();
 
         ImGui::SameLine();
 
@@ -51,5 +54,11 @@ namespace chip8::front
         ImGui::EndChild();
 
         ImGui::End();
+    }
+
+    void RomSelectorWidget::refreshRoms()
+    {
+        roms = ResourceLoader::findAllRoms(romsPath);
+        std::sort(roms.begin(), roms.end());
     }
 }

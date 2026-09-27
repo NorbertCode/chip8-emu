@@ -2,6 +2,7 @@
 #include "application.hpp"
 #include "loading/configParser.hpp"
 #include "loading/resourceLoader.hpp"
+#include <algorithm>
 #include <filesystem>
 #include <imgui.h>
 
@@ -9,15 +10,17 @@ namespace chip8::front
 {
     ConfigSelectorWidget::ConfigSelectorWidget(Application& application, const std::filesystem::path& configsPath)
         : application(application),
-        configsPath(configsPath),
-        configs(ResourceLoader::findAllConfigs(configsPath)) { }
+        configsPath(configsPath)
+    {
+        refreshConfigs();
+    }
 
     void ConfigSelectorWidget::render()
     {
         ImGui::Begin("Config Selector");
 
         if (ImGui::Button("Refresh"))
-            configs = ResourceLoader::findAllConfigs(configsPath);
+            refreshConfigs();
 
         ImGui::SameLine();
 
@@ -52,5 +55,11 @@ namespace chip8::front
         ImGui::EndChild();
 
         ImGui::End();
+    }
+
+    void ConfigSelectorWidget::refreshConfigs()
+    {
+        configs = ResourceLoader::findAllConfigs(configsPath);
+        std::sort(configs.begin(), configs.end());
     }
 }

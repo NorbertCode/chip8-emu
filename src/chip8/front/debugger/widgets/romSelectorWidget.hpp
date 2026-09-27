@@ -16,5 +16,7 @@ namespace chip8::front
         const std::filesystem::path& romsPath;
 
         std::vector<std::filesystem::path> roms;
+
+        void refreshRoms();
     };
 }

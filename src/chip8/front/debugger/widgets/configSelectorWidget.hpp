@@ -16,5 +16,7 @@ namespace chip8::front
         const std::filesystem::path& configsPath;
 
         std::vector<std::filesystem::path> configs;
+
+        void refreshConfigs();
     };
 }
