@@ -73,7 +73,10 @@ int main(int argc, char* argv[])
                     app.setRom(front::Rom { droppedFile, front::ResourceLoader::loadRom(droppedFile) });
                     app.reset();
                 }
-                catch(const std::exception&) { } // Ignore invalid files to not crash the emulator
+                catch(const std::exception& e) 
+                {
+                    std::cerr << std::format("Invalid ROM file: {}\n", e.what()); // Ignore invalid files to not crash the emulator
+                }
 
                 SDL_free(droppedFile);
             }

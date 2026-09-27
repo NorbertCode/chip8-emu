@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <emscripten.h>
 #include <exception>
+#include <format>
 #include <iostream>
 #include <string_view>
 
@@ -98,7 +99,10 @@ int main()
                     app->setRom(front::Rom { droppedFile, front::ResourceLoader::loadRom(droppedFile) });
                     app->reset();
                 }
-                catch(const std::exception&) { } // Ignore invalid files to not crash the emulator
+                catch(const std::exception& e) 
+                {
+                    std::cerr << std::format("Invalid ROM file: {}\n", e.what()); // Ignore invalid files to not crash the emulator
+                }
 
                 SDL_free(droppedFile); 
             }
