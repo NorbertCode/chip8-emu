@@ -154,6 +154,8 @@ namespace chip8::front
 
     void Application::setRom(Rom newRom)
     {
+        reset();
+
         rom = std::move(newRom);
         chip8.loadRom(rom.content);
     }
