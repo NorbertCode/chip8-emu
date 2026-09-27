@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 
         app.reset();
 
-        app.getInput().addOnEventCallback([&app](const SDL_Event& event) {
+        app.attachCallbackToInput([&app](const SDL_Event& event) {
             if (event.type == SDL_DROPFILE)
             {
                 char* droppedFile = event.drop.file;

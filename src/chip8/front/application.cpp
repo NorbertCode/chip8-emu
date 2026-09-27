@@ -169,9 +169,9 @@ namespace chip8::front
         breakpoints.erase(line);
     }
 
-    Input& Application::getInput()
+    void Application::attachCallbackToInput(std::function<void(const SDL_Event&)> callback)
     {
-        return input;
+        input.addOnEventCallback(std::move(callback));
     }
 
     void Application::writeStorage(std::span<const std::uint8_t, 16> data)

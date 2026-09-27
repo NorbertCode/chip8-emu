@@ -40,7 +40,7 @@ namespace chip8::front
         void addBreakpoint(std::uint16_t line);
         void removeBreakpoint(std::uint16_t line);
 
-        Input& getInput();
+        void attachCallbackToInput(std::function<void(const SDL_Event&)> callback);
 
     private:
         core::Chip8 chip8;
