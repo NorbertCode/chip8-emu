@@ -1,7 +1,6 @@
 add_executable(
     chip8
     main.cpp
-    desktopLoader.cpp
 )
 
 include(FetchContent)
