@@ -1,4 +1,6 @@
 #include "chip8.hpp"
+#include "memory/memory.hpp"
+#include "peripherals/display.hpp"
 
 namespace chip8::core
 {
@@ -59,5 +61,12 @@ namespace chip8::core
     void Chip8::loadFont()
     {
         memory.forceWriteBytes(0x0, FONT_DATA);
+    }
+
+    void Chip8::loadConfigs(Quirks quirks, MemoryConfig memoryConfig, DisplayConfig displayConfig)
+    {
+        processor.setQuirks(quirks);
+        memory.setMemoryConfig(memoryConfig);
+        display.setDisplayConfig(displayConfig);
     }
 }

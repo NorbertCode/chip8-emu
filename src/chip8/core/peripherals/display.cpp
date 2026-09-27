@@ -150,4 +150,11 @@ namespace chip8::core
         const auto remainingEnd = std::shift_right(display.begin(), display.end(), static_cast<std::ptrdiff_t>(pixels * width));
         std::fill(display.begin(), remainingEnd, std::uint8_t{0});
     }
+
+    void Display::setDisplayConfig(DisplayConfig config)
+    {
+        setWidth(config.width);
+        setHeight(config.height);
+        setResolutionMode(config.defaultMode);
+    }
 }

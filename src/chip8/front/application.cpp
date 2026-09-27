@@ -154,6 +154,12 @@ namespace chip8::front
         chip8.loadRom(rom.content);
     }
 
+    void Application::setConfigs(Configs newConfigs)
+    {
+        configs = std::move(newConfigs);
+        chip8.loadConfigs(configs.quirks, configs.memoryConfig, configs.displayConfig);
+    }
+
     void Application::attachCallbackToInput(std::function<void(const SDL_Event&)> callback)
     {
         input.addOnEventCallback(std::move(callback));

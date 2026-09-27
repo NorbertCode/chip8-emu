@@ -63,6 +63,15 @@ namespace chip8::core
         std::ranges::fill(memory, std::uint8_t{0});
     }
 
+    void Memory::setMemoryConfig(MemoryConfig config)
+    {
+        if (config.reservedEnd >= config.programEnd)
+            return;
+
+        memoryConfig = config;
+        memory.resize(memoryConfig.programEnd);
+    }
+
     const MemoryConfig& Memory::getMemoryConfig() const
     {
         return memoryConfig;

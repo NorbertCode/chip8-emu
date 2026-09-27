@@ -30,6 +30,7 @@ namespace chip8::core
 
         void clear();
 
+        void setMemoryConfig(MemoryConfig config);
         const MemoryConfig& getMemoryConfig() const;
 
     private:

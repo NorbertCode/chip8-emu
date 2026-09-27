@@ -4,6 +4,7 @@
 #include "memory/storage.hpp"
 #include "peripherals/display.hpp"
 #include "peripherals/keyboard.hpp"
+#include "processor/quirks.hpp"
 #include <span>
 
 namespace chip8::core
@@ -23,6 +24,8 @@ namespace chip8::core
         void loadRom(std::span<const std::uint8_t> newRom);
 
         void loadFont();
+
+        void loadConfigs(Quirks quirks, MemoryConfig memoryConfig, DisplayConfig displayConfig);
 
     private:
         Memory memory;

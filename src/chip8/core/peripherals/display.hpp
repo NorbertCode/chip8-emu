@@ -46,6 +46,8 @@ namespace chip8::core
         void scrollRight(std::uint8_t pixels, bool loresWholePixelScrolling = false);
         void scrollDown(std::uint8_t pixels, bool loresWholePixelScrolling = false);
 
+        void setDisplayConfig(DisplayConfig config);
+
     private:
         std::vector<std::uint8_t> display;
 

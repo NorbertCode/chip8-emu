@@ -1,4 +1,5 @@
 #include "processor.hpp"
+#include "processor/quirks.hpp"
 #include <algorithm>
 
 namespace chip8::core
@@ -129,6 +130,11 @@ namespace chip8::core
                 }
                 break;
         }
+    }
+
+    void Processor::setQuirks(Quirks newQuirks)
+    {
+        quirks = newQuirks;
     }
 
     void Processor::reset()

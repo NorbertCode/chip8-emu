@@ -32,6 +32,7 @@ namespace chip8::core
         std::uint8_t getDelayTimer() const { return delayTimer; }
         std::uint8_t getSoundTimer() const { return soundTimer; }
 
+        void setQuirks(Quirks newQuirks);
         const Quirks& getQuirks() const { return quirks; }
         Quirks& getQuirks() { return quirks; }
 

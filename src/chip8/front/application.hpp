@@ -35,6 +35,7 @@ namespace chip8::front
         void setRunning(bool value);
 
         void setRom(Rom newRom);
+        void setConfigs(Configs newConfigs);
 
         void attachCallbackToInput(std::function<void(const SDL_Event&)> callback);
 
