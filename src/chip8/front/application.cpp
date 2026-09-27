@@ -23,16 +23,16 @@
 namespace chip8::front
 {
     Application::Application(Configs configs, Rom rom)
-        : chip8(configs.quirks, configs.memoryConfig, configs.displayConfig, [this](std::span<const std::uint8_t, 16> data) { writeStorage(data); }),
-        renderer(configs.displayConfig.width, configs.displayConfig.height, 
-                 configs.applicationConfig.windowWidth, configs.applicationConfig.windowHeight, 
-                 configs.applicationConfig.foregroundColor, configs.applicationConfig.backgroundColor),
-        input(chip8.getKeyboard(), configs.applicationConfig.keyMap),
-        audio(configs.applicationConfig.audioFrequency),
-        processorTime(1000.0 / configs.applicationConfig.loopFrequency),
-        timerTime(1000.0 / configs.applicationConfig.timerFrequency),
-        displayTime(1000.0 / configs.applicationConfig.displayFrequency),
-        configs(std::move(configs)),
+        : configs(std::move(configs)),
+        chip8(this->configs.quirks, this->configs.memoryConfig, this->configs.displayConfig, [this](std::span<const std::uint8_t, 16> data) { writeStorage(data); }),
+        renderer(this->configs.displayConfig.width, this->configs.displayConfig.height, 
+                 this->configs.applicationConfig.windowWidth, this->configs.applicationConfig.windowHeight, 
+                 this->configs.applicationConfig.foregroundColor, this->configs.applicationConfig.backgroundColor),
+        input(chip8.getKeyboard(), this->configs.applicationConfig.keyMap),
+        audio(this->configs.applicationConfig.audioFrequency),
+        processorTime(1000.0 / this->configs.applicationConfig.loopFrequency),
+        timerTime(1000.0 / this->configs.applicationConfig.timerFrequency),
+        displayTime(1000.0 / this->configs.applicationConfig.displayFrequency),
         rom(std::move(rom))
     {
         chip8.getStorage().setData(ResourceLoader::readStorage(this->rom.path));
