@@ -18,7 +18,7 @@ target_link_options(chip8_wasm PRIVATE
     "-sFORCE_FILESYSTEM=1"
     "-sEXPORTED_RUNTIME_METHODS=ccall"
     "-fwasm-exceptions"
-    "--preload-file=${CMAKE_SOURCE_DIR}/configs/emulator@/configs"
+    "--preload-file=${CMAKE_SOURCE_DIR}/configs/emulator@/configs/emulator"
 )
 
 target_include_directories(chip8_wasm PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
