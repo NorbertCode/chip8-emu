@@ -3,6 +3,7 @@
 #include "debugger/debugger.hpp"
 #include <functional>
 #include <imgui.h>
+#include <string>
 
 namespace chip8::front
 {
