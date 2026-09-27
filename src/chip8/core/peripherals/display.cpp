@@ -3,7 +3,7 @@
 
 namespace chip8::core
 {
-    Display::Display(const DisplayConfig& displayConfig) 
+    Display::Display(DisplayConfig displayConfig) 
         : width(displayConfig.width), height(displayConfig.height), mode(displayConfig.defaultMode)
     {
         display.resize(static_cast<size_t>(width * height), 0x0);

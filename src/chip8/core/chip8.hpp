@@ -11,7 +11,7 @@ namespace chip8::core
     class Chip8
     {
     public:
-        Chip8(const Quirks& quirks, const MemoryConfig& memoryConfig, const DisplayConfig& displayConfig, std::function<void(std::span<const std::uint8_t, 16>)> onStorageWriteCallback);
+        Chip8(Quirks quirks, MemoryConfig memoryConfig, DisplayConfig displayConfig, std::function<void(std::span<const std::uint8_t, 16>)> onStorageWriteCallback);
 
         Processor& getProcessor() { return processor; }
         Memory& getMemory() { return memory; }

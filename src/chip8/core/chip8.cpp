@@ -38,7 +38,7 @@ namespace chip8::core
         0xFF, 0xFF, 0xC0, 0xC0, 0xFF, 0xFF, 0xC0, 0xC0, 0xC0, 0xC0  // Hires F
     };
 
-    Chip8::Chip8(const Quirks& quirks, const MemoryConfig& memoryConfig, const DisplayConfig& displayConfig, std::function<void(std::span<const std::uint8_t, 16>)> onStorageWriteCallback)
+    Chip8::Chip8(Quirks quirks, MemoryConfig memoryConfig, DisplayConfig displayConfig, std::function<void(std::span<const std::uint8_t, 16>)> onStorageWriteCallback)
         : memory(memoryConfig, FONT_DATA), display(displayConfig), processor(memory, storage, display, keyboard, quirks, memoryConfig.reservedEnd) 
     {
         storage.setOnWriteCallback(std::move(onStorageWriteCallback));

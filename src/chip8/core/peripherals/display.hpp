@@ -23,7 +23,7 @@ namespace chip8::core
     class Display
     {
     public:
-        Display(const DisplayConfig& displayConfig);
+        Display(DisplayConfig displayConfig);
 
         bool getPixel(std::uint8_t x, std::uint8_t y) const;
         std::span<const std::uint8_t> getDisplay() const;
