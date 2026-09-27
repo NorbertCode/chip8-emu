@@ -46,9 +46,6 @@ namespace chip8::front
         Audio audio;
         Debugger debugger;
 
-        Configs configs;
-        Rom rom;
-
         double processorTime;
         double timerTime;
         double displayTime;
@@ -57,6 +54,9 @@ namespace chip8::front
         double timerAccumulator = 0.0;
         double displayAccumulator = 0.0;
         std::chrono::time_point<std::chrono::high_resolution_clock> previousTime = std::chrono::high_resolution_clock::now();
+
+        Configs configs;
+        Rom rom;
 
         bool running = false;
 
