@@ -4,6 +4,7 @@
 #include "processor/quirks.hpp"
 #include <cstdint>
 #include <array>
+#include <filesystem>
 #include <string>
 
 namespace chip8::front
@@ -18,6 +19,8 @@ namespace chip8::front
         int windowHeight = 0;
         std::uint32_t foregroundColor = 0;
         std::uint32_t backgroundColor = 0;
+        std::filesystem::path romsPath = "roms/";
+        std::filesystem::path configsPath = "configs/emulator";
         std::array<std::string, 16> keyMap{};
     };
 
