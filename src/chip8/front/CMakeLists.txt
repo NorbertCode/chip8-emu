@@ -18,6 +18,8 @@ add_library(
     debugger/widgets/flowControlWidget.cpp
     debugger/widgets/breakpointsWidget.cpp
     debugger/widgets/configurationWidget.cpp
+    debugger/widgets/configSelectorWidget.cpp
+    debugger/widgets/romSelectorWidget.cpp
 )
 
 if (NOT EMSCRIPTEN)

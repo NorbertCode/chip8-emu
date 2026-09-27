@@ -5,11 +5,13 @@
 #include "components/renderer.hpp"
 #include "debugger/debuggerBuilder.hpp"
 #include "debugger/widgets/breakpointsWidget.hpp"
+#include "debugger/widgets/configSelectorWidget.hpp"
 #include "debugger/widgets/configurationWidget.hpp"
 #include "debugger/widgets/flowControlWidget.hpp"
 #include "debugger/widgets/memoryViewerWidget.hpp"
 #include "debugger/widgets/disassemblyViewerWidget.hpp"
 #include "debugger/widgets/registersViewWidget.hpp"
+#include "debugger/widgets/romSelectorWidget.hpp"
 #include "debugger/widgets/spritePreviewWidget.hpp"
 #include "debugger/widgets/stackViewerWidget.hpp"
 #include "debugger/widgets/viewportWidget.hpp"
@@ -54,6 +56,8 @@ namespace chip8::front
             .addWidget(std::make_unique<FlowControlWidget>(*this, true))
             .addWidget(std::make_unique<BreakpointsWidget>(debugger))
             .addWidget(std::make_unique<ConfigurationWidget>(chip8, renderer))
+            .addWidget(std::make_unique<ConfigSelectorWidget>(*this, this->configs.applicationConfig.configsPath))
+            .addWidget(std::make_unique<RomSelectorWidget>(*this, this->configs.applicationConfig.romsPath))
             .build();
     }
 
