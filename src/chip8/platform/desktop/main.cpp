@@ -1,15 +1,54 @@
+#include <argparse/argparse.hpp>
 #include <exception>
 #include <iostream>
-#include "desktopLoader.hpp"
 #include "application.hpp"
+#include "loading/configParser.hpp"
+#include "loading/resourceLoader.hpp"
 
 using namespace chip8;
+
+struct Args
+{
+    std::string romPath;
+    std::string configPath;
+};
+
+Args parseArgs(const std::string& name, int argc, char** argv)
+{
+    argparse::ArgumentParser parser(name);
+
+    parser.add_argument("-r", "--rom")
+        .help("path to the ROM file to execute")
+        .default_value("");
+
+    parser.add_argument("-c", "--config")
+        .help("path to the TOML configuration file to use")
+        .default_value("./configs/emulator/example.toml");
+
+    try
+    {
+        parser.parse_args(argc, argv);
+    }
+    catch(const std::exception& e)
+    {
+        std::stringstream error;
+
+        error << "Failed to parse arguments: " << e.what() << "\n\n" << parser;
+
+        throw std::runtime_error(error.str());
+    }
+    
+    return Args {
+        .romPath = parser.get<std::string>("--rom"),
+        .configPath = parser.get<std::string>("--config")
+    };
+}
 
 int main(int argc, char* argv[])
 {
     try
     {
-        front::DesktopLoader loader("CHIP8", argc, argv);
+        Args args = parseArgs("CHIP8-EMU", argc, argv);
 
         if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
         {
@@ -17,25 +56,27 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        auto onStorageWriteCallback = [&loader](std::span<const std::uint8_t, 16> data) {
-            loader.writeStorage(data);
-        };
+        front::Application app(
+            front::ConfigParser::parseConfig(front::ResourceLoader::loadConfig(args.configPath)),
+            front::Rom { args.romPath, front::ResourceLoader::loadRom(args.romPath) }
+        );
 
-        core::Chip8 chip8(loader.getQuirks(), loader.getMemoryConfig(), loader.getDisplayConfig(), onStorageWriteCallback);
-        chip8.getStorage().setData(loader.readStorage());
-        chip8.loadRom(loader.getRom());
-
-        front::Application app(chip8, loader.getApplicationConfig());
         app.reset();
 
-        app.getInput().addOnEventCallback([&loader, &chip8, &app](const SDL_Event& event) {
+        app.attachCallbackToInput([&app](const SDL_Event& event) {
             if (event.type == SDL_DROPFILE)
             {
                 char* droppedFile = event.drop.file;
                 
-                loader.loadRom(droppedFile);
-                chip8.loadRom(loader.getRom());
-                app.reset();
+                try
+                {
+                    app.setRom(front::Rom { droppedFile, front::ResourceLoader::loadRom(droppedFile) });
+                    app.reset();
+                }
+                catch(const std::exception& e) 
+                {
+                    std::cerr << std::format("Invalid ROM file: {}\n", e.what()); // Ignore invalid files to not crash the emulator
+                }
 
                 SDL_free(droppedFile);
             }

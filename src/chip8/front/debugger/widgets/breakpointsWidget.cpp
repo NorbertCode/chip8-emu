@@ -1,13 +1,13 @@
 #include "breakpointsWidget.hpp"
-#include "application.hpp"
+#include "debugger/debugger.hpp"
 #include <imgui.h>
 #include <imgui_stdlib.h>
 #include <string>
 
 namespace chip8::front
 {
-    BreakpointsWidget::BreakpointsWidget(Application& application)
-        : application(application) { }
+    BreakpointsWidget::BreakpointsWidget(Debugger& debugger)
+        : debugger(debugger) { }
 
     void BreakpointsWidget::render()
     {
@@ -17,16 +17,16 @@ namespace chip8::front
             line = std::stoul(input, nullptr, 16);
 
         if (ImGui::Button("Add"))
-            application.get().addBreakpoint(line);
+            debugger.get().addBreakpoint(line);
 
         ImGui::SameLine();
 
         if (ImGui::Button("Remove"))
-            application.get().removeBreakpoint(line);
+            debugger.get().removeBreakpoint(line);
 
         ImGui::BeginGroup();
 
-        for (std::uint16_t line : application.get().getBreakpoints())
+        for (std::uint16_t line : debugger.get().getBreakpoints())
         {
             ImGui::Text("0x%04X", line);
         }

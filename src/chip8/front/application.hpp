@@ -1,11 +1,11 @@
 #pragma once
-#include <array>
 #include <chrono>
 #include <cstdint>
+#include <filesystem>
 #include <functional>
-#include <string>
-#include <unordered_set>
+#include <vector>
 #include "chip8.hpp"
+#include "configs.hpp"
 #include "components/renderer.hpp"
 #include "components/input.hpp"
 #include "components/audio.hpp"
@@ -13,23 +13,17 @@
 
 namespace chip8::front
 {
-    struct ApplicationConfig
+
+    struct Rom
     {
-        double loopFrequency = 0;
-        double timerFrequency = 0;
-        double displayFrequency = 0;
-        double audioFrequency = 0;
-        int windowWidth = 0;
-        int windowHeight = 0;
-        std::uint32_t foregroundColor = 0;
-        std::uint32_t backgroundColor = 0;
-        std::array<std::string, 16> keyMap{};
+        std::filesystem::path path = "";
+        std::vector<std::uint8_t> content{};
     };
 
     class Application
     {
     public:
-        Application(core::Chip8& chip8, ApplicationConfig config);
+        Application(Configs configs, Rom rom);
 
         void reset();
         void chipStep();
@@ -40,19 +34,17 @@ namespace chip8::front
         bool isRunning() const;
         void setRunning(bool value);
 
-        const std::unordered_set<std::uint16_t>& getBreakpoints() const;
-        void addBreakpoint(std::uint16_t line);
-        void removeBreakpoint(std::uint16_t line);
+        void setRom(Rom newRom);
 
-        Input& getInput();
+        void attachCallbackToInput(std::function<void(const SDL_Event&)> callback);
 
     private:
+        core::Chip8 chip8;
+
         Renderer renderer;
         Input input;
         Audio audio;
         Debugger debugger;
-
-        std::reference_wrapper<core::Chip8> chip8;
 
         double processorTime;
         double timerTime;
@@ -63,9 +55,11 @@ namespace chip8::front
         double displayAccumulator = 0.0;
         std::chrono::time_point<std::chrono::high_resolution_clock> previousTime = std::chrono::high_resolution_clock::now();
 
-        bool running = false;
-        std::unordered_set<std::uint16_t> breakpoints;
+        Configs configs;
+        Rom rom;
 
-        ApplicationConfig applicationConfig;
+        bool running = false;
+
+        void writeStorage(std::span<const std::uint8_t, 16> data);
     };
 }

@@ -551,7 +551,7 @@ The frontend's main job is to provide the user a way to interact with the emulat
 
 I decided to split the `SDL2` code into multiple classes to improve readability and separate concerns between different classes. Here is the list of the classes:
 
-- `Application` - A facade for all components of the frontend (including the `Debugger`). It manages them and handles their connection to the emulator's core logic.
+- `Application` - An orchestrator for all components of the frontend (including the `Debugger`). It manages the application's state and handles connection of the components to the emulator's core logic.
 
 - `Renderer` - Handles `SDL2` code responsible for displaying the CHIP-8 display. It maintains ownership over `SDL_Renderer` and `SDL_Window`. This requires it to have a custom destructor, which means it also have to use Rule of Five. Every frame it applies to contents of the CHIP-8 display to an `SDL_Texture` it owns.
 
@@ -561,11 +561,11 @@ I decided to split the `SDL2` code into multiple classes to improve readability 
 
 The above classes are responsible for using `SDL2` during the program's runtime. There are also two classes which are important for launching the application:
 
-- `Loader` - This class provides a connection to the user's OS. It fetches configs and ROMs from the user's disk based on their paths. It uses `std::filesystem` to be OS-agnostic and the `toml++` library to parse configuration files.
+- `ResourceLoader` - Provides static methods for access to the user's OS for IO operations. It fetches configs and ROMs from the users disk, and allows for reading and writing RPL storage to a file. It uses `std::filesystem` to be OS-agnostic.
 
-- `DesktopLoader` - A class inheriting from `Loader`. It provides specific functionality for the desktop version of the application - it uses `argparse` to parse command line arguments and loads configs and ROMs based on them.
+- `ConfigParser` - Parser strings formatted as TOML to configuration structus used in the emulator.
 
-There also existing two `main.cpp` files - one for each platform. They use the elements above and initialize `SDL2` to run the program. The one for WebAssembly also sets up the webpage for inputting ROMs by drag-and-drop.
+There also existing two `main.cpp` files - one for each platform. They use the elements above and initialize `SDL2` to run the program. The one for WebAssembly also sets up the webpage for inputting ROMs by drag-and-drop, and the one for desktop handles CLI argument parsing using `argparse`.
 
 ## Debugger
 
@@ -575,7 +575,7 @@ It uses `ImGui` to create its interface. Despite `ImGui` being an immediate mode
 
 Here is a list of classes:
 
-- `Debugger` - Manages `ImGui` and `DebugWidgets`. Due to how `ImGui` works it must use Rule of Five, and due to the use of the Builder pattern it defines move operators, instead of just deleting them.
+- `Debugger` - Manages the `DebugWidgets` and handles breakpoints. Due to how `ImGui` works it must use Rule of Five, and due to the use of the Builder pattern it defines move operators, instead of just deleting them.
 
 - `DebuggerBuilder` - Allows for building of `Debugger` objects based on added `DebugWidgets`.
 

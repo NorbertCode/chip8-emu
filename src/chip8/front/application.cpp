@@ -1,5 +1,8 @@
 #include "application.hpp"
+#include "chip8.hpp"
+#include "configs.hpp"
 #include "components/input.hpp"
+#include "components/renderer.hpp"
 #include "debugger/debuggerBuilder.hpp"
 #include "debugger/widgets/breakpointsWidget.hpp"
 #include "debugger/widgets/configurationWidget.hpp"
@@ -10,23 +13,31 @@
 #include "debugger/widgets/spritePreviewWidget.hpp"
 #include "debugger/widgets/stackViewerWidget.hpp"
 #include "debugger/widgets/viewportWidget.hpp"
+#include "loading/resourceLoader.hpp"
 #include <chrono>
 #include <cstdint>
 #include <memory>
 #include <span>
+#include <utility>
 
 namespace chip8::front
 {
-    Application::Application(core::Chip8& chip8, ApplicationConfig config)
-        : renderer(chip8.getDisplay().getWidth(), chip8.getDisplay().getHeight(), config.windowWidth, config.windowHeight, config.foregroundColor, config.backgroundColor), 
-        input(chip8.getKeyboard(), std::span<const std::string, 16>(config.keyMap)),
-        audio(config.audioFrequency),
-        chip8(chip8), 
-        processorTime(1000.0 / config.loopFrequency), 
-        timerTime(1000.0 / config.timerFrequency),
-        displayTime(1000.0 / config.displayFrequency),
-        applicationConfig(std::move(config))
+    Application::Application(Configs configs, Rom rom)
+        : chip8(configs.quirks, configs.memoryConfig, configs.displayConfig, [this](std::span<const std::uint8_t, 16> data) { writeStorage(data); }),
+        renderer(configs.displayConfig.width, configs.displayConfig.height, 
+                 configs.applicationConfig.windowWidth, configs.applicationConfig.windowHeight, 
+                 configs.applicationConfig.foregroundColor, configs.applicationConfig.backgroundColor),
+        input(chip8.getKeyboard(), configs.applicationConfig.keyMap),
+        audio(configs.applicationConfig.audioFrequency),
+        processorTime(1000.0 / configs.applicationConfig.loopFrequency),
+        timerTime(1000.0 / configs.applicationConfig.timerFrequency),
+        displayTime(1000.0 / configs.applicationConfig.displayFrequency),
+        configs(std::move(configs)),
+        rom(std::move(rom))
     {
+        chip8.getStorage().setData(ResourceLoader::readStorage(this->rom.path));
+        chip8.loadRom(this->rom.content);
+
         auto onEventCallback = [this](const SDL_Event& event) {
             debugger.processEvent(event);
         };
@@ -41,7 +52,7 @@ namespace chip8::front
             .addWidget(std::make_unique<RegistersViewerWidget>(chip8.getProcessor()))
             .addWidget(std::make_unique<SpritePreviewWidget>(chip8.getProcessor(), chip8.getMemory()))
             .addWidget(std::make_unique<FlowControlWidget>(*this, true))
-            .addWidget(std::make_unique<BreakpointsWidget>(*this))
+            .addWidget(std::make_unique<BreakpointsWidget>(debugger))
             .addWidget(std::make_unique<ConfigurationWidget>(chip8, renderer))
             .build();
     }
@@ -55,17 +66,17 @@ namespace chip8::front
 
         running = false;
 
-        chip8.get().getDisplay().clear();
-        chip8.get().getMemory().clear();
-        chip8.get().getProcessor().reset();
+        chip8.getDisplay().clear();
+        chip8.getMemory().clear();
+        chip8.getProcessor().reset();
 
-        chip8.get().loadFont();
-        chip8.get().loadRom(chip8.get().getRom());
+        chip8.loadFont();
+        chip8.loadRom(chip8.getRom());
     }
 
     void Application::chipStep()
     {
-        chip8.get().getProcessor().step();
+        chip8.getProcessor().step();
     }
 
     void Application::tick()
@@ -85,7 +96,7 @@ namespace chip8::front
         if (shouldQuit()) 
             return;
 
-        if (chip8.get().getProcessor().getSoundTimer() > 0)
+        if (chip8.getProcessor().getSoundTimer() > 0)
             audio.enable();
         else
             audio.disable();
@@ -96,13 +107,13 @@ namespace chip8::front
 
             processorAccumulator -= processorTime;
 
-            if (breakpoints.contains(chip8.get().getProcessor().getProgramCounter()))
-                running = false;
+            if (debugger.hasBreakpoint(chip8.getProcessor().getProgramCounter()))
+                setRunning(false);
         }
 
         while (timerAccumulator >= timerTime)
         {
-            chip8.get().getProcessor().tickTimers();
+            chip8.getProcessor().tickTimers();
 
             timerAccumulator -= timerTime;
         }
@@ -112,11 +123,11 @@ namespace chip8::front
             renderer.clearRenderer();
 
             debugger.draw();
-            renderer.drawDisplay(chip8.get().getDisplay());
+            renderer.drawDisplay(chip8.getDisplay());
             debugger.render(renderer.getRenderer());
             renderer.render();
 
-            chip8.get().getProcessor().resetWaitingForVBlank();
+            chip8.getProcessor().resetWaitingForVBlank();
 
             displayAccumulator -= displayTime;
         }
@@ -137,23 +148,19 @@ namespace chip8::front
         running = value;
     }
 
-    const std::unordered_set<std::uint16_t>& Application::getBreakpoints() const
+    void Application::setRom(Rom newRom)
     {
-        return breakpoints;
+        rom = std::move(newRom);
+        chip8.loadRom(rom.content);
     }
 
-    void Application::addBreakpoint(std::uint16_t line)
+    void Application::attachCallbackToInput(std::function<void(const SDL_Event&)> callback)
     {
-        breakpoints.insert(line);
+        input.addOnEventCallback(std::move(callback));
     }
 
-    void Application::removeBreakpoint(std::uint16_t line)
+    void Application::writeStorage(std::span<const std::uint8_t, 16> data)
     {
-        breakpoints.erase(line);
-    }
-
-    Input& Application::getInput()
-    {
-        return input;
+        ResourceLoader::writeStorage(rom.path, data);
     }
 }

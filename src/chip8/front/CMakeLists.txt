@@ -1,7 +1,8 @@
 add_library(
     chip8_front
     application.cpp
-    loader.cpp
+    loading/configParser.cpp
+    loading/resourceLoader.cpp
     components/renderer.cpp
     components/input.cpp
     components/audio.cpp

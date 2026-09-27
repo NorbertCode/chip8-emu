@@ -1,10 +1,12 @@
 #include "application.hpp"
-#include "chip8.hpp"
-#include "loader.hpp"
+#include "loading/configParser.hpp"
+#include "loading/resourceLoader.hpp"
 #include <SDL.h>
 #include <emscripten.h>
 #include <exception>
+#include <format>
 #include <iostream>
+#include <string_view>
 
 using namespace chip8;
 
@@ -66,6 +68,8 @@ EM_JS(void, hijackDropZone, (), {
     });
 });
 
+constexpr std::string_view DEFAULT_CONFIG = "configs/cosmac.toml";
+
 int main()
 {
     try
@@ -78,29 +82,29 @@ int main()
 
         hijackDropZone();
 
-        front::Loader* loader = new front::Loader; // NOLINT: Object must stay on the heap to work with WASM
-        loader->loadConfig("configs/cosmac.toml");
+        front::Application* app = new front::Application( // NOLINT: Object must stay on the heap to work with WASM
+            front::ConfigParser::parseConfig(front::ResourceLoader::loadConfig(DEFAULT_CONFIG)),
+            front::Rom{}
+        ); 
 
-        auto onStorageWriteCallback = [loader](std::span<const std::uint8_t, 16> data) {
-            loader->writeStorage(data);
-        };
-
-        core::Chip8* chip8 = new core::Chip8(loader->getQuirks(), loader->getMemoryConfig(), loader->getDisplayConfig(), onStorageWriteCallback); // NOLINT: Object must stay on the heap to work with WASM
-        chip8->getStorage().setData(loader->readStorage());
-
-        front::Application* app = new front::Application(*chip8, loader->getApplicationConfig()); // NOLINT: Object must stay on the heap to work with WASM
         app->reset();
 
-        app->getInput().addOnEventCallback([loader, chip8, app](const SDL_Event& event) {
+        app->attachCallbackToInput([app](const SDL_Event& event) {
             if (event.type == SDL_DROPFILE)
             {
                 char* droppedFile = event.drop.file;
                 
-                loader->loadRom(droppedFile);
-                chip8->loadRom(loader->getRom());
-                app->reset();
+                try
+                {
+                    app->setRom(front::Rom { droppedFile, front::ResourceLoader::loadRom(droppedFile) });
+                    app->reset();
+                }
+                catch(const std::exception& e) 
+                {
+                    std::cerr << std::format("Invalid ROM file: {}\n", e.what()); // Ignore invalid files to not crash the emulator
+                }
 
-                SDL_free(droppedFile);
+                SDL_free(droppedFile); 
             }
         });
 
