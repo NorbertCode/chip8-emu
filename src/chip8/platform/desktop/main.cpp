@@ -1,6 +1,7 @@
 #include <argparse/argparse.hpp>
 #include <exception>
 #include <iostream>
+#include <vector>
 #include "application.hpp"
 #include "loading/configParser.hpp"
 #include "loading/resourceLoader.hpp"
@@ -58,7 +59,7 @@ int main(int argc, char* argv[])
 
         front::Application app(
             front::ConfigParser::parseConfig(front::ResourceLoader::loadConfig(args.configPath)),
-            front::Rom { args.romPath, front::ResourceLoader::loadRom(args.romPath) }
+            front::Rom { args.romPath, args.romPath.empty() ? std::vector<std::uint8_t>{} : front::ResourceLoader::loadRom(args.romPath) }
         );
 
         app.reset();
