@@ -3,6 +3,7 @@
 #include <imgui_internal.h>
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_sdlrenderer2.h>
+#include <unordered_set>
 #include <utility>
 
 namespace chip8::front
@@ -50,6 +51,26 @@ namespace chip8::front
         }
 
         return *this;
+    }
+
+    const std::unordered_set<std::uint16_t>& Debugger::getBreakpoints() const
+    {
+        return breakpoints;
+    }
+
+    bool Debugger::hasBreakpoint(std::uint16_t line) const
+    {
+        return breakpoints.contains(line);
+    }
+
+    void Debugger::addBreakpoint(std::uint16_t line)
+    {
+        breakpoints.insert(line);
+    }
+
+    void Debugger::removeBreakpoint(std::uint16_t line)
+    {
+        breakpoints.erase(line);
     }
 
     void Debugger::processEvent(const SDL_Event& event)

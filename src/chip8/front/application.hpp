@@ -2,7 +2,7 @@
 #include <chrono>
 #include <cstdint>
 #include <filesystem>
-#include <unordered_set>
+#include <functional>
 #include <vector>
 #include "chip8.hpp"
 #include "configs.hpp"
@@ -36,10 +36,6 @@ namespace chip8::front
 
         void setRom(Rom newRom);
 
-        const std::unordered_set<std::uint16_t>& getBreakpoints() const;
-        void addBreakpoint(std::uint16_t line);
-        void removeBreakpoint(std::uint16_t line);
-
         void attachCallbackToInput(std::function<void(const SDL_Event&)> callback);
 
     private:
@@ -63,7 +59,6 @@ namespace chip8::front
         std::chrono::time_point<std::chrono::high_resolution_clock> previousTime = std::chrono::high_resolution_clock::now();
 
         bool running = false;
-        std::unordered_set<std::uint16_t> breakpoints;
 
         void writeStorage(std::span<const std::uint8_t, 16> data);
     };

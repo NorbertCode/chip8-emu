@@ -52,7 +52,7 @@ namespace chip8::front
             .addWidget(std::make_unique<RegistersViewerWidget>(chip8.getProcessor()))
             .addWidget(std::make_unique<SpritePreviewWidget>(chip8.getProcessor(), chip8.getMemory()))
             .addWidget(std::make_unique<FlowControlWidget>(*this, true))
-            .addWidget(std::make_unique<BreakpointsWidget>(*this))
+            .addWidget(std::make_unique<BreakpointsWidget>(debugger))
             .addWidget(std::make_unique<ConfigurationWidget>(chip8, renderer))
             .build();
     }
@@ -107,8 +107,8 @@ namespace chip8::front
 
             processorAccumulator -= processorTime;
 
-            if (breakpoints.contains(chip8.getProcessor().getProgramCounter()))
-                running = false;
+            if (debugger.hasBreakpoint(chip8.getProcessor().getProgramCounter()))
+                setRunning(false);
         }
 
         while (timerAccumulator >= timerTime)
@@ -152,21 +152,6 @@ namespace chip8::front
     {
         rom = std::move(newRom);
         chip8.loadRom(rom.content);
-    }
-
-    const std::unordered_set<std::uint16_t>& Application::getBreakpoints() const
-    {
-        return breakpoints;
-    }
-
-    void Application::addBreakpoint(std::uint16_t line)
-    {
-        breakpoints.insert(line);
-    }
-
-    void Application::removeBreakpoint(std::uint16_t line)
-    {
-        breakpoints.erase(line);
     }
 
     void Application::attachCallbackToInput(std::function<void(const SDL_Event&)> callback)
