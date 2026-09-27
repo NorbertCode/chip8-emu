@@ -852,3 +852,5 @@ While working on this project I spent a lot of time looking for, and looking at 
 [CHIP-8 Research Facility](https://chip-8.github.io/)
 
 [chip8-test-suite, Tim "Timendus" Franssen](https://github.com/Timendus/chip8-test-suite)
+
+The included ROMs are public domain and come from: [Zophar's Domain](https://www.zophar.net/pdroms/chip8.html)
