@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -74,6 +75,7 @@ jobs:
 
   deploy-github:
     name: Deploy to GitHub
+    if: github.event_name == 'push'
     needs: [build, build-wasm]
     runs-on: ubuntu-latest
     steps:
@@ -94,6 +96,7 @@ jobs:
 
   deploy-itch:
     name: Deploy to itch.io
+    if: github.event_name == 'push'
     needs: [build, build-wasm]
     runs-on: ubuntu-latest
     steps:
