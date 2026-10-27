@@ -12,7 +12,7 @@ namespace disassembler::core
         return config.programStart;
     }
 
-    std::string Disassembler::disassemble(std::uint16_t instruction)
+    std::string Disassembler::disassemble(std::uint16_t instruction) const
     {
         const std::array<std::uint8_t, 4> nibbles = {
             static_cast<std::uint8_t>((instruction & 0xF000) >> 12),
@@ -123,7 +123,7 @@ namespace disassembler::core
         return std::format("0x{:04X}", instruction);
     }
 
-    std::vector<std::string> Disassembler::disassemble(std::span<const std::uint16_t> memory)
+    std::vector<std::string> Disassembler::disassemble(std::span<const std::uint16_t> memory) const
     {
         std::vector<std::string> output(memory.size());
 
