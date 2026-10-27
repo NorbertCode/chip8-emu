@@ -3,6 +3,7 @@ add_library(
     application.cpp
     loading/configParser.cpp
     loading/resourceLoader.cpp
+    loading/argumentParser.cpp
     components/renderer.cpp
     components/input.cpp
     components/audio.cpp
@@ -37,6 +38,7 @@ endif ()
 target_link_libraries(chip8_front PUBLIC 
     chip8_core
     disassembler_core
+    argparse
     tomlplusplus::tomlplusplus
     imgui
 )
