@@ -26,9 +26,6 @@ namespace chip8::front
         bool defaultModeExists = result["display"]["default_mode"].is_string();
         bool loresSpriteHandlingExists = result["quirks"]["lores_sprite_handling"].is_string();
 
-        if (!keymapTable)
-            throw std::runtime_error("Missing keymap in config.");
-
         configs.applicationConfig = {
             .loopFrequency = result["application"]["loop_frequency"].value_or(defaultConfigs.applicationConfig.loopFrequency),
             .timerFrequency = result["application"]["timer_frequency"].value_or(defaultConfigs.applicationConfig.timerFrequency),
@@ -40,7 +37,7 @@ namespace chip8::front
             .backgroundColor = result["application"]["background_color"].value_or(defaultConfigs.applicationConfig.backgroundColor),
             .romsPath = std::filesystem::path(result["application"]["roms_path"].value_or(defaultConfigs.applicationConfig.romsPath.string())),
             .configsPath = std::filesystem::path(result["application"]["configs_path"].value_or(defaultConfigs.applicationConfig.configsPath.string())),
-            .keyMap = parseKeyMap(*keymapTable)
+            .keyMap = keymapExists ? parseKeyMap(*keymapTable) : defaultConfigs.applicationConfig.keyMap
         };
 
         configs.memoryConfig = {
