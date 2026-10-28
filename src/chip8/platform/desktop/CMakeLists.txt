@@ -22,8 +22,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(tomlplusplus)
 
 target_link_libraries(chip8 PRIVATE
-    argparse
-    tomlplusplus::tomlplusplus
     chip8_front
     warnings
 )

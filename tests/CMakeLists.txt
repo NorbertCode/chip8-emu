@@ -14,11 +14,11 @@ set_target_properties(gtest gtest_main gmock gmock_main PROPERTIES EXPORT_COMPIL
 
 add_executable(
     run_tests
-    chip8/displayTest.cpp
-    chip8/memoryTest.cpp
-    chip8/storageTest.cpp
-    chip8/keyboardTest.cpp
-    chip8/processorTest.cpp
+    chip8/core/displayTest.cpp
+    chip8/core/memoryTest.cpp
+    chip8/core/storageTest.cpp
+    chip8/core/keyboardTest.cpp
+    chip8/core/processorTest.cpp
     disassembler/disassemblerTest.cpp
 )
 

@@ -21,8 +21,8 @@ namespace disassembler::core
 
         std::uint16_t getProgramStart() const;
 
-        std::string disassemble(std::uint16_t instruction);
-        std::vector<std::string> disassemble(std::span<const std::uint16_t> memory);
+        std::string disassemble(std::uint16_t instruction) const;
+        std::vector<std::string> disassemble(std::span<const std::uint16_t> memory) const;
 
         DisassemblerConfig& getConfig();
 
