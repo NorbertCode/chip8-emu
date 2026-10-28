@@ -336,7 +336,7 @@ CHIP-8 keyboard layout was different from the keyboards we use today. It looked 
 </tbody>
 </table>
 
-The most common mapping of this layout to today's keyboards (and the one used in the example config) looks like this:
+The most common mapping of this layout to today's keyboards (and the one used by default and in the example config) looks like this:
 
 <table>
 <tbody>
@@ -354,8 +354,6 @@ The most common mapping of this layout to today's keyboards (and the one used in
     </tr>
 </tbody>
 </table>
-
-The keymap **must** be defined in all configs. It is the one thing that does not have default values.
 
 ## Loading ROMs
 
