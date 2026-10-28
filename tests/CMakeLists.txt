@@ -19,7 +19,7 @@ add_executable(
     chip8/core/storageTest.cpp
     chip8/core/keyboardTest.cpp
     chip8/core/processorTest.cpp
-    disassembler/disassemblerTest.cpp
+    disassembler/core/disassemblerTest.cpp
 )
 
 target_link_libraries(
