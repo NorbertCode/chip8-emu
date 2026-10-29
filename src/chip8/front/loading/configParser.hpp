@@ -16,6 +16,7 @@ namespace chip8::front
     {
     public:
         static Configs parseConfig(std::string_view config);
+        static const Configs& getDefaultConfigs();
 
     private:
         template <typename T>

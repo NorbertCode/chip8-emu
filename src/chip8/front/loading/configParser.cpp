@@ -69,6 +69,11 @@ namespace chip8::front
         return configs;
     }
 
+    const Configs& ConfigParser::getDefaultConfigs()
+    {
+        return defaultConfigs;
+    }
+
     std::array<std::string, 16> ConfigParser::parseKeyMap(const toml::table& keyMap)
     {
         std::array<std::string, 16> keyArray(defaultConfigs.applicationConfig.keyMap);
