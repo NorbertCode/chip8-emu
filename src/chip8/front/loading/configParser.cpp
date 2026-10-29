@@ -22,6 +22,7 @@ namespace chip8::front
         Configs configs;
 
         toml::table* keymapTable = result["keymap"].as_table();
+
         bool keymapExists = keymapTable != nullptr;
         bool defaultModeExists = result["display"]["default_mode"].is_string();
         bool loresSpriteHandlingExists = result["quirks"]["lores_sprite_handling"].is_string();
@@ -79,8 +80,17 @@ namespace chip8::front
 
             std::string value = it->second.value_or("");
 
-            if (ec != std::errc() || key >= 16 || value.length() != 1)
-                throw std::runtime_error("Invalid key map configuration");
+            std::string errorMessage;
+
+            if (ec != std::errc())
+                errorMessage = std::format("Invalid key map configuration: key '{}' is not a valid hex digit", it->first.str());
+            else if (key >= 16)
+                errorMessage = std::format("Invalid key map configuration: key '{}' is out of range (must be 0-F)", it->first.str());
+            else if (value.length() != 1)
+                errorMessage = std::format("Invalid key map configuration: value for key '{}' must be a single character", it->first.str());
+
+            if (!errorMessage.empty())
+                throw std::runtime_error(errorMessage);
 
             keyArray[key] = it->second.value_or("");
         }
