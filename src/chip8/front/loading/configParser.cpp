@@ -71,7 +71,7 @@ namespace chip8::front
 
     std::array<std::string, 16> ConfigParser::parseKeyMap(const toml::table& keyMap)
     {
-        std::array<std::string, 16> keyArray;
+        std::array<std::string, 16> keyArray(defaultConfigs.applicationConfig.keyMap);
 
         for (auto it = keyMap.begin(); it != keyMap.end(); ++it)
         {
@@ -92,7 +92,7 @@ namespace chip8::front
             if (!errorMessage.empty())
                 throw std::runtime_error(errorMessage);
 
-            keyArray[key] = it->second.value_or("");
+            keyArray[key] = value;
         }
 
         return keyArray;
