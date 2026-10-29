@@ -50,7 +50,7 @@ namespace chip8::front
         configs.displayConfig = {
             .width = getValue(result["display"], "width", defaultConfigs.displayConfig.width),
             .height = getValue(result["display"], "height", defaultConfigs.displayConfig.height),
-            .defaultMode = defaultModeExists ? parseResolutionMode(result["display"]["default_mode"].value<std::string>().value()) : defaultConfigs.displayConfig.defaultMode // NOLINT(bugprone-unchecked-optional-access) Checked above
+            .defaultMode = defaultModeExists ? parseResolutionMode(getValue(result["display"], "default_mode", "")) : defaultConfigs.displayConfig.defaultMode // NOLINT(bugprone-unchecked-optional-access) Checked above
         };
 
         configs.quirks = {
@@ -63,7 +63,7 @@ namespace chip8::front
             .vfCollisionCounter = getValue(result["quirks"], "vf_collision_counter", defaultConfigs.quirks.vfCollisionCounter),
             .loresWholePixelScrolling = getValue(result["quirks"], "lores_whole_pixel_scrolling", defaultConfigs.quirks.loresWholePixelScrolling),
             .waitForVBlank = getValue(result["quirks"], "wait_for_vblank", defaultConfigs.quirks.waitForVBlank),
-            .loresSpriteHandling = loresSpriteHandlingExists ? parseLoresSpriteHandling(result["quirks"]["lores_sprite_handling"].value<std::string>().value()) : defaultConfigs.quirks.loresSpriteHandling // NOLINT(bugprone-unchecked-optional-access) Checked above
+            .loresSpriteHandling = loresSpriteHandlingExists ? parseLoresSpriteHandling(getValue(result["quirks"], "lores_sprite_handling", "")) : defaultConfigs.quirks.loresSpriteHandling // NOLINT(bugprone-unchecked-optional-access) Checked above
         };
 
         return configs;
