@@ -22,6 +22,8 @@ namespace chip8::front
         std::filesystem::path romsPath = "roms/";
         std::filesystem::path configsPath = "configs/emulator";
         std::array<std::string, 16> keyMap{};
+
+        bool operator==(const ApplicationConfig&) const = default;
     };
 
     struct Configs

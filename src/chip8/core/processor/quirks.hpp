@@ -22,5 +22,7 @@ namespace chip8::core
         bool loresWholePixelScrolling;
         bool waitForVBlank;
         LoresSpriteHandling loresSpriteHandling;
+
+        bool operator==(const Quirks&) const = default;
     };
 }

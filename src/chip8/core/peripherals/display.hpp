@@ -18,6 +18,8 @@ namespace chip8::core
         std::uint8_t width = 64;
         std::uint8_t height = 32;
         ResolutionMode defaultMode = ResolutionMode::Hires;
+    
+        bool operator==(const DisplayConfig&) const = default;
     };
 
     class Display
