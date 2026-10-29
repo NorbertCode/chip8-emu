@@ -16,5 +16,43 @@ namespace chip8::front
         static std::array<std::string, 16> parseKeyMap(const toml::table& keyMap);
         static core::ResolutionMode parseResolutionMode(std::string_view mode);
         static core::LoresSpriteHandling parseLoresSpriteHandling(std::string_view handling);
+
+        inline static const Configs defaultConfigs = {
+            .applicationConfig = {
+                .loopFrequency = 600.0,
+                .timerFrequency = 60.0,
+                .displayFrequency = 60.0,
+                .audioFrequency = 440.0,
+                .windowWidth = 1200,
+                .windowHeight = 800,
+                .foregroundColor = 0xFFFFFF,
+                .backgroundColor = 0x0,
+                .romsPath = "roms/",
+                .configsPath = "configs/emulator",
+                .keyMap = { "X", "1", "2", "3", "Q", "W", "E", "A", "S", "D", "Z", "C", "4", "R", "F", "V" }
+            },
+            .memoryConfig = {
+                .reservedEnd = 0x200,
+                .programEnd = 0x1000,
+                .reservedReadOnly = true
+            },
+            .displayConfig = {
+                .width = 64,
+                .height = 32,
+                .defaultMode = core::ResolutionMode::Hires
+            },
+            .quirks = {
+                .vfReset = false,
+                .indexIncrement = false,
+                .displayClipping = false,
+                .vyShifting = false,
+                .vxJumping = false,
+                .clearOnDisplayModeChange = true,
+                .vfCollisionCounter = false,
+                .loresWholePixelScrolling = false,
+                .waitForVBlank = false,
+                .loresSpriteHandling = core::LoresSpriteHandling::DrawWide
+            }
+        };
     };
 }

@@ -22,47 +22,47 @@ namespace chip8::front
         Configs configs;
 
         toml::table* keymapTable = result["keymap"].as_table();
-
-        if (!keymapTable)
-            throw std::runtime_error("Missing keymap in config.");
+        bool keymapExists = keymapTable != nullptr;
+        bool defaultModeExists = result["display"]["default_mode"].is_string();
+        bool loresSpriteHandlingExists = result["quirks"]["lores_sprite_handling"].is_string();
 
         configs.applicationConfig = {
-            .loopFrequency = result["application"]["loop_frequency"].value_or<double>(600.0),
-            .timerFrequency = result["application"]["timer_frequency"].value_or<double>(60.0),
-            .displayFrequency = result["application"]["display_frequency"].value_or<double>(60.0),
-            .audioFrequency = result["application"]["audio_frequency"].value_or<double>(880.0),
-            .windowWidth = result["application"]["window_width"].value_or<int>(1200),
-            .windowHeight = result["application"]["window_height"].value_or<int>(800),
-            .foregroundColor = result["application"]["foreground_color"].value_or<std::uint32_t>(0xFFFFFF),
-            .backgroundColor = result["application"]["background_color"].value_or<std::uint32_t>(0x0),
-            .romsPath = result["application"]["roms_path"].value_or<std::string>("roms"),
-            .configsPath = result["application"]["configs_path"].value_or<std::string>("configs/emulator"),
-            .keyMap = parseKeyMap(*keymapTable)
+            .loopFrequency = result["application"]["loop_frequency"].value_or(defaultConfigs.applicationConfig.loopFrequency),
+            .timerFrequency = result["application"]["timer_frequency"].value_or(defaultConfigs.applicationConfig.timerFrequency),
+            .displayFrequency = result["application"]["display_frequency"].value_or(defaultConfigs.applicationConfig.displayFrequency),
+            .audioFrequency = result["application"]["audio_frequency"].value_or(defaultConfigs.applicationConfig.audioFrequency),
+            .windowWidth = result["application"]["window_width"].value_or(defaultConfigs.applicationConfig.windowWidth),
+            .windowHeight = result["application"]["window_height"].value_or(defaultConfigs.applicationConfig.windowHeight),
+            .foregroundColor = result["application"]["foreground_color"].value_or(defaultConfigs.applicationConfig.foregroundColor),
+            .backgroundColor = result["application"]["background_color"].value_or(defaultConfigs.applicationConfig.backgroundColor),
+            .romsPath = std::filesystem::path(result["application"]["roms_path"].value_or(defaultConfigs.applicationConfig.romsPath.string())),
+            .configsPath = std::filesystem::path(result["application"]["configs_path"].value_or(defaultConfigs.applicationConfig.configsPath.string())),
+            .keyMap = keymapExists ? parseKeyMap(*keymapTable) : defaultConfigs.applicationConfig.keyMap
         };
 
         configs.memoryConfig = {
-            .reservedEnd = result["memory"]["reserved_end"].value_or<std::uint16_t>(0x200),
-            .programEnd = result["memory"]["program_end"].value_or<std::uint16_t>(0x1000),
-            .reservedReadOnly = result["memory"]["reserved_read_only"].value_or(true)
+            .reservedEnd = result["memory"]["reserved_end"].value_or(defaultConfigs.memoryConfig.reservedEnd),
+            .programEnd = result["memory"]["program_end"].value_or(defaultConfigs.memoryConfig.programEnd),
+            .reservedReadOnly = result["memory"]["reserved_read_only"].value_or(defaultConfigs.memoryConfig.reservedReadOnly)
         };
 
         configs.displayConfig = {
-            .width = result["display"]["width"].value_or<std::uint8_t>(64),
-            .height = result["display"]["height"].value_or<std::uint8_t>(32),
-            .defaultMode = parseResolutionMode(result["display"]["default_mode"].value_or("hires"))
+            .width = result["display"]["width"].value_or(defaultConfigs.displayConfig.width),
+            .height = result["display"]["height"].value_or(defaultConfigs.displayConfig.height),
+            .defaultMode = defaultModeExists ? parseResolutionMode(result["display"]["default_mode"].value<std::string>().value()) : defaultConfigs.displayConfig.defaultMode // NOLINT(bugprone-unchecked-optional-access) Checked above
         };
 
         configs.quirks = {
-            .vfReset = result["quirks"]["vf_reset"].value_or(false),
-            .indexIncrement = result["quirks"]["index_increment"].value_or(false),
-            .displayClipping = result["quirks"]["display_clipping"].value_or(false),
-            .vyShifting = result["quirks"]["vy_shifting"].value_or(false),
-            .vxJumping = result["quirks"]["vx_jumping"].value_or(false),
-            .clearOnDisplayModeChange = result["quirks"]["clear_on_mode_change"].value_or(true),
-            .vfCollisionCounter = result["quirks"]["vf_collision_counter"].value_or(false),
-            .loresWholePixelScrolling = result["quirks"]["lores_whole_pixel_scrolling"].value_or(false),
-            .waitForVBlank = result["quirks"]["wait_for_vblank"].value_or(false),
-            .loresSpriteHandling = parseLoresSpriteHandling(result["quirks"]["lores_sprite_handling"].value_or("draw_wide"))
+            .vfReset = result["quirks"]["vf_reset"].value_or(defaultConfigs.quirks.vfReset),
+            .indexIncrement = result["quirks"]["index_increment"].value_or(defaultConfigs.quirks.indexIncrement),
+            .displayClipping = result["quirks"]["display_clipping"].value_or(defaultConfigs.quirks.displayClipping),
+            .vyShifting = result["quirks"]["vy_shifting"].value_or(defaultConfigs.quirks.vyShifting),
+            .vxJumping = result["quirks"]["vx_jumping"].value_or(defaultConfigs.quirks.vxJumping),
+            .clearOnDisplayModeChange = result["quirks"]["clear_on_mode_change"].value_or(defaultConfigs.quirks.clearOnDisplayModeChange),
+            .vfCollisionCounter = result["quirks"]["vf_collision_counter"].value_or(defaultConfigs.quirks.vfCollisionCounter),
+            .loresWholePixelScrolling = result["quirks"]["lores_whole_pixel_scrolling"].value_or(defaultConfigs.quirks.loresWholePixelScrolling),
+            .waitForVBlank = result["quirks"]["wait_for_vblank"].value_or(defaultConfigs.quirks.waitForVBlank),
+            .loresSpriteHandling = loresSpriteHandlingExists ? parseLoresSpriteHandling(result["quirks"]["lores_sprite_handling"].value<std::string>().value()) : defaultConfigs.quirks.loresSpriteHandling // NOLINT(bugprone-unchecked-optional-access) Checked above
         };
 
         return configs;

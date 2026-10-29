@@ -25,21 +25,3 @@ vf_collision_counter = false
 lores_whole_pixel_scrolling = true
 wait_for_vblank = false
 lores_sprite_handling = "draw_wide"
-
-[keymap]
-0 = "X"
-1 = "1"
-2 = "2"
-3 = "3"
-4 = "Q"
-5 = "W"
-6 = "E"
-7 = "A"
-8 = "S"
-9 = "D"
-A = "Z"
-B = "C"
-C = "4"
-D = "R"
-E = "F"
-F = "V"
