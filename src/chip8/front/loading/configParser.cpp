@@ -92,8 +92,10 @@ namespace chip8::front
     {
         if (mode == "lores")
             return core::ResolutionMode::Lores;
-        else 
+        else if (mode == "hires")
             return core::ResolutionMode::Hires;
+        else
+            throw std::runtime_error("Invalid resolution mode configuration: must be 'lores' or 'hires'");
     }
 
     core::LoresSpriteHandling ConfigParser::parseLoresSpriteHandling(std::string_view handling)
@@ -102,7 +104,9 @@ namespace chip8::front
             return core::LoresSpriteHandling::DrawWide;
         else if (handling == "draw_tall")
             return core::LoresSpriteHandling::DrawTall;
-        else
+        else if (handling == "no_operation")
             return core::LoresSpriteHandling::NoOperation;
+        else
+            throw std::runtime_error("Invalid lores sprite handling configuration: must be 'draw_wide', 'draw_tall', or 'no_operation'");
     }
 }
