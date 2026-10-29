@@ -2,7 +2,12 @@
 #include "configs.hpp"
 #include "peripherals/display.hpp"
 #include "processor/quirks.hpp"
+#include <format>
+#include <optional>
+#include <stdexcept>
 #include <string_view>
+#include <toml++/impl/node.hpp>
+#include <toml++/impl/node_view.hpp>
 #include <toml++/toml.hpp>
 
 namespace chip8::front
@@ -13,6 +18,22 @@ namespace chip8::front
         static Configs parseConfig(std::string_view config);
 
     private:
+        template <typename T>
+        static T getValue(toml::node_view<toml::node> table, std::string_view key, T defaultValue)
+        {
+            if (table[key])
+            {
+                std::optional<T> result = table[key].value<T>();
+
+                if (result.has_value())
+                    return result.value();
+
+                throw std::runtime_error(std::format("Invalid {} configuration: value does not match expected type", key));
+            }
+
+            return defaultValue;
+        }
+
         static std::array<std::string, 16> parseKeyMap(const toml::table& keyMap);
         static core::ResolutionMode parseResolutionMode(std::string_view mode);
         static core::LoresSpriteHandling parseLoresSpriteHandling(std::string_view handling);
