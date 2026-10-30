@@ -1,5 +1,6 @@
 #include <exception>
 #include <iostream>
+#include <string>
 #include <vector>
 #include "application.hpp"
 #include "loading/argumentParser.hpp"
@@ -12,7 +13,8 @@ int main(int argc, char* argv[])
 {
     try
     {
-        front::Args args = front::ArgumentParser::parseArgs("CHIP8-EMU", argc, argv);
+        const std::vector<std::string> argsList(argv, argv + argc);
+        const front::Args args = front::ArgumentParser::parseArgs("CHIP8-EMU", argsList);
 
         if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
         {
