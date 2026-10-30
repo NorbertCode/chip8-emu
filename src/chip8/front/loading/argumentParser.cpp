@@ -1,9 +1,11 @@
 #include "argumentParser.hpp"
 #include <argparse/argparse.hpp>
+#include <string>
+#include <vector>
 
 namespace chip8::front
 {
-    Args ArgumentParser::parseArgs(const std::string& name, int argc, char** argv)
+    Args ArgumentParser::parseArgs(const std::string& name, const std::vector<std::string>& args)
     {
         argparse::ArgumentParser parser(name);
 
@@ -17,7 +19,7 @@ namespace chip8::front
 
         try
         {
-            parser.parse_args(argc, argv);
+            parser.parse_args(args);
         }
         catch(const std::exception& e)
         {
