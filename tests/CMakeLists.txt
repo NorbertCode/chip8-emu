@@ -20,6 +20,7 @@ add_executable(
     chip8/core/keyboardTest.cpp
     chip8/core/processorTest.cpp
     chip8/front/configParserTest.cpp
+    chip8/front/argumentParserTest.cpp
     disassembler/core/disassemblerTest.cpp
 )
 
