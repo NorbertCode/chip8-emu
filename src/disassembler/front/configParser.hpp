@@ -27,5 +27,12 @@ namespace disassembler::front
 
             return defaultValue;
         }
+
+        inline static const core::DisassemblerConfig defaultConfigs = {
+            .programStart = 0x200,
+            .vyShifting = false,
+            .vxJumping = false,
+            .hiresOperations = false
+        };
     };
 }
