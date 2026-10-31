@@ -10,6 +10,7 @@ namespace disassembler::front
     {
     public:
         static core::DisassemblerConfig parseConfig(std::string_view config);
+        static core::DisassemblerConfig getDefaultConfigs();
 
     private:
         template <typename T>
