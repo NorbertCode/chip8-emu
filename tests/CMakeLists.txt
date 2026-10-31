@@ -23,6 +23,7 @@ add_executable(
     chip8/front/argumentParserTest.cpp
     chip8/front/resourceLoaderTest.cpp
     disassembler/core/disassemblerTest.cpp
+    disassembler/front/argumentParserTest.cpp
 )
 
 target_link_libraries(
@@ -30,6 +31,7 @@ target_link_libraries(
     chip8_core
     chip8_front
     disassembler_core
+    disassembler_front
     gtest
     gtest_main
     gmock
