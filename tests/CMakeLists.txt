@@ -25,6 +25,7 @@ add_executable(
     disassembler/core/disassemblerTest.cpp
     disassembler/front/argumentParserTest.cpp
     disassembler/front/configParserTest.cpp
+    disassembler/front/resourceLoaderTest.cpp
 )
 
 target_link_libraries(
