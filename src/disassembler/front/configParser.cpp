@@ -19,10 +19,10 @@ namespace disassembler::front
         }
 
         return core::DisassemblerConfig {
-            .programStart = getValue(result["disassembler"]["program_start"], "program_start", defaultConfigs.programStart),
-            .vyShifting = getValue(result["disassembler"]["vy_shifting"], "vy_shifting", defaultConfigs.vyShifting),
-            .vxJumping = getValue(result["disassembler"]["vx_jumping"], "vx_jumping", defaultConfigs.vxJumping),
-            .hiresOperations = getValue(result["disassembler"]["hires_operations"], "hires_operations", defaultConfigs.hiresOperations)
+            .programStart = getValue(result["disassembler"], "program_start", defaultConfigs.programStart),
+            .vyShifting = getValue(result["disassembler"], "vy_shifting", defaultConfigs.vyShifting),
+            .vxJumping = getValue(result["disassembler"], "vx_jumping", defaultConfigs.vxJumping),
+            .hiresOperations = getValue(result["disassembler"], "hires_operations", defaultConfigs.hiresOperations)
         };
     }
 }
