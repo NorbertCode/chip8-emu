@@ -23,7 +23,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(tomlplusplus)
 
-target_link_libraries(disassembler_front PRIVATE
+target_link_libraries(disassembler_front PUBLIC
     argparse
     tomlplusplus::tomlplusplus
     disassembler_core
