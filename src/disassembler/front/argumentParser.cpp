@@ -3,7 +3,7 @@
 
 namespace disassembler::front
 {
-    Args ArgumentParser::parseArgs(const std::string& name, int argc, char** argv)
+    Args ArgumentParser::parseArgs(const std::string& name, const std::vector<std::string>& args)
     {
         argparse::ArgumentParser parser(name);
 
@@ -21,7 +21,7 @@ namespace disassembler::front
 
         try 
         {
-            parser.parse_args(argc, argv);
+            parser.parse_args(args);
         } 
         catch (const std::exception& e) 
         {
