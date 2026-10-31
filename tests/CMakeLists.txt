@@ -24,6 +24,7 @@ add_executable(
     chip8/front/resourceLoaderTest.cpp
     disassembler/core/disassemblerTest.cpp
     disassembler/front/argumentParserTest.cpp
+    disassembler/front/configParserTest.cpp
 )
 
 target_link_libraries(
