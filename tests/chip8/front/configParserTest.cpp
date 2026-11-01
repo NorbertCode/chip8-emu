@@ -110,7 +110,7 @@ TEST(ConfigParserTest, ParseConfig_FullValidConfig_GetsParsedCorrectly)
 TEST(ConfigParserTest, ParseConfig_MinimalValidConfig_GetsParsedCorrectly)
 {
     std::string config = "";
-    Configs expectedConfigs = ConfigParser::getDefaultConfigs();
+    const Configs& expectedConfigs = ConfigParser::getDefaultConfigs();
 
     Configs configs = ConfigParser::parseConfig(config);
 
