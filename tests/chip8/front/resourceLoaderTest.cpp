@@ -69,6 +69,10 @@ TEST_F(ResourceLoaderTest, LoadRom_EmptyFile_LoadedCorrectly)
 
 TEST_F(ResourceLoaderTest, LoadRom_InvalidPermissions_ThrowsException)
 {
+    #if defined(_WIN32)
+        GTEST_SKIP() << "Skip due to Windows-specific behavior";
+    #endif
+
     std::filesystem::path romPath = testDir / "restricted_rom.ch8";
     createBinaryFile(romPath, {});
     std::filesystem::permissions(romPath, std::filesystem::perms::none);
@@ -108,6 +112,10 @@ TEST_F(ResourceLoaderTest, LoadConfig_EmptyFile_LoadedCorrectly)
 
 TEST_F(ResourceLoaderTest, LoadConfig_InvalidPermissions_ThrowsException)
 {
+    #if defined(_WIN32)
+        GTEST_SKIP() << "Skip due to Windows-specific behavior";
+    #endif
+
     std::filesystem::path configPath = testDir / "restricted_config.toml";
     createFile(configPath, "key = \"value\"");
     std::filesystem::permissions(configPath, std::filesystem::perms::none);
@@ -150,6 +158,10 @@ TEST_F(ResourceLoaderTest, FindAllRoms_InvalidDirectory_ThrowsException)
 
 TEST_F(ResourceLoaderTest, FindAllRoms_InvalidPermissions_ThrowsException)
 {
+    #if defined(_WIN32)
+        GTEST_SKIP() << "Skip due to Windows-specific behavior";
+    #endif
+
     std::filesystem::path restrictedDir = testDir / "restricted_dir";
     std::filesystem::create_directory(restrictedDir);
     std::filesystem::permissions(restrictedDir, std::filesystem::perms::none);
@@ -192,6 +204,10 @@ TEST_F(ResourceLoaderTest, FindAllConfigs_InvalidDirectory_ThrowsException)
 
 TEST_F(ResourceLoaderTest, FindAllConfigs_InvalidPermissions_ThrowsException)
 {
+    #if defined(_WIN32)
+        GTEST_SKIP() << "Skip due to Windows-specific behavior";
+    #endif
+
     std::filesystem::path restrictedDir = testDir / "restricted_dir";
     std::filesystem::create_directory(restrictedDir);
     std::filesystem::permissions(restrictedDir, std::filesystem::perms::none);
@@ -238,6 +254,10 @@ TEST_F(ResourceLoaderTest, WriteStorage_NonExistentStorageFile_CreatesFile)
 
 TEST_F(ResourceLoaderTest, WriteStorage_InvalidPermissions_DoesNotThrow)
 {
+    #if defined(_WIN32)
+        GTEST_SKIP() << "Skip due to Windows-specific behavior";
+    #endif
+
     std::filesystem::path romPath = testDir / "test_rom.ch8";
     createBinaryFile(romPath, {});
     std::filesystem::permissions(testDir, std::filesystem::perms::none);
@@ -265,6 +285,10 @@ TEST_F(ResourceLoaderTest, ReadStorage_NonExistentStorageFile_ReturnsDefaultData
 
 TEST_F(ResourceLoaderTest, ReadStorage_InvalidPermissions_ReturnsDefaultData)
 {
+    #if defined(_WIN32)
+        GTEST_SKIP() << "Skip due to Windows-specific behavior";
+    #endif
+
     std::filesystem::path romPath = testDir / "test_rom.ch8";
     createBinaryFile(romPath, {});
     std::filesystem::permissions(testDir, std::filesystem::perms::none);

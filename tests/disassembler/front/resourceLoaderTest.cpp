@@ -68,6 +68,10 @@ TEST_F(DisasmResourceLoaderTest, LoadRom_EmptyFile_LoadedCorrectly)
 
 TEST_F(DisasmResourceLoaderTest, LoadRom_InvalidPermissions_ThrowsException)
 {
+    #if defined(_WIN32)
+        GTEST_SKIP() << "Skip due to Windows-specific behavior";
+    #endif
+
     std::filesystem::path romPath = testDir / "restricted_rom.ch8";
     createBinaryFile(romPath, {});
     std::filesystem::permissions(romPath, std::filesystem::perms::none);
@@ -107,6 +111,10 @@ TEST_F(DisasmResourceLoaderTest, LoadConfig_EmptyFile_LoadedCorrectly)
 
 TEST_F(DisasmResourceLoaderTest, LoadConfig_InvalidPermissions_ThrowsException)
 {
+    #if defined(_WIN32)
+        GTEST_SKIP() << "Skip due to Windows-specific behavior";
+    #endif
+
     std::filesystem::path configPath = testDir / "restricted_config.toml";
     createFile(configPath, "key = \"value\"");
     std::filesystem::permissions(configPath, std::filesystem::perms::none);
