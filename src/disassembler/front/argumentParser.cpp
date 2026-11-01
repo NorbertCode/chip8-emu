@@ -1,11 +1,12 @@
 #include "argumentParser.hpp"
 #include <argparse/argparse.hpp>
+#include <string>
 
 namespace disassembler::front
 {
-    Args ArgumentParser::parseArgs(const std::string& name, const std::vector<std::string>& args)
+    Args ArgumentParser::parseArgs(const std::string& name, const std::string& version, const std::vector<std::string>& args)
     {
-        argparse::ArgumentParser parser(name);
+        argparse::ArgumentParser parser(name, version);
 
         parser.add_argument("input")
             .help("path to the ROM file to disassemble");
