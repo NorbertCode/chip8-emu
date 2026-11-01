@@ -19,13 +19,21 @@ add_executable(
     chip8/core/storageTest.cpp
     chip8/core/keyboardTest.cpp
     chip8/core/processorTest.cpp
-    disassembler/disassemblerTest.cpp
+    chip8/front/configParserTest.cpp
+    chip8/front/argumentParserTest.cpp
+    chip8/front/resourceLoaderTest.cpp
+    disassembler/core/disassemblerTest.cpp
+    disassembler/front/argumentParserTest.cpp
+    disassembler/front/configParserTest.cpp
+    disassembler/front/resourceLoaderTest.cpp
 )
 
 target_link_libraries(
     run_tests PRIVATE 
     chip8_core
+    chip8_front
     disassembler_core
+    disassembler_front
     gtest
     gtest_main
     gmock

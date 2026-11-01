@@ -12,6 +12,8 @@ namespace chip8::core
         std::uint16_t reservedEnd;
         std::uint16_t programEnd; // This also works as memory end
         bool reservedReadOnly;
+
+        bool operator==(const MemoryConfig&) const = default;
     };
 
     class Memory

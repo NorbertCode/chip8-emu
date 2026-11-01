@@ -25,4 +25,9 @@ namespace disassembler::front
             .hiresOperations = getValue(result["disassembler"], "hires_operations", defaultConfigs.hiresOperations)
         };
     }
+
+    core::DisassemblerConfig ConfigParser::getDefaultConfigs()
+    {
+        return defaultConfigs;
+    }
 }
