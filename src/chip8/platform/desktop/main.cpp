@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     try
     {
         const std::vector<std::string> argsList(argv, argv + argc);
-        const front::Args args = front::ArgumentParser::parseArgs("CHIP8-EMU", argsList);
+        const front::Args args = front::ArgumentParser::parseArgs("CHIP8-EMU", "1.1.0", argsList);
 
         if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
         {
