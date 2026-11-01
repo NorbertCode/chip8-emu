@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include <span>
 #include <string_view>
+#include <algorithm>
 #include "loading/resourceLoader.hpp"
 
 using namespace chip8;
