@@ -271,7 +271,7 @@ Any options not specified within a configuration file have chosen default option
 
 - `background_color` - Color of disabled pixels written in hex. For example `0xFF0000` is red and `0x00FF00` is green. `0x0` (black) by default.
 
-- `roms_path` - Path (relative to where you launch the emulator from) where the ROM Selector Widget will look for ROMs. `rom` by default.
+- `roms_path` - Path (relative to where you launch the emulator from) where the ROM Selector Widget will look for ROMs. `roms/` by default.
 
 - `configs_path` - Path (relative to where you launch the emulator from) where the Config Selector Widget will look for config files. `configs/emulator` by default.
 
