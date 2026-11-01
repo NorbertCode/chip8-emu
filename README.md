@@ -617,6 +617,10 @@ List of concrete `DebugWidgets`:
 
 - `ViewportWidget` - Communicates with the `Renderer` to wrap the display in a widget.
 
+- `RomSelectorWidget` - Fetches ROM list from [the ROM directory](#emulator-configuration) and allows the user to dynamically load ROMs.
+
+- `ConfigSelectorWidget` - Fetches config list from [the config directory](#emulator-configuration) and allows the user to dynamically change configs.
+
 ## Disassembler
 
 The disassembler follows the same formula as the emulator. It's divided into core logic and frontend. However, in this case it's a much smaller program.
