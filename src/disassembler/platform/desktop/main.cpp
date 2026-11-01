@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
     try
     {
         const std::vector<std::string> argsList(argv, argv + argc);
-        const front::Args args = front::ArgumentParser::parseArgs("CHIP-DISASM", argsList);
+        const front::Args args = front::ArgumentParser::parseArgs("CHIP-DISASM", "1.1.0", argsList);
 
         const std::vector<std::uint16_t> rom = front::ResourceLoader::loadRom(args.romPath);
         const std::string configData = front::ResourceLoader::loadConfig(args.configPath);

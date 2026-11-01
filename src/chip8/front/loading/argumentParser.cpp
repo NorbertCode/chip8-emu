@@ -5,9 +5,9 @@
 
 namespace chip8::front
 {
-    Args ArgumentParser::parseArgs(const std::string& name, const std::vector<std::string>& args)
+    Args ArgumentParser::parseArgs(const std::string& name, const std::string& version, const std::vector<std::string>& args)
     {
-        argparse::ArgumentParser parser(name);
+        argparse::ArgumentParser parser(name, version);
 
         parser.add_argument("-r", "--rom")
             .help("path to the ROM file to execute")

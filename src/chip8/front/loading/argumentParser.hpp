@@ -13,6 +13,6 @@ namespace chip8::front
     class ArgumentParser
     {
     public:
-        static Args parseArgs(const std::string& name, const std::vector<std::string>& args); // Has to take a vector (not span) because of argparse interface
+        static Args parseArgs(const std::string& name, const std::string& version, const std::vector<std::string>& args); // Has to take a vector (not span) because of argparse interface
     };
 }
