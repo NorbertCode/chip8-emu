@@ -661,7 +661,7 @@ The frontend contains the following three classes:
 
 ## Tests
 
-Most of my testing was automated. I used `GoogleTest` to write unit and integration tests. I only tested the core logic. I did not test the `SDL2` frontend or the `ImGui` debugger.
+Most of my testing was automated. I used `GoogleTest` to write unit and integration tests. Only the core logic and easily-testable frontend components were tested (this means tests for resource loading, parsing configuration files and parsing CLI arguments). I did not test the `SDL2` frontend or the `ImGui` debugger.
 
 I wrote unit tests for each CHIP-8 component, testing whether they work properly with different quirks enabled or disabled. I also tested edge-cases to see if my components work correctly in uncommon conditions.
 
@@ -808,7 +808,7 @@ Output: Arrows are displayed correctly.
 
 ## CI/CD
 
-There are currently two CI/CD workflows: `Build Analyze and Test` and `Deploy`.
+There are currently two CI/CD workflows: `Build Analyze and Test` and `Release`.
 
 ### Build Analyze and Test
 
@@ -820,9 +820,9 @@ This workflow is run on every pull request to main, and on every push to main. I
 - `Run Valgrind` - Runs Valgrind on the tests executable.
 - `Run Tests` - Uses a build matrix to run tests on multiple operating systems.
 
-`Build` and `Build (wasm)` are the first jobs to run. They run in parallel and upload their artifacts.
+`Build` and `Build (wasm)` are the first jobs to run. They run in parallel. `Build` uploads its artifacts for further use.
 
-`Run Clang-Tidy`, `Run Valgrind` and `Run Tests` all run in parallel. They download the artifacts uploaded by previous jobs and use them.
+`Run Clang-Tidy`, `Run Valgrind` and `Run Tests` all run in parallel. They download the artifacts uploaded by `Build` and use them.
 
 `Run Valgrind` runs only on the tests executable, because I decided automating running an interactive program would be a rabbit-hole by itself and out of scope of this project.
 
@@ -838,14 +838,14 @@ performance-*,
 
 I also decided to exclude a few checks due to the nature of the project - magic numbers, pointer arithmetic, and reinterpret cast are all things which would otherwise be enabled, but an emulator heavily relies on them.
 
-### Deploy
+### Release
 
-This workflow is run when a new tag is pushed. It consists of the following jobs:
+This workflow is run when a new tag is pushed or on manual dispatch. It consists of the following jobs:
 
-- `Build for Release` - Uses a build matrix to build the release version of the toolchain for multipe operating systems and zips them.
+- `Build for Release` - Uses a build matrix to build the release version of the toolchain for multiple operating systems and zips them.
 - `Build for Release (wasm)` - Builds the release version of the emulator for WebAssembly using `emscripten` and zips it.
-- `Deploy to GitHub` - Creates a GitHub release and uploads the builds.
-- `Deploy to itch.io` - Uses `Butler` to push the builds to itch.io
+- `Deploy to GitHub` - Creates a GitHub release and uploads the builds. This does not run when the workflow was dispatched manually.
+- `Deploy to itch.io` - Uses `Butler` to push the builds to itch.io. This does not run when the workflow was dispatched manually.
 
 
 # Sources
