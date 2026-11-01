@@ -518,6 +518,7 @@ There exist many CHIP-8 variants which not only add new functionality, but often
 │       └── wasm
 └── disassembler
     ├── core
+    ├── front
     └── platform
         └── desktop
 ```
@@ -574,9 +575,11 @@ The above classes are responsible for using `SDL2` during the program's runtime.
 
 - `ResourceLoader` - Provides static methods for access to the user's OS for IO operations. It fetches configs and ROMs from the users disk, and allows for reading and writing RPL storage to a file. It uses `std::filesystem` to be OS-agnostic.
 
-- `ConfigParser` - Parser strings formatted as TOML to configuration structus used in the emulator.
+- `ConfigParser` - Parser strings formatted as TOML to configuration structs used in the emulator.
 
-There also existing two `main.cpp` files - one for each platform. They use the elements above and initialize `SDL2` to run the program. The one for WebAssembly also sets up the webpage for inputting ROMs by drag-and-drop, and the one for desktop handles CLI argument parsing using `argparse`.
+- `ArgumentParser` - Parses CLI arguments to configuration structs.
+
+There also existing two `main.cpp` files - one for each platform. They use the elements above and initialize `SDL2` to run the program. The one for WebAssembly also sets up the webpage for inputting ROMs by drag-and-drop.
 
 ## Debugger
 
@@ -624,9 +627,13 @@ The core logic is comprised of one class:
 
 The core is packaged into a library and used in the `DisassemblyViewerWidget`.
 
-The frontend also only has one class:
+The frontend contains the following three classes:
 
-- `DesktopLoader` - Loads and parses command line arguments and configs.
+- `ResourceLoader` - Provides static methods for access to the user's OS for IO operations. It fetches configs and ROMs from the users disk. It uses `std::filesystem` to be OS-agnostic.
+
+- `ConfigParser` - Parser strings formatted as TOML to configuration structs used in the disassembler.
+
+- `ArgumentParser` - Parses CLI arguments to configuration structs.
 
 ## Dependencies
 
